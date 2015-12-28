@@ -197,7 +197,7 @@ class SmartSearch(object):
 					"bootstrap": ['cat',[True, False]],
 					"criterion": ['cat',["gini", "entropy"]]}
 
-	>>> search = GPSearchCV(parameters,estimator=clf,X=X,y=y,n_iter=20)
+	>>> search = SmartSearch(parameters,estimator=clf,X=X,y=y,n_iter=20)
 	>>> search._fit()
 
     """
@@ -259,7 +259,7 @@ class SmartSearch(object):
 		self.nugget = nugget
 		self.detailed_res = detailed_res
 
-		self.best_parameters_ = None
+		self.best_parameter_ = None
 		self.tested_parameters_ = None
 		self.cv_scores_ = None
 
