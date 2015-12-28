@@ -22,14 +22,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import numpy as np
 import sys
+sys.path.append('../../..')
+from DeepMining.gcp_hpo.smart_search import SmartSearch
+import numpy as np
 import os
+import yaml
 from sklearn.neighbors import NearestNeighbors
-from smart_search import SmartSearch
 
 def runExperiment(first_exp,
                   n_exp,
+                  dir_,
                   parameters,
                   model = 'GCP',
                   n_random_init = 10,
@@ -48,7 +51,7 @@ def runExperiment(first_exp,
 
   # Load data
   output = []
-  f =open(("scoring_function/output.csv"),'r')
+  f =open(( dir_ + 'scoring_function/output.csv'),'r')
   for l in f:
       l = l[1:-3]
       string_l = l.split(',')
@@ -56,7 +59,7 @@ def runExperiment(first_exp,
   f.close()
   print 'Loaded output file,',len(output),'rows'
 
-  params = np.genfromtxt(("scoring_function/params.csv"),delimiter=',')
+  params = np.genfromtxt((dir_ + 'scoring_function/params.csv'),delimiter=',')
   print 'Loaded parameters file, shape :',params.shape
 
   KNN = NearestNeighbors()
@@ -75,12 +78,14 @@ def runExperiment(first_exp,
 
 
   ###  Run experiment  ### 
+  if not os.path.exists(dir_ + 'exp_results'):
+    os.mkdir(dir_ + 'exp_results')
 
   for n_exp in range(first_exp,last_exp):
       print ' ****   Run exp',n_exp,'  ****'
       ### set directory
-      if not os.path.exists("exp_results/exp"+str(n_exp)):
-          os.mkdir("exp_results/exp"+str(n_exp))
+      if not os.path.exists(dir_ + 'exp_results/exp'+str(n_exp)):
+          os.mkdir(dir_ + 'exp_results/exp'+str(n_exp))
       else:
           print('Warning : directory already exists')
 
@@ -104,11 +109,34 @@ def runExperiment(first_exp,
 
       ## save experiment's data
       for i in range(len(all_raw_outputs)):
-          f =open(("exp_results/exp"+str(n_exp)+"/output_"+str(i)+".csv"),'w')
+          f =open((dir_ + 'exp_results/exp'+str(n_exp)+'/output_'+str(i)+'.csv'),'w')
           for line in all_raw_outputs[i]:
               print>>f,line
           f.close()
-          np.savetxt(("exp_results/exp"+str(n_exp)+"/param_"+str(i)+".csv"),all_parameters[i], delimiter=",")
-          np.savetxt(("exp_results/exp"+str(n_exp)+"/param_path_"+str(i)+".csv"),all_search_path[i], delimiter=",")
+          np.savetxt((dir_ + 'exp_results/exp'+str(n_exp)+'/param_'+str(i)+'.csv'),all_parameters[i], delimiter=',')
+          np.savetxt((dir_ + 'exp_results/exp'+str(n_exp)+'/param_path_'+str(i)+'.csv'),all_search_path[i], delimiter=',')
 
       print ' ****   End experiment',n_exp,'  ****\n'
+
+
+if __name__ == '__main__':
+  dir_ = sys.argv[1] + '/'
+  print 'Saving in subdirectory:', dir_
+
+  config = yaml.safe_load(open(dir_ + 'config.yml'))
+
+  runExperiment(first_exp = config['first_exp'],
+              n_exp = config['n_exp'],
+              dir_ = dir_,
+              model = config['model'],
+              parameters = config['parameters'],
+              n_random_init = config['n_random_init'],
+              n_total_iter = config['n_iter'],
+              corr_kernel = config['corr_kernel'],
+              acquisition_function = config['acquisition_function'],
+              n_clusters = config['n_clusters'],
+              cluster_evol = config['cluster_evol'],
+              GCP_mapWithNoise = config['GCP_mapWithNoise'],
+              GCP_useAllNoisyY = config['GCP_useAllNoisyY'],
+              model_noise = config['model_noise'],
+              n_candidates = config['n_candidates'])

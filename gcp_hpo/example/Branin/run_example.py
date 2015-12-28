@@ -1,18 +1,11 @@
-import numpy as np
+from branin import branin
 import sys
-from har6 import har6
-
-sys.path.append("../../")
-from smart_search import SmartSearch
+sys.path.append('../../../..')
+from DeepMining.gcp_hpo.smart_search import SmartSearch
 
 ### Set parameters ###
-parameters = { 'a' : ['float',[0,1]],
-			   'b' : ['float',[0,1]],
-			   'c' : ['float',[0,1]],
-			   'd' : ['float',[0,1]],
-			   'e' : ['float',[0,1]],
-			   'f' : ['float',[0,1]] }
-			   
+parameters = { 'x' : ['float',[0,15]],
+			   'y' : ['float',[0,15]] }
 nugget = 1.e-10
 n_clusters = 1
 cluster_evol ='constant'
@@ -28,13 +21,11 @@ acquisition_function = 'UCB'
 
 
 def scoring_function(p_dict):
-	p_vector = [p_dict['a'],
-				p_dict['b'],
-				p_dict['c'],
-				p_dict['d'],
-				p_dict['e'],
-				p_dict['f'] ]
-	return har6(p_vector)
+	x,y = p_dict['x'], p_dict['y']
+	x = x -5.
+	y= y
+	return branin(x,y)
+
 
 search = SmartSearch(parameters,
 			estimator=scoring_function,
@@ -53,3 +44,4 @@ search = SmartSearch(parameters,
 			detailed_res = 0)
 
 search._fit()
+
