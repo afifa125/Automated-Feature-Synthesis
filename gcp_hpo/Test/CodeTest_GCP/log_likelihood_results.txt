@@ -1,0 +1,257 @@
+--------------------------------------Log Likelihood ------------------------------------------------------
+
+Average on n_tests = 20, nugget = 1.e-10, integratedPrediction = False
+Training size : 20
+ **  Test function artificial_f  **
+                                 > GP - Likelihood = -5.18915818537     7.63593340823
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = -3.82040193985     4.76618222242
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = -24.5985598869     37.97470778
+Fail to build 2 clusters
+Fail to build 2 clusters
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = -31.2003272285     50.3127347402
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = -0.57571370655     0.0667750118379
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = -1.97416327246     1.31357445813
+Fail to build 2 clusters
+Fail to build 2 clusters
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = -8.46395654081     12.8000547932
+
+
+ **  Test function branin  **
+                                 > GP - Likelihood = -0.0993224158217   0.0560701609813
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = -0.08035733632     0.0288980422685
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = -0.916749294496    1.3902410304
+Fail to build 2 clusters
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = -0.661240827882    0.75260361543
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = -0.4568636937      0.0544298913213
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = -1.88091570562     2.24311275524
+Fail to build 2 clusters
+Fail to build 2 clusters
+Fail to build 2 clusters
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = -1.57128086739     2.6585516185
+
+
+ **  Test function har6  **
+                                 > GP - Likelihood = -0.530403665147    0.107209420709
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = -0.313989084724    0.10696629238
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = -0.535919247736    0.295520072814
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = -0.602801760211    0.367263230633
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = -0.451195278103    0.0573653753416
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = -0.7377683054      0.421442363738
+Fail to build 2 clusters
+Fail to build 2 clusters
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = -1.0164922587      0.716479226176
+
+
+
+Training size : 50
+ **  Test function artificial_f  **
+                                 > GP - Likelihood = -3.5382842246      0.279847614739
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = -2.26578227335     0.612664625599
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = -8.03667885149     3.78392967472
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = -14.883317046      7.02301906075
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = -0.469796797777    0.0532847496216
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = -1.43944374563     0.653356119429
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = -2.79965874653     1.1929257989
+
+
+ **  Test function branin  **
+                                 > GP - Likelihood = -0.000190613134938         6.52217202767e-05
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = -0.0186158807621   0.0130691875009
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = -0.139435097479    0.177255305228
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = -0.254869215713    0.416229681251
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = -0.384811997276    0.0287690778906
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = -2.39583561561     4.14841875159
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = -2.70706379601     4.60380695466
+
+
+ **  Test function har6  **
+                                 > GP - Likelihood = -0.579994576903    0.0873118754968
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = -0.260831835968    0.04478019329
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = -0.537836582165    0.329775390797
+Fail to build 2 clusters
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = -0.664376716331    0.283071757598
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = -0.465120234077    0.0450735612038
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = -0.68783781109     0.201428887574
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = -1.32264235228     1.48209055012
+
+
+
+Training size : 80
+ **  Test function artificial_f  **
+                                 > GP - Likelihood = -1.75785011749     0.443220861157
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = -0.801138183434    0.278188663986
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = -5.30663555133     2.31496025317
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = -10.112752133      2.90711948711
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = -0.395782485115    0.0415351551498
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = -1.62173439585     0.524375553298
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = -2.91656153951     0.947446093332
+
+
+ **  Test function branin  **
+                                 > GP - Likelihood = -6.72808969168e-06         1.14118040285e-06
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = -0.00798947228142  0.00331134890193
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = -0.0891959854876   0.0781274259866
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = -0.183741977974    0.249864773222
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = -0.34926443589     0.0200104704554
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = -1.92949503858     1.70192325515
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = -1.32423227845     1.29443820806
+
+
+ **  Test function har6  **
+                                 > GP - Likelihood = -0.501870523335    0.0729472648149
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = -0.232471874396    0.0438225597821
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = -0.511792033792    0.173114761035
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = -0.700707179938    0.236980468693
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = -0.429274531826    0.039011336935
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = -0.758415153933    0.223139652985
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = -1.12887236465     0.475651402061
+
+
+.
+.
+.
+
+-------------------------------------- Likelihood ------------------------------------------------------
+
+
+Average on n_tests = 20, log_likelihood = False, nugget = 1.e-10, integratedPrediction = False
+Training size : 20
+ **  Test function artificial_f  **
+                                 > GP - Likelihood = 0.389197258031     0.392684984008
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = 0.383970138116     0.394031392767
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = 0.220336939594     0.325165935103
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = 0.0670246037671    0.129459861334
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = 0.586174244435     0.0480997338498
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = 0.351583199236     0.229862328253
+Fail to build 3 clusters
+Fail to build 3 clusters
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = 0.203394788039     0.19492771049
+
+
+ **  Test function branin  **
+                                 > GP - Likelihood = 0.91483401711      0.0336097434819
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = 0.905827598273     0.0435411924945
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = 0.62933563532      0.228027871727
+Fail to build 3 clusters
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = 0.494990419395     0.272211690122
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = 0.632335349029     0.0344623074205
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = 0.414314638594     0.149602104052
+Fail to build 3 clusters
+Fail to build 3 clusters
+Fail to build 3 clusters
+Fail to build 3 clusters
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = 0.386022366343     0.251639055534
+
+
+ **  Test function har6  **
+                                 > GP - Likelihood = 0.587931928602     0.0711529576947
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = 0.722102744231     0.0702877217093
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = 0.668394171394     0.104991973464
+Fail to build 3 clusters
+Fail to build 3 clusters
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = 0.514259082324     0.229447835441
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = 0.643553031033     0.044654074668
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = 0.474453432924     0.184875950432
+Fail to build 3 clusters
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = 0.560406607709     0.171110965195
+
+
+
+Training size : 50
+ **  Test function artificial_f  **
+                                 > GP - Likelihood = 0.0744188497987    0.106032140198
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = 0.173604489995     0.151597914335
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = 0.00382067794326   0.00611658475491
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = 0.000401968334576  0.00174904698471
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = 0.635592164017     0.0183974451922
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = 0.222546805544     0.178474929526
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = 0.0650629882622    0.102557119269
+
+
+ **  Test function branin  **
+                                 > GP - Likelihood = 0.999789471854     8.76427264654e-05
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = 0.980663073523     0.0175975804563
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = 0.845318086149     0.178340992466
+Fail to build 3 clusters
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = 0.847888609755     0.105142822714
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = 0.675934578176     0.023349099606
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = 0.392019687405     0.228495337029
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = 0.484446051925     0.231978306681
+
+
+ **  Test function har6  **
+                                 > GP - Likelihood = 0.608739060821     0.0625509329145
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = 0.782887371005     0.0443832841032
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = 0.595595279834     0.121531078425
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = 0.465709527714     0.156675741477
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = 0.641762443974     0.0275406233702
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = 0.482408464406     0.146348832741
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = 0.360328028967     0.13131365336
+
+
+
+Training size : 80
+ **  Test function artificial_f  **
+                                 > GP - Likelihood = 0.157986824536     0.0456449875945
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = 0.51488110537      0.165692980422
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = 0.0454124463439    0.143870727921
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = 0.00493880647539   0.0203070888386
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = 0.677832731487     0.0222328254428
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = 0.263078234616     0.195894774511
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = 0.0636964057001    0.0328071398188
+
+
+ **  Test function branin  **
+                                 > GP - Likelihood = 0.999992842432     1.43591135462e-06
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = 0.992468268479     0.00346250503506
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = 0.919541328961     0.0611857968765
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = 0.881773789289     0.18773447445
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = 0.717595627738     0.0231041191335
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = 0.396055757667     0.23555925498
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = 0.483746919771     0.202902823788
+
+
+ **  Test function har6  **
+                                 > GP - Likelihood = 0.591101958008     0.0672690101306
+
+corr_kernel: squared_exponential - n_clusters: 1        Likelihood = 0.791101186394     0.0340366016151
+corr_kernel: squared_exponential - n_clusters: 2        Likelihood = 0.600449379748     0.10422402335
+corr_kernel: squared_exponential - n_clusters: 3        Likelihood = 0.561556015841     0.120156069937
+
+corr_kernel: exponential_periodic - n_clusters: 1       Likelihood = 0.653140730949     0.0179366753529
+corr_kernel: exponential_periodic - n_clusters: 2       Likelihood = 0.436017859204     0.0952971001363
+corr_kernel: exponential_periodic - n_clusters: 3       Likelihood = 0.364290713392     0.137311009776
