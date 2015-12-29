@@ -34,7 +34,7 @@ import os
 
 sys.path.append("../../../..")
 from DeepMining.gcp_hpo.gcp import GaussianCopulaProcess
-from function_utils import *
+from DeepMining.gcp_hpo.test.function_utils import *
 from sklearn.gaussian_process import GaussianProcess
 from sklearn.neighbors import NearestNeighbors
 

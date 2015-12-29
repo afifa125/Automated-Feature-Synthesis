@@ -27,7 +27,7 @@ import sys
 import matplotlib.pyplot as plt
 
 sys.path.append("../../")
-import sampling_utils as utils 
+import search_utils as utils 
 from gcp import GaussianCopulaProcess
 import GCP_utils
 

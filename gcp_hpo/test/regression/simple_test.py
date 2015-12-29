@@ -34,6 +34,7 @@ import matplotlib.pyplot as plt
 sys.path.append("../../")
 from gcp import GaussianCopulaProcess
 from sklearn.gaussian_process import GaussianProcess
+from DeepMining.gcp_hpo.test.function_utils import artificial_f
 
 ### Set parameters ###
 parameter_bounds = np.asarray( [[0,400]] )
@@ -43,7 +44,7 @@ n_clusters_max = 3
 corr_kernel = 'exponential_periodic' # 'squared_exponential'
 
 def scoring_function(x):
-    return (70-7*np.exp(x/50. - ((x-55.)**2)/500.) + 6*np.sin(x/40.) +3./(1.1+np.cos(x/50.)) - 15./(3.3-3*np.sin((x-70)/25.)))/100.
+	return artificial_f([x])[0]
 
 x_training = []
 y_training = []

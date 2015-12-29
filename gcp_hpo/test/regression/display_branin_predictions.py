@@ -25,67 +25,51 @@
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 sys.path.append("../../../..")
 import DeepMining.gcp_hpo.search_utils as utils 
 from DeepMining.gcp_hpo.gcp import GaussianCopulaProcess
+from DeepMining.gcp_hpo.test.function_utils import branin_f
+
 
 save_plots = False
 
 ### Set parameters ###
 nugget = 1.e-10
-all_n_clusters = [1,2,3]
-corr_kernel = 'exponential_periodic'
+all_n_clusters = [1]
+corr_kernel = 'squared_exponential'
 GCP_mapWithNoise= False
 sampling_model = 'GCP'
+integratedPrediction = False
 coef_latent_mapping = 0.1
-prediction_size = 400
+prediction_size = 1000
 
 ### Set parameters ###
-parameter_bounds = np.asarray( [[0,400]] )
-training_size = 30
-
-def scoring_function(x):
-    return (70-7*np.exp(x/50. - ((x-55.)**2)/500.) + 6*np.sin(x/40.) +3./(1.1+np.cos(x/50.)) - 15./(3.3-3*np.sin((x-70)/25.)))/100.
-
-abs = np.atleast_2d(range(0,400)).T
-f_plot = [scoring_function(i) for i in abs[:,0]]
+parameter_bounds = np.asarray( [[0,15],[0,15]] )
+training_size = 50
 
 x_training = []
 y_training = []
 for i in range(training_size):
-	x = np.random.uniform(0,400)
+	x = [np.random.uniform(parameter_bounds[j][0],parameter_bounds[j][1]) for j in range(parameter_bounds.shape[0])]
 	x_training.append(x)
-	y_training.append(scoring_function(x))
-x_training = np.atleast_2d(x_training).T
+	y_training.append(branin_f(x)[0])
+x_training = np.asarray(x_training)
 
-g=open('data_EI/training_data.csv','w')
-g.write('x,y\n')
-
-for i in range(training_size):
-	g.write( str(x_training[i]) + ',' + str(y_training[i]) + '\n')
-g.close()
-
-candidates = abs
-# real_y = []
-# for i in range(prediction_size):
-# 	x = [np.random.uniform(0,400)]
-# 	candidates.append(x)
-# 	real_y.append(scoring_function(x[0]))
-# real_y = np.asarray(real_y)
-# candidates = np.asarray(candidates)
-
-count = 0
-fig = plt.figure()
+candidates = []
+real_y = []
+for i in range(prediction_size):
+	x = [np.random.uniform(parameter_bounds[j][0],parameter_bounds[j][1]) for j in range(parameter_bounds.shape[0])]
+	candidates.append(x)
+	real_y.append(branin_f(x)[0])
+real_y = np.asarray(real_y)
+candidates = np.asarray(candidates)
 
 for n_clusters in all_n_clusters:
 
-	f=open('data_EI/cluster' + str(n_clusters) +'.csv','w')
-	f.write('x,y,pred,ei\n')
-
-
-	count += 1
-	ax = fig.add_subplot(len(all_n_clusters),1,count)
+	fig = plt.figure()
+	ax = fig.add_subplot(1,2,1, projection='3d')
 	ax.set_title("GCP prediction")
 
 	gcp = GaussianCopulaProcess(nugget = nugget,
@@ -100,33 +84,29 @@ for n_clusters in all_n_clusters:
 	gcp.fit(x_training,y_training)
 
 	print '\nGCP fitted'
-	print 'Theta', gcp.theta
 	print 'Likelihood', np.exp(gcp.reduced_likelihood_function_value_)
 
-	predictions = gcp.predict(candidates,eval_MSE=False,eval_confidence_bounds=False,coef_bound = 1.96,integratedPrediction=False)
+	predictions,MSE,boundL,boundU = \
+						gcp.predict(candidates,eval_MSE=True,eval_confidence_bounds=True,coef_bound = 1.96,integratedPrediction=integratedPrediction)
 
-	pred,mse = gcp.predict(candidates,eval_MSE=True,transformY=False)
-	y_best =np.max(y_training)
-	sigma = np.sqrt(mse)
-	ei = [ utils.gcp_compute_ei((candidates[i]- gcp.X_mean) / gcp.X_std,pred[i],sigma[i],y_best, \
-	                gcp.mapping,gcp.mapping_derivative) \
-	        for i in range(candidates.shape[0]) ]
-	ei = np.asarray(ei)
-	print ei.shape
+	pred_error = np.mean( (predictions - np.asarray(real_y) ) **2. )
+	print 'MSE', pred_error
+	print 'Normalized error', np.sqrt(pred_error) /np.std(real_y)
+	 
+	pred,MSE_bis = gcp.predict(candidates,eval_MSE=True,transformY=False,eval_confidence_bounds=False,coef_bound = 1.96)
 
-	for i in range(abs.shape[0]):
-		f.write( str(candidates[i,0]) + ',' + str(f_plot[i]) +',' + str(predictions[i]) + ',' + str(ei[i]) +'\n' )
-	f.close()
+	t_f_plot =  [gcp.mapping(candidates[i],real_y[i],normalize=True) for i in range(real_y.shape[0])]
+	t_y_training =  [gcp.mapping(x_training[i],y_training[i],normalize=True) for i in range(len(y_training))]
 
-	if(save_plots):
-		save_data = np.asarray([s_candidates,boundL,boundU,predictions,f_plot]).T
-		np.savetxt('data_plot.csv',save_data,delimiter=',')
+	ax.scatter(x_training[:,0],x_training[:,1],y_training,c='g',label='Training points',alpha=0.5)
+	ax.scatter(candidates[:,0],candidates[:,1],real_y,c='b',label='Branin function',alpha=0.5)
+	ax.scatter(candidates[:,0],candidates[:,1],predictions,c='r',label='predictions',marker='+')
 
-	ax.plot(abs,f_plot)
-	ax.plot(candidates,predictions,'r+',label='GCP predictions')
-	ax.plot(x_training,y_training,'bo',label='Training points')
-	ax.plot(candidates,100.*ei,'g+',label='EI')
-
+	ax = fig.add_subplot(1,2,2, projection='3d')
+	ax.set_title('GP space')
+	ax.scatter(x_training[:,0],x_training[:,1],t_y_training,c='g',label='Training points',alpha=0.5)
+	ax.scatter(candidates[:,0],candidates[:,1],t_f_plot,c='b',label='Branin function',alpha=0.5)
+	ax.scatter(candidates[:,0],candidates[:,1],pred,c='r',label='predictions',marker='+')
 
 plt.legend()
 plt.show()
