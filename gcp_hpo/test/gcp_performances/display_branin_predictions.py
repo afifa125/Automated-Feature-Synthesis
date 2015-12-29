@@ -25,13 +25,13 @@
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
-
-sys.path.append("../../")
-sys.path.append("../Branin/")
-from branin import branin
-import sampling_utils as utils 
-from gcp import GaussianCopulaProcess
 from mpl_toolkits.mplot3d import Axes3D
+import math
+
+sys.path.append("../../../..")
+import DeepMining.gcp_hpo.search_utils as utils 
+from DeepMining.gcp_hpo.gcp import GaussianCopulaProcess
+
 
 save_plots = False
 
@@ -53,7 +53,9 @@ def branin_f(p_vector):
 	x,y = p_vector
 	x = x -5.
 	y= y
-	return branin(x,y)
+	result = np.square(y - (5.1/(4*np.square(math.pi)))*np.square(x) + \
+		(5/math.pi)*x - 6) + 10*(1-(1./(8*math.pi)))*np.cos(x) + 10
+	return [-result]
 
 x_training = []
 y_training = []

@@ -26,9 +26,9 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 
-sys.path.append("../../")
-import sampling_utils as utils 
-from gcp import GaussianCopulaProcess
+sys.path.append("../../../..")
+import DeepMining.gcp_hpo.search_utils as utils 
+from DeepMining.gcp_hpo.gcp import GaussianCopulaProcess
 
 save_plots = False
 
@@ -108,7 +108,7 @@ for n_clusters in all_n_clusters:
 	pred,mse = gcp.predict(candidates,eval_MSE=True,transformY=False)
 	y_best =np.max(y_training)
 	sigma = np.sqrt(mse)
-	ei = [ utils.compute_ei((candidates[i]- gcp.X_mean) / gcp.X_std,pred[i],sigma[i],y_best, \
+	ei = [ utils.gcp_compute_ei((candidates[i]- gcp.X_mean) / gcp.X_std,pred[i],sigma[i],y_best, \
 	                gcp.mapping,gcp.mapping_derivative) \
 	        for i in range(candidates.shape[0]) ]
 	ei = np.asarray(ei)

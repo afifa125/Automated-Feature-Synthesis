@@ -22,6 +22,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+"""
+Comparison of regression with LGCP and GP, with different n_clusters values.
+Displays graphs and the models' likelihood.
+"""
+
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
@@ -73,7 +78,7 @@ for n_clusters in range(1,n_clusters_max+1):
 	gcp.fit(x_training,y_training)
 	likelihood = gcp.reduced_likelihood_function_value_
 	print 'LGCP-'+str(n_clusters)+' fitted'
-	print 'Theta', gcp.theta
+	# print 'Theta', gcp.theta
 	print 'Likelihood',likelihood
 
 	if(n_clusters > 1):
@@ -112,8 +117,8 @@ for n_clusters in range(1,n_clusters_max+1):
 	plt.legend()
 
 	mapping_functions_plot.append( [gcp.mapping(200,mf_plt_axis[i],normalize=True) for i in range(100)])
-## with GP ##
 
+## with GP ##
 gp = GaussianProcess(theta0=.1 ,
 				 thetaL = 0.001,
 				 thetaU = 10.,
@@ -122,7 +127,7 @@ gp = GaussianProcess(theta0=.1 ,
 gp.fit(x_training,y_training)
 likelihood = gp.reduced_likelihood_function_value_
 print 'GP'
-print 'Theta',gp.theta_
+# print 'Theta',gp.theta_
 print 'Likelihood',likelihood
 candidates = np.atleast_2d(range(80)).T * 5
 prediction = gp.predict(candidates)
