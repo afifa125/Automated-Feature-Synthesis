@@ -15,7 +15,7 @@ The **Deep Mining** project aims at finding the best hyperparameter set for a Ma
 
 **This software will test iteratively, and smartly, some hyperparameter sets in order to find as quickly as possible the best ones to achieve the best classification accuracy that a pipeline can offer.**
 
-![Fig2](GCP-HPO/Figures/DeepMining_workflow.png?raw=true)
+![Fig2](GCP-HPO/fig/DeepMining_workflow.png?raw=true)
 
 
 ### Methods ###

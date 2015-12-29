@@ -39,7 +39,7 @@ The two real examples contained in the repository are the **Sentiment Analysis p
 In order to quickly test the optimization process, a lot of off-line computations have already been done and stored in the folders *Test/ProblemName/scoring_function*. This way, the script run_experiments makes it easy to run fast experiments by querying those files, instead of really building the pipeline for each parameter test.
 
 
-![Fig1](Figures/SmartSampling_example.png?raw=true)
+![Fig1](fig/SmartSampling_example.png?raw=true)
 *An example of the Smart Search process. The function to optimize is the blue line, and we start the process with 10 random points for which we know the real value (blue points). At each step, the performance function is modeled by a GCP and predictions are made (red crosses) based on the known data (blue and red points). The cyan zone shows the 95% condifence bounds. At each step the selected point (the one that maximizes the upper confidence bound) is shown in yellow. This point is then added to the known data so that the model becomes more and more accurate.*
 
 
