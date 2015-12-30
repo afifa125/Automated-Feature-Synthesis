@@ -33,11 +33,11 @@ from sklearn.metrics.scorer import check_scoring
 from sklearn.base import is_classifier, clone
 
 class SmartSearch(object):
-	"""
-	Parameters
-	----------
+	""" The class for GCP-based hyper-parameter optimization.
 
-	parameters : dict, parameter space on which to optimize the estimator
+	**Parameters**
+	----------
+	`parameters` : dict, parameter space on which to optimize the estimator  
 		The keys of the dictionnary should be the names of the parameters,
 		and the values should be lists of length 2; the first element being
 		the type of the parameter ('int', 'float' or 'cat' [for categorical]),
@@ -45,162 +45,161 @@ class SmartSearch(object):
 		to search (for 'int' and 'float') or the values the parameter can take
 		(for 'cat')
 		Example : parameters = {'kernel' :  ['cat', ['rbf','poly']],
-    			     			 'd' : ['int', [1,3]],
-    				  			 'C' : ['float',[1,10])}
+				     			 'd' : ['int', [1,3]],
+					  			 'C' : ['float',[1,10])}  
 
-    estimator : 1) sklearn estimator or 2)callable 
+	`estimator` : 1) sklearn estimator or 2) callable  
 		1 : object type that implements the "fit" and "predict" methods,
 		as a classifier or a pipeline
 		2 : a function that computes the output given a dictionnary of 
 		parameters. The returned value should be a list of one or more 
 		floats if score_format == 'cv', and a float if score_format == 
-		'avg'
+		'avg'.   
 
-	X : array-like, shape = [n_samples, n_features]
+	`X` : array-like, shape = [n_samples, n_features]  
 		Training vector, where n_samples in the number of samples and
-		n_features is the number of features.
+		n_features is the number of features.   
 
-	y : array-like, shape = [n_samples] or [n_samples, n_output], optional
+	`y` : array-like, shape = [n_samples] or [n_samples, n_output], optional  
 		Target relative to X for classification or regression;
-		None for unsupervised learning.
+		None for unsupervised learning.  
 
-	model : string, optional
+	`model` : string, optional  
 		The model to run.
 		Choose between :
 		- GCP (non-parametric (Latent) Gaussian Copula Process)
 		- GP (Gaussian Process)
-		- rand (samples at random)
+		- rand (samples at random)  
 
-	score_format : string ('cv' or 'avg'), optional
+	`score_format` : string ('cv' or 'avg'), optional   
 		'avg' considers only the mean of the CV results while 'cv'
 		stores all values
-		Default is 'cv'
+		Default is 'cv'  
 
-	fit_params : dict, optional
-		Parameters to pass to the fit method.
+	`fit_params` : dict, optional  
+		Parameters to pass to the fit method.  
 
-    scoring : string, callable or None, optional
-        A string (see sklearn's model evaluation documentation) or
-        a scorer callable object / function with signature
-        ``scorer(estimator, X, y)``.
-        Default is None.
+	`scoring` : string, callable or None, optional  
+	    A string (see sklearn's model evaluation documentation) or
+	    a scorer callable object / function with signature
+	    ``scorer(estimator, X, y)``.
+	    Default is None.  
 
-    cv : integer or cross-validation generator, optional
+	`cv` : integer or cross-validation generator, optional  
 		Relevant if the estimator is an sklearn object.
 		If an integer is passed, it is the number of folds.
 		Specific cross-validation objects can be passed, see
 		sklearn.cross_validation module for the list of possible objects
-		Default is 5.
+		Default is 5.  
 
-	acquisition function : string, optional
-		Function to maximize in order to choose the next parameter to test.
-		- Simple : maximize the predicted output
-		- UCB : maximize the upper confidence bound
-		- EI : maximizes the expected improvement
-		Default is 'UCB'
+	`acquisition function` : string, optional  
+		Function to maximize in order to choose the next parameter to test.  
+		- Simple : maximize the predicted output  
+		- UCB : maximize the upper confidence bound  
+		- EI : maximizes the expected improvement  
+		Default is 'UCB'  
 
-	corr_kernel : string, optional
-		Correlation kernel to choose for the GCP. 
+	`corr_kernel` : string, optional  
+		Correlation kernel to choose for the GCP.   
 		Possible choices are :
 		- exponential_periodic (a linear combination of 3 classic kernels)
 		- squared_exponential
-		Default is 'exponential_periodic'.
+		Default is 'exponential_periodic'.  
 
-	n_iter : int
+	`n_iter` : int  
 		Total number of iterations to perform (including n_init and n_final_iter).
-		Default is 100.
+		Default is 100.  
 
-	n_init : int, optional
+	`n_init` : int, optional  
 		Number of random iterations to perform before the smart sampling.
-		Default is 30.
+		Default is 30.  
 
-	n_final_iter : int, optional
+	`n_final_iter` : int, optional  
 		Number of final iterations, ie. smart iterations but with
 		acquisition_function == 'Simple'
-		Default is 5.
+		Default is 5.  
 
-	n_candidates : int, optional
+	`n_candidates` : int, optional  
 		Number of random candidates to sample for each GCP / GP iterations
-		Default is 500.
+		Default is 500.  
 
-	n_clusters : int, optional
+	`n_clusters` : int, optional  
 		Number of clusters used in the parameter space to build a variable mapping for the GCP.
-		Default is 1.
+		Default is 1.  
 
-	cluster_evol : string {'constant', 'step', 'variable'}, optional
+	`cluster_evol` : string {'constant', 'step', 'variable'}, optional  
 		Method used to set the number of clusters.
 		If 'constant', the number of clusters is set with n_clusters.
 		If 'step', start with one cluster, and set n_clusters after 20 smart steps.
 		If 'variable', start with one cluster and increase n_clusters by one every 30 smart steps.
-		Default is constant.
+		Default is constant.  
 
-	n_clusters_max : int, optional
+	`n_clusters_max` : int, optional  
 		The maximum value for n_clusters (relevant only if cluster_evol <> 'constant').
-		Default is 5.
+		Default is 5.  
 
-	nugget : float, optional
+	`nugget` : float, optional  
 		The nugget to set for the Gaussian Copula Process or Gaussian Process.
-		Default is 1.e-10.
+		Default is 1.e-10.  
 
-	GCP_mapWithNoise : boolean, optional
+	`GCP_mapWithNoise` : boolean, optional  
 		If True and if Y outputs contain multiple noisy observations for the same
 		x inputs, then all the noisy observations are used to compute Y's distribution
 		and learn the mapping function.
 		Otherwise, only the mean of the outputs, for a given input x, is considered.
-		Default is False.
+		Default is False.  
 
-	GCP_useAllNoisyY : boolean, optional
+	`GCP_useAllNoisyY` : boolean, optional  
 		If True and if Y outputs contain multiple noisy observations for the same
 		x inputs, then all the warped noisy observations are used to fit the GP.
 		Otherwise, only the mean of the outputs, for a given input x, is considered.
-		Default is False.
+		Default is False.  
 
-	model_noise : string {'EGN',None}, optional
+	`model_noise` : string {'EGN',None}, optional  
 		Method to model the noise.
 		If not None and if Y outputs contain multiple noisy observations for the same
 		x inputs, then the nugget is estimated from the standard deviation of the multiple 
 		outputs for a given input x.
-		Default is None.
+		Default is None.  
 
-	detailed_res : int, optional
+	`detailed_res` : int, optional  
 		Specify the level of details to return.
 		0 : tested parameters and mean outputs
 		1 : tested parameters and list of CV results
 		2 : tested parameters, search path, list of all CV results and mean outputs
-		Default is 1.
+		Default is 1.  
 
 
-	Attributes
+	**Attributes**
 	----------
-
-	best_parameter_ : dict, the parameter set, from those tested by the method _fit, that
+	`best_parameter_` : dict, the parameter set, from those tested by the method _fit, that
 		maximizes the mean of the cross-validation results.
 
-	tested_parameters_ : ndarray, the parameters tested by _fit
+	`tested_parameters_` : ndarray, the parameters tested by _fit
 
-	cv_scores_ : if score_format == 'cv', list of all the CV results of the parameters
+	`cv_scores_` : if score_format == 'cv', list of all the CV results of the parameters
 		tested by _fit;
 				 if score_format == 'avg', array of the mean CV results of the parameters
 		tested by _fit
 
 
-    Examples
-    -------
-    >>> from sklearn.datasets import load_digits
-	>>> iris = load_digits()
-	>>> X, y = iris.data, iris.target
-	>>> clf = RandomForestClassifier(n_estimators=20)
-	>>> parameters = {"max_depth": ['int',[3, 3]],
-					"max_features": ['int',[1,11]],
-					"min_samples_split": ['int',[1,11]],
-					"min_samples_leaf": ['int',[1,11]],
-					"bootstrap": ['cat',[True, False]],
-					"criterion": ['cat',["gini", "entropy"]]}
+	**Examples**
+	--------
+		>>> from sklearn.datasets import load_digits
+		>>> iris = load_digits()
+		>>> X, y = iris.data, iris.target
+		>>> clf = RandomForestClassifier(n_estimators=20)
+		>>> parameters = {
+				"max_depth": ['int',[3, 3]],
+				"max_features": ['int',[1,11]],
+				"min_samples_split": ['int',[1,11]],
+				"min_samples_leaf": ['int',[1,11]],
+				"bootstrap": ['cat',[True, False]],
+				"criterion": ['cat',["gini", "entropy"]]}
 
-	>>> search = SmartSearch(parameters,estimator=clf,X=X,y=y,n_iter=20)
-	>>> search._fit()
-
-    """
+		>>> search = SmartSearch(parameters,estimator=clf,X=X,y=y,n_iter=20)
+		>>> search._fit()
+	"""
 
 	def __init__(self,
 				parameters,
