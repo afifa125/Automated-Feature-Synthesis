@@ -23,8 +23,6 @@
 # THE SOFTWARE.
 
 from __future__ import print_function
-
-
 import numpy as np
 from scipy import linalg, optimize
 import math
@@ -35,9 +33,10 @@ from scipy.stats import norm
 from scipy import stats
 from sklearn.cluster import KMeans
 from scipy.spatial import distance
-from GCP_utils import *
 import sklearn_utils as sk_utils
 from scipy import integrate
+
+from gcp_utils import *
 
 MACHINE_EPSILON = np.finfo(np.double).eps
 

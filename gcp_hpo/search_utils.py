@@ -24,10 +24,12 @@
 
 import numpy as np
 from random import randint, randrange
-from gcp import GaussianCopulaProcess
 from sklearn.gaussian_process import GaussianProcess
 from scipy import integrate
 from scipy.stats import norm
+import sys
+sys.path.append("../")
+from DeepMining.gcp_hpo.gcp.gcp import GaussianCopulaProcess
 
 max_f_value = 1.
 

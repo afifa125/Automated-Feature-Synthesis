@@ -23,9 +23,11 @@
 # THE SOFTWARE.
 
 import numpy as np
-from gcp import GaussianCopulaProcess
 from random import randint, randrange
 import search_utils as utils 
+import sys
+sys.path.append("../")
+from DeepMining.gcp_hpo.gcp.gcp import GaussianCopulaProcess
 
 from sklearn.gaussian_process import GaussianProcess
 from sklearn.cross_validation import check_cv, _fit_and_score
