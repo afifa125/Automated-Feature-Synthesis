@@ -27,7 +27,7 @@ Utilities for the GaussianCopulaProcess class.
 # THE SOFTWARE.
 
 import numpy as np
-from sklearn_utils import *
+import sklearn_utils as sk_utils
 
 
 def theta_toOneDim(theta):
@@ -157,7 +157,7 @@ def l1_cross_distances(X):
         The indices i and j of the vectors in X associated to the cross-
         distances in D: D[k] = np.abs(X[ij[k, 0]] - Y[ij[k, 1]]).
     """
-    X = array2d(X)
+    X = sk_utils.array2d(X)
     n_samples, n_features = X.shape
     n_nonzero_cross_dist = n_samples * (n_samples - 1) // 2
     ij = np.zeros((n_nonzero_cross_dist, 2), dtype=np.int)

@@ -33,9 +33,9 @@ from scipy.stats import norm
 from scipy import stats
 from sklearn.cluster import KMeans
 from scipy.spatial import distance
-import sklearn_utils as sk_utils
 from scipy import integrate
 
+import sklearn_utils as sk_utils
 from gcp_utils import *
 
 MACHINE_EPSILON = np.finfo(np.double).eps
@@ -575,7 +575,7 @@ class GaussianCopulaProcess(BaseEstimator, RegressorMixin):
 		self.thetaU = (np.ones((x_dim,self.thetaU.shape[0])) * self.thetaU ).T
 		#print('theta has new shape '+str(self.theta.shape))
 			
-		self.random_state = check_random_state(self.random_state)		
+		self.random_state = sk_utils.check_random_state(self.random_state)		
 		X, y = sk_utils.check_arrays(X, y)
 
 		# Check shapes of DOE & observations
