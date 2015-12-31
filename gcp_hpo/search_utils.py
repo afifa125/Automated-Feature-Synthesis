@@ -31,7 +31,6 @@ from random import randint, randrange
 from sklearn.gaussian_process import GaussianProcess
 from scipy import integrate
 from scipy.stats import norm
-import sys
 from gcp_hpo.gcp.gcp import GaussianCopulaProcess
 
 max_f_value = 1.

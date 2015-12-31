@@ -1,4 +1,9 @@
-import sys
+"""
+Testing SmartSearch on the Hartmann 6D function.  
+
+The Hartmann 6D function is a classic example to evaluate nonlinear optimization algorithms.  
+"""
+
 from gcp_hpo.smart_search import SmartSearch
 import numpy as np
 
@@ -31,6 +36,15 @@ def har6(x):
     
     return [s]
 
+def scoring_function(p_dict):
+	p_vector = [p_dict['a'],
+				p_dict['b'],
+				p_dict['c'],
+				p_dict['d'],
+				p_dict['e'],
+				p_dict['f'] ]
+	return har6(p_vector)
+
 
 ### Set parameters ###
 parameters = { 'a' : ['float',[0,1]],
@@ -52,16 +66,6 @@ n_random_init= 15
 n_iter = 100
 nb_iter_final = 0
 acquisition_function = 'UCB'
-
-
-def scoring_function(p_dict):
-	p_vector = [p_dict['a'],
-				p_dict['b'],
-				p_dict['c'],
-				p_dict['d'],
-				p_dict['e'],
-				p_dict['f'] ]
-	return har6(p_vector)
 
 search = SmartSearch(parameters,
 			estimator=scoring_function,

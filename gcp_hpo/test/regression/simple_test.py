@@ -28,7 +28,6 @@ Displays graphs and the models' likelihood.
 """
 
 import numpy as np
-import sys
 import matplotlib.pyplot as plt
 from sklearn.gaussian_process import GaussianProcess
 

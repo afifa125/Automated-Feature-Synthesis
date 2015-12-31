@@ -29,7 +29,6 @@ Hyper-parameter optimization through randomized search, GP-based, and GCP-based.
 import numpy as np
 from random import randint, randrange
 import search_utils as utils 
-import sys
 from gcp_hpo.gcp.gcp import GaussianCopulaProcess
 
 from sklearn.gaussian_process import GaussianProcess

@@ -1121,9 +1121,9 @@ table {
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
 <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
 <span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">distance</span>
-<span class="kn">import</span> <span class="nn">sklearn_utils</span> <span class="kn">as</span> <span class="nn">sk_utils</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">integrate</span>
 
+<span class="kn">import</span> <span class="nn">sklearn_utils</span> <span class="kn">as</span> <span class="nn">sk_utils</span>
 <span class="kn">from</span> <span class="nn">gcp_utils</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">MACHINE_EPSILON</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
@@ -1608,34 +1608,34 @@ table {
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
-<span class="sd">		X : double array_like</span>
+<span class="sd">		`X` : double array_like  </span>
 <span class="sd">			An array with shape (n_samples, n_features) with the input at which</span>
-<span class="sd">			observations were made.</span>
+<span class="sd">			observations were made.  </span>
 
-<span class="sd">		y : double array_like</span>
+<span class="sd">		`y` : double array_like  </span>
 <span class="sd">			An array with shape (n_samples, ) or shape (n_samples, n_targets)</span>
 <span class="sd">			with the observations of the output to be predicted.</span>
-<span class="sd">			Currently only 1D targets are supported.</span>
+<span class="sd">			Currently only 1D targets are supported.  </span>
 
-<span class="sd">		detailed_y_obs : double list of list</span>
+<span class="sd">		`detailed_y_obs` : double list of list  </span>
 <span class="sd">			A list of length n_samples where entry at position i corresponds to </span>
 <span class="sd">			the mutiple noisy observations (given as a list) of the input value X[i,:], </span>
-<span class="sd">			and whose mean is y[i].</span>
+<span class="sd">			and whose mean is y[i].  </span>
 <span class="sd">			If not None, it can be used to learn the mapping function or fit the GP,</span>
-<span class="sd">			see parameters mapWithNoise and useAllNoisyY of the GaussianCopulaProcess class.</span>
+<span class="sd">			see parameters mapWithNoise and useAllNoisyY of the GaussianCopulaProcess class.  </span>
 
-<span class="sd">		obs_noise : double array</span>
+<span class="sd">		`obs_noise` : double array  </span>
 <span class="sd">			An array of shape (n_samples,) corresponding to the estimated noise</span>
-<span class="sd">			in the observed y outputs.</span>
+<span class="sd">			in the observed y outputs.  </span>
 <span class="sd">			If not None, it can be used to model the noise with the Estimated</span>
 <span class="sd">			Gaussian Noise method, see the model_noise parameter of the </span>
-<span class="sd">			GaussianCopulaProcess class.</span>
+<span class="sd">			GaussianCopulaProcess class.  </span>
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		gcp : self</span>
+<span class="sd">		`gcp` : self  </span>
 <span class="sd">			A fitted Gaussian Copula Process model object awaiting data to perform</span>
-<span class="sd">			predictions.</span>
+<span class="sd">			predictions.  </span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="c"># Run input checks</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_check_params</span><span class="p">()</span>
@@ -1663,7 +1663,7 @@ table {
 		<span class="bp">self</span><span class="o">.</span><span class="n">thetaU</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">x_dim</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">thetaU</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetaU</span> <span class="p">)</span><span class="o">.</span><span class="n">T</span>
 		<span class="c">#print(&#39;theta has new shape &#39;+str(self.theta.shape))</span>
 			
-		<span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>		
+		<span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">sk_utils</span><span class="o">.</span><span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>		
 		<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sk_utils</span><span class="o">.</span><span class="n">check_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 		<span class="c"># Check shapes of DOE &amp; observations</span>
@@ -1786,71 +1786,71 @@ table {
 
 	<span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">eval_MSE</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">transformY</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">returnRV</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">integratedPrediction</span><span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">eval_confidence_bounds</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">coef_bound</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		This function evaluates the Gaussian Process model at x.</span>
+<span class="sd">		This function evaluates the Gaussian Process model at x.  </span>
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
-<span class="sd">		X : array_like</span>
+<span class="sd">		`X` : array_like  </span>
 <span class="sd">			An array with shape (n_eval, n_features) giving the point(s) at</span>
-<span class="sd">			which the prediction(s) should be made.</span>
+<span class="sd">			which the prediction(s) should be made.  </span>
 
-<span class="sd">		eval_MSE : boolean, optional</span>
+<span class="sd">		`eval_MSE` : boolean, optional  </span>
 <span class="sd">			A boolean specifying whether the Mean Squared Error should be</span>
-<span class="sd">			evaluated or not.</span>
+<span class="sd">			evaluated or not.  </span>
 <span class="sd">			Default assumes evalMSE = False and evaluates only the BLUP (mean</span>
-<span class="sd">			prediction).</span>
+<span class="sd">			prediction).  </span>
 
-<span class="sd">		transformY : boolean, optional</span>
+<span class="sd">		`transformY` : boolean, optional  </span>
 <span class="sd">			A boolean specifying if the predicted values should correspond to</span>
 <span class="sd">			the same space as the data given to the fit method, or to the</span>
 <span class="sd">			warped space (in which the GP is fitted).</span>
 <span class="sd">			Default is True. Setting to False can be useful to compute the Expected</span>
-<span class="sd">			Improvement in an optimization process.</span>
+<span class="sd">			Improvement in an optimization process.  </span>
 
-<span class="sd">		returnRV : boolean, optional</span>
+<span class="sd">		`returnRV` : boolean, optional  </span>
 <span class="sd">			A boolean specifying if the method should return the predicted random variables</span>
-<span class="sd">			at x instead of a float number.</span>
-<span class="sd">			Default is False.</span>
+<span class="sd">			at x instead of a float number.  </span>
+<span class="sd">			Default is False.  </span>
 
-<span class="sd">		integratedPrediction : boolean, optional</span>
+<span class="sd">		`integratedPrediction` : boolean, optional  </span>
 <span class="sd">			A boolean specifying if the method should return the fully Bayesian</span>
 <span class="sd">			prediction, ie compute the expectation given the posterior in the</span>
 <span class="sd">			original space. If False, the returned value is the inverse value</span>
 <span class="sd">			(by the mapping function) of the GP prediction. This is much more faster</span>
 <span class="sd">			as the integratedPrediction needs to numerically compute the integral.</span>
-<span class="sd">			Default is False.</span>
+<span class="sd">			Default is False.  </span>
 
-<span class="sd">		eval_confidence_bounds : boolean, optional</span>
+<span class="sd">		`eval_confidence_bounds` : boolean, optional  </span>
 <span class="sd">			A boolean specifying if the method should return the confidence bounds.</span>
 <span class="sd">			Because of the non-linearity of the mapping function, this cannot be computed</span>
-<span class="sd">			directly with the MSE, but needs to invert the mapping function.</span>
-<span class="sd">			Default is False. If True, coef_bound specifies the boundary to compute.</span>
+<span class="sd">			directly with the MSE, but needs to invert the mapping function.  </span>
+<span class="sd">			Default is False. If True, coef_bound specifies the boundary to compute.  </span>
 
-<span class="sd">		coef_bound : float, optional</span>
+<span class="sd">		`coef_bound` : float, optional  </span>
 <span class="sd">			A float specifying the confidence bounds to compute. Upper and lower</span>
 <span class="sd">			confidence bounds are computed as the inverse of m + coef_bound*sigma</span>
 <span class="sd">			where m and sigma are the mean and the std of the posterior in the GP</span>
-<span class="sd">			space.</span>
-<span class="sd">			Default is 1.96 which corresponds to the 95% confidence bounds.</span>
+<span class="sd">			space.  </span>
+<span class="sd">			Default is 1.96 which corresponds to the 95% confidence bounds.  </span>
 
-<span class="sd">		batch_size : integer, optional</span>
+<span class="sd">		`batch_size` : integer, optional  </span>
 <span class="sd">			An integer giving the maximum number of points that can be</span>
 <span class="sd">			evaluated simultaneously (depending on the available memory).</span>
 <span class="sd">			Default is None so that all given points are evaluated at the same</span>
-<span class="sd">			time.</span>
+<span class="sd">			time.  </span>
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		y : array_like, shape (n_samples,)</span>
+<span class="sd">		`y` : array_like, shape (n_samples,)  </span>
 <span class="sd">			Prediction at x.</span>
 
-<span class="sd">		MSE : array_like, optional (if eval_MSE == True)</span>
+<span class="sd">		`MSE` : array_like, optional (if eval_MSE == True)  </span>
 <span class="sd">			Mean Squared Error at x.</span>
 
-<span class="sd">		LCB : array_like, optional (if eval_confidence_bounds == True)</span>
+<span class="sd">		`LCB` : array_like, optional (if eval_confidence_bounds == True)  </span>
 <span class="sd">			Lower confidence bound.</span>
 
-<span class="sd">		UCB : array_like, optional (if eval_confidence_bounds == True)</span>
+<span class="sd">		`UCB` : array_like, optional (if eval_confidence_bounds == True)  </span>
 <span class="sd">			Upper confidence bound.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 
@@ -1992,7 +1992,7 @@ table {
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
-<span class="sd">		theta : array_like, optional</span>
+<span class="sd">		`theta` : array_like, optional</span>
 <span class="sd">			An array containing the autocorrelation parameters at which the</span>
 <span class="sd">			Gaussian Process model parameters should be determined.</span>
 <span class="sd">			Default uses the built-in autocorrelation parameters</span>
@@ -2000,11 +2000,11 @@ table {
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		reduced_likelihood_function_value : double</span>
+<span class="sd">		`reduced_likelihood_function_value` : double</span>
 <span class="sd">			The value of the reduced likelihood function associated to the</span>
 <span class="sd">			given autocorrelation parameters theta.</span>
 
-<span class="sd">		par : dict</span>
+<span class="sd">		`par` : dict</span>
 <span class="sd">			A dictionary containing the requested Gaussian Process model</span>
 <span class="sd">			parameters:</span>
 
@@ -2116,18 +2116,18 @@ table {
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
-<span class="sd">		self : All parameters are stored in the Gaussian Process model object.</span>
+<span class="sd">		`self` : All parameters are stored in the Gaussian Process model object.</span>
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		optimal_theta : array_like</span>
+<span class="sd">		`optimal_theta` : array_like</span>
 <span class="sd">			The best set of autocorrelation parameters (the sought maximizer of</span>
 <span class="sd">			the reduced likelihood function).</span>
 
-<span class="sd">		optimal_reduced_likelihood_function_value : double</span>
+<span class="sd">		`optimal_reduced_likelihood_function_value` : double</span>
 <span class="sd">			The optimal reduced likelihood function value.</span>
 
-<span class="sd">		optimal_par : dict</span>
+<span class="sd">		`optimal_par` : dict</span>
 <span class="sd">			The BLUP parameters associated to thetaOpt.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		
@@ -2942,34 +2942,34 @@ table {
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
-<span class="sd">		X : double array_like</span>
+<span class="sd">		`X` : double array_like  </span>
 <span class="sd">			An array with shape (n_samples, n_features) with the input at which</span>
-<span class="sd">			observations were made.</span>
+<span class="sd">			observations were made.  </span>
 
-<span class="sd">		y : double array_like</span>
+<span class="sd">		`y` : double array_like  </span>
 <span class="sd">			An array with shape (n_samples, ) or shape (n_samples, n_targets)</span>
 <span class="sd">			with the observations of the output to be predicted.</span>
-<span class="sd">			Currently only 1D targets are supported.</span>
+<span class="sd">			Currently only 1D targets are supported.  </span>
 
-<span class="sd">		detailed_y_obs : double list of list</span>
+<span class="sd">		`detailed_y_obs` : double list of list  </span>
 <span class="sd">			A list of length n_samples where entry at position i corresponds to </span>
 <span class="sd">			the mutiple noisy observations (given as a list) of the input value X[i,:], </span>
-<span class="sd">			and whose mean is y[i].</span>
+<span class="sd">			and whose mean is y[i].  </span>
 <span class="sd">			If not None, it can be used to learn the mapping function or fit the GP,</span>
-<span class="sd">			see parameters mapWithNoise and useAllNoisyY of the GaussianCopulaProcess class.</span>
+<span class="sd">			see parameters mapWithNoise and useAllNoisyY of the GaussianCopulaProcess class.  </span>
 
-<span class="sd">		obs_noise : double array</span>
+<span class="sd">		`obs_noise` : double array  </span>
 <span class="sd">			An array of shape (n_samples,) corresponding to the estimated noise</span>
-<span class="sd">			in the observed y outputs.</span>
+<span class="sd">			in the observed y outputs.  </span>
 <span class="sd">			If not None, it can be used to model the noise with the Estimated</span>
 <span class="sd">			Gaussian Noise method, see the model_noise parameter of the </span>
-<span class="sd">			GaussianCopulaProcess class.</span>
+<span class="sd">			GaussianCopulaProcess class.  </span>
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		gcp : self</span>
+<span class="sd">		`gcp` : self  </span>
 <span class="sd">			A fitted Gaussian Copula Process model object awaiting data to perform</span>
-<span class="sd">			predictions.</span>
+<span class="sd">			predictions.  </span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="c"># Run input checks</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_check_params</span><span class="p">()</span>
@@ -2997,7 +2997,7 @@ table {
 		<span class="bp">self</span><span class="o">.</span><span class="n">thetaU</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">x_dim</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">thetaU</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetaU</span> <span class="p">)</span><span class="o">.</span><span class="n">T</span>
 		<span class="c">#print(&#39;theta has new shape &#39;+str(self.theta.shape))</span>
 			
-		<span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>		
+		<span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">sk_utils</span><span class="o">.</span><span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>		
 		<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sk_utils</span><span class="o">.</span><span class="n">check_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 		<span class="c"># Check shapes of DOE &amp; observations</span>
@@ -3120,71 +3120,71 @@ table {
 
 	<span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">eval_MSE</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">transformY</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">returnRV</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">integratedPrediction</span><span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">eval_confidence_bounds</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">coef_bound</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		This function evaluates the Gaussian Process model at x.</span>
+<span class="sd">		This function evaluates the Gaussian Process model at x.  </span>
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
-<span class="sd">		X : array_like</span>
+<span class="sd">		`X` : array_like  </span>
 <span class="sd">			An array with shape (n_eval, n_features) giving the point(s) at</span>
-<span class="sd">			which the prediction(s) should be made.</span>
+<span class="sd">			which the prediction(s) should be made.  </span>
 
-<span class="sd">		eval_MSE : boolean, optional</span>
+<span class="sd">		`eval_MSE` : boolean, optional  </span>
 <span class="sd">			A boolean specifying whether the Mean Squared Error should be</span>
-<span class="sd">			evaluated or not.</span>
+<span class="sd">			evaluated or not.  </span>
 <span class="sd">			Default assumes evalMSE = False and evaluates only the BLUP (mean</span>
-<span class="sd">			prediction).</span>
+<span class="sd">			prediction).  </span>
 
-<span class="sd">		transformY : boolean, optional</span>
+<span class="sd">		`transformY` : boolean, optional  </span>
 <span class="sd">			A boolean specifying if the predicted values should correspond to</span>
 <span class="sd">			the same space as the data given to the fit method, or to the</span>
 <span class="sd">			warped space (in which the GP is fitted).</span>
 <span class="sd">			Default is True. Setting to False can be useful to compute the Expected</span>
-<span class="sd">			Improvement in an optimization process.</span>
+<span class="sd">			Improvement in an optimization process.  </span>
 
-<span class="sd">		returnRV : boolean, optional</span>
+<span class="sd">		`returnRV` : boolean, optional  </span>
 <span class="sd">			A boolean specifying if the method should return the predicted random variables</span>
-<span class="sd">			at x instead of a float number.</span>
-<span class="sd">			Default is False.</span>
+<span class="sd">			at x instead of a float number.  </span>
+<span class="sd">			Default is False.  </span>
 
-<span class="sd">		integratedPrediction : boolean, optional</span>
+<span class="sd">		`integratedPrediction` : boolean, optional  </span>
 <span class="sd">			A boolean specifying if the method should return the fully Bayesian</span>
 <span class="sd">			prediction, ie compute the expectation given the posterior in the</span>
 <span class="sd">			original space. If False, the returned value is the inverse value</span>
 <span class="sd">			(by the mapping function) of the GP prediction. This is much more faster</span>
 <span class="sd">			as the integratedPrediction needs to numerically compute the integral.</span>
-<span class="sd">			Default is False.</span>
+<span class="sd">			Default is False.  </span>
 
-<span class="sd">		eval_confidence_bounds : boolean, optional</span>
+<span class="sd">		`eval_confidence_bounds` : boolean, optional  </span>
 <span class="sd">			A boolean specifying if the method should return the confidence bounds.</span>
 <span class="sd">			Because of the non-linearity of the mapping function, this cannot be computed</span>
-<span class="sd">			directly with the MSE, but needs to invert the mapping function.</span>
-<span class="sd">			Default is False. If True, coef_bound specifies the boundary to compute.</span>
+<span class="sd">			directly with the MSE, but needs to invert the mapping function.  </span>
+<span class="sd">			Default is False. If True, coef_bound specifies the boundary to compute.  </span>
 
-<span class="sd">		coef_bound : float, optional</span>
+<span class="sd">		`coef_bound` : float, optional  </span>
 <span class="sd">			A float specifying the confidence bounds to compute. Upper and lower</span>
 <span class="sd">			confidence bounds are computed as the inverse of m + coef_bound*sigma</span>
 <span class="sd">			where m and sigma are the mean and the std of the posterior in the GP</span>
-<span class="sd">			space.</span>
-<span class="sd">			Default is 1.96 which corresponds to the 95% confidence bounds.</span>
+<span class="sd">			space.  </span>
+<span class="sd">			Default is 1.96 which corresponds to the 95% confidence bounds.  </span>
 
-<span class="sd">		batch_size : integer, optional</span>
+<span class="sd">		`batch_size` : integer, optional  </span>
 <span class="sd">			An integer giving the maximum number of points that can be</span>
 <span class="sd">			evaluated simultaneously (depending on the available memory).</span>
 <span class="sd">			Default is None so that all given points are evaluated at the same</span>
-<span class="sd">			time.</span>
+<span class="sd">			time.  </span>
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		y : array_like, shape (n_samples,)</span>
+<span class="sd">		`y` : array_like, shape (n_samples,)  </span>
 <span class="sd">			Prediction at x.</span>
 
-<span class="sd">		MSE : array_like, optional (if eval_MSE == True)</span>
+<span class="sd">		`MSE` : array_like, optional (if eval_MSE == True)  </span>
 <span class="sd">			Mean Squared Error at x.</span>
 
-<span class="sd">		LCB : array_like, optional (if eval_confidence_bounds == True)</span>
+<span class="sd">		`LCB` : array_like, optional (if eval_confidence_bounds == True)  </span>
 <span class="sd">			Lower confidence bound.</span>
 
-<span class="sd">		UCB : array_like, optional (if eval_confidence_bounds == True)</span>
+<span class="sd">		`UCB` : array_like, optional (if eval_confidence_bounds == True)  </span>
 <span class="sd">			Upper confidence bound.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 
@@ -3326,7 +3326,7 @@ table {
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
-<span class="sd">		theta : array_like, optional</span>
+<span class="sd">		`theta` : array_like, optional</span>
 <span class="sd">			An array containing the autocorrelation parameters at which the</span>
 <span class="sd">			Gaussian Process model parameters should be determined.</span>
 <span class="sd">			Default uses the built-in autocorrelation parameters</span>
@@ -3334,11 +3334,11 @@ table {
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		reduced_likelihood_function_value : double</span>
+<span class="sd">		`reduced_likelihood_function_value` : double</span>
 <span class="sd">			The value of the reduced likelihood function associated to the</span>
 <span class="sd">			given autocorrelation parameters theta.</span>
 
-<span class="sd">		par : dict</span>
+<span class="sd">		`par` : dict</span>
 <span class="sd">			A dictionary containing the requested Gaussian Process model</span>
 <span class="sd">			parameters:</span>
 
@@ -3450,18 +3450,18 @@ table {
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
-<span class="sd">		self : All parameters are stored in the Gaussian Process model object.</span>
+<span class="sd">		`self` : All parameters are stored in the Gaussian Process model object.</span>
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		optimal_theta : array_like</span>
+<span class="sd">		`optimal_theta` : array_like</span>
 <span class="sd">			The best set of autocorrelation parameters (the sought maximizer of</span>
 <span class="sd">			the reduced likelihood function).</span>
 
-<span class="sd">		optimal_reduced_likelihood_function_value : double</span>
+<span class="sd">		`optimal_reduced_likelihood_function_value` : double</span>
 <span class="sd">			The optimal reduced likelihood function value.</span>
 
-<span class="sd">		optimal_par : dict</span>
+<span class="sd">		`optimal_par` : dict</span>
 <span class="sd">			The BLUP parameters associated to thetaOpt.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		
@@ -3919,27 +3919,27 @@ table {
   
     <div class="desc"><p>The Gaussian Copula Process model fitting method.</p>
 <h2>Parameters</h2>
-<p>X : double array_like
+<p><code>X</code> : double array_like<br />
         An array with shape (n_samples, n_features) with the input at which
-        observations were made.</p>
-<p>y : double array_like
+        observations were made.  </p>
+<p><code>y</code> : double array_like<br />
         An array with shape (n_samples, ) or shape (n_samples, n_targets)
         with the observations of the output to be predicted.
-        Currently only 1D targets are supported.</p>
-<p>detailed_y_obs : double list of list
+        Currently only 1D targets are supported.  </p>
+<p><code>detailed_y_obs</code> : double list of list<br />
         A list of length n_samples where entry at position i corresponds to 
         the mutiple noisy observations (given as a list) of the input value X[i,:], 
-        and whose mean is y[i].
+        and whose mean is y[i].<br />
         If not None, it can be used to learn the mapping function or fit the GP,
-        see parameters mapWithNoise and useAllNoisyY of the GaussianCopulaProcess class.</p>
-<p>obs_noise : double array
+        see parameters mapWithNoise and useAllNoisyY of the GaussianCopulaProcess class.  </p>
+<p><code>obs_noise</code> : double array<br />
         An array of shape (n_samples,) corresponding to the estimated noise
-        in the observed y outputs.
+        in the observed y outputs.<br />
         If not None, it can be used to model the noise with the Estimated
         Gaussian Noise method, see the model_noise parameter of the 
-        GaussianCopulaProcess class.</p>
+        GaussianCopulaProcess class.  </p>
 <h2>Returns</h2>
-<p>gcp : self
+<p><code>gcp</code> : self<br />
         A fitted Gaussian Copula Process model object awaiting data to perform
         predictions.</p></div>
   <div class="source_cont">
@@ -3950,30 +3950,30 @@ table {
 <span class="sd">	The Gaussian Copula Process model fitting method.</span>
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
-<span class="sd">	X : double array_like</span>
+<span class="sd">	`X` : double array_like  </span>
 <span class="sd">		An array with shape (n_samples, n_features) with the input at which</span>
-<span class="sd">		observations were made.</span>
-<span class="sd">	y : double array_like</span>
+<span class="sd">		observations were made.  </span>
+<span class="sd">	`y` : double array_like  </span>
 <span class="sd">		An array with shape (n_samples, ) or shape (n_samples, n_targets)</span>
 <span class="sd">		with the observations of the output to be predicted.</span>
-<span class="sd">		Currently only 1D targets are supported.</span>
-<span class="sd">	detailed_y_obs : double list of list</span>
+<span class="sd">		Currently only 1D targets are supported.  </span>
+<span class="sd">	`detailed_y_obs` : double list of list  </span>
 <span class="sd">		A list of length n_samples where entry at position i corresponds to </span>
 <span class="sd">		the mutiple noisy observations (given as a list) of the input value X[i,:], </span>
-<span class="sd">		and whose mean is y[i].</span>
+<span class="sd">		and whose mean is y[i].  </span>
 <span class="sd">		If not None, it can be used to learn the mapping function or fit the GP,</span>
-<span class="sd">		see parameters mapWithNoise and useAllNoisyY of the GaussianCopulaProcess class.</span>
-<span class="sd">	obs_noise : double array</span>
+<span class="sd">		see parameters mapWithNoise and useAllNoisyY of the GaussianCopulaProcess class.  </span>
+<span class="sd">	`obs_noise` : double array  </span>
 <span class="sd">		An array of shape (n_samples,) corresponding to the estimated noise</span>
-<span class="sd">		in the observed y outputs.</span>
+<span class="sd">		in the observed y outputs.  </span>
 <span class="sd">		If not None, it can be used to model the noise with the Estimated</span>
 <span class="sd">		Gaussian Noise method, see the model_noise parameter of the </span>
-<span class="sd">		GaussianCopulaProcess class.</span>
+<span class="sd">		GaussianCopulaProcess class.  </span>
 <span class="sd">	Returns</span>
 <span class="sd">	-------</span>
-<span class="sd">	gcp : self</span>
+<span class="sd">	`gcp` : self  </span>
 <span class="sd">		A fitted Gaussian Copula Process model object awaiting data to perform</span>
-<span class="sd">		predictions.</span>
+<span class="sd">		predictions.  </span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="c"># Run input checks</span>
 	<span class="bp">self</span><span class="o">.</span><span class="n">_check_params</span><span class="p">()</span>
@@ -4000,7 +4000,7 @@ table {
 	<span class="bp">self</span><span class="o">.</span><span class="n">thetaU</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">x_dim</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">thetaU</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetaU</span> <span class="p">)</span><span class="o">.</span><span class="n">T</span>
 	<span class="c">#print(&#39;theta has new shape &#39;+str(self.theta.shape))</span>
 		
-	<span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>		
+	<span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">sk_utils</span><span class="o">.</span><span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>		
 	<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sk_utils</span><span class="o">.</span><span class="n">check_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 	<span class="c"># Check shapes of DOE &amp; observations</span>
 	<span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
@@ -4442,116 +4442,116 @@ table {
 
     
   
-    <div class="desc"><p>This function evaluates the Gaussian Process model at x.</p>
+    <div class="desc"><p>This function evaluates the Gaussian Process model at x.  </p>
 <h2>Parameters</h2>
-<p>X : array_like
+<p><code>X</code> : array_like<br />
         An array with shape (n_eval, n_features) giving the point(s) at
-        which the prediction(s) should be made.</p>
-<p>eval_MSE : boolean, optional
+        which the prediction(s) should be made.  </p>
+<p><code>eval_MSE</code> : boolean, optional<br />
         A boolean specifying whether the Mean Squared Error should be
-        evaluated or not.
+        evaluated or not.<br />
         Default assumes evalMSE = False and evaluates only the BLUP (mean
-        prediction).</p>
-<p>transformY : boolean, optional
+        prediction).  </p>
+<p><code>transformY</code> : boolean, optional<br />
         A boolean specifying if the predicted values should correspond to
         the same space as the data given to the fit method, or to the
         warped space (in which the GP is fitted).
         Default is True. Setting to False can be useful to compute the Expected
-        Improvement in an optimization process.</p>
-<p>returnRV : boolean, optional
+        Improvement in an optimization process.  </p>
+<p><code>returnRV</code> : boolean, optional<br />
         A boolean specifying if the method should return the predicted random variables
-        at x instead of a float number.
-        Default is False.</p>
-<p>integratedPrediction : boolean, optional
+        at x instead of a float number.<br />
+        Default is False.  </p>
+<p><code>integratedPrediction</code> : boolean, optional<br />
         A boolean specifying if the method should return the fully Bayesian
         prediction, ie compute the expectation given the posterior in the
         original space. If False, the returned value is the inverse value
         (by the mapping function) of the GP prediction. This is much more faster
         as the integratedPrediction needs to numerically compute the integral.
-        Default is False.</p>
-<p>eval_confidence_bounds : boolean, optional
+        Default is False.  </p>
+<p><code>eval_confidence_bounds</code> : boolean, optional<br />
         A boolean specifying if the method should return the confidence bounds.
         Because of the non-linearity of the mapping function, this cannot be computed
-        directly with the MSE, but needs to invert the mapping function.
-        Default is False. If True, coef_bound specifies the boundary to compute.</p>
-<p>coef_bound : float, optional
+        directly with the MSE, but needs to invert the mapping function.<br />
+        Default is False. If True, coef_bound specifies the boundary to compute.  </p>
+<p><code>coef_bound</code> : float, optional<br />
         A float specifying the confidence bounds to compute. Upper and lower
         confidence bounds are computed as the inverse of m + coef_bound*sigma
         where m and sigma are the mean and the std of the posterior in the GP
-        space.
-        Default is 1.96 which corresponds to the 95% confidence bounds.</p>
-<p>batch_size : integer, optional
+        space.<br />
+        Default is 1.96 which corresponds to the 95% confidence bounds.  </p>
+<p><code>batch_size</code> : integer, optional<br />
         An integer giving the maximum number of points that can be
         evaluated simultaneously (depending on the available memory).
         Default is None so that all given points are evaluated at the same
-        time.</p>
+        time.  </p>
 <h2>Returns</h2>
-<p>y : array_like, shape (n_samples,)
+<p><code>y</code> : array_like, shape (n_samples,)<br />
         Prediction at x.</p>
-<p>MSE : array_like, optional (if eval_MSE == True)
+<p><code>MSE</code> : array_like, optional (if eval_MSE == True)<br />
         Mean Squared Error at x.</p>
-<p>LCB : array_like, optional (if eval_confidence_bounds == True)
+<p><code>LCB</code> : array_like, optional (if eval_confidence_bounds == True)<br />
         Lower confidence bound.</p>
-<p>UCB : array_like, optional (if eval_confidence_bounds == True)
+<p><code>UCB</code> : array_like, optional (if eval_confidence_bounds == True)<br />
         Upper confidence bound.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.gcp.gcp.GaussianCopulaProcess.predict', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.gcp.gcp.GaussianCopulaProcess.predict" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">eval_MSE</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">transformY</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">returnRV</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">integratedPrediction</span><span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">eval_confidence_bounds</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">coef_bound</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	This function evaluates the Gaussian Process model at x.</span>
+<span class="sd">	This function evaluates the Gaussian Process model at x.  </span>
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
-<span class="sd">	X : array_like</span>
+<span class="sd">	`X` : array_like  </span>
 <span class="sd">		An array with shape (n_eval, n_features) giving the point(s) at</span>
-<span class="sd">		which the prediction(s) should be made.</span>
-<span class="sd">	eval_MSE : boolean, optional</span>
+<span class="sd">		which the prediction(s) should be made.  </span>
+<span class="sd">	`eval_MSE` : boolean, optional  </span>
 <span class="sd">		A boolean specifying whether the Mean Squared Error should be</span>
-<span class="sd">		evaluated or not.</span>
+<span class="sd">		evaluated or not.  </span>
 <span class="sd">		Default assumes evalMSE = False and evaluates only the BLUP (mean</span>
-<span class="sd">		prediction).</span>
-<span class="sd">	transformY : boolean, optional</span>
+<span class="sd">		prediction).  </span>
+<span class="sd">	`transformY` : boolean, optional  </span>
 <span class="sd">		A boolean specifying if the predicted values should correspond to</span>
 <span class="sd">		the same space as the data given to the fit method, or to the</span>
 <span class="sd">		warped space (in which the GP is fitted).</span>
 <span class="sd">		Default is True. Setting to False can be useful to compute the Expected</span>
-<span class="sd">		Improvement in an optimization process.</span>
-<span class="sd">	returnRV : boolean, optional</span>
+<span class="sd">		Improvement in an optimization process.  </span>
+<span class="sd">	`returnRV` : boolean, optional  </span>
 <span class="sd">		A boolean specifying if the method should return the predicted random variables</span>
-<span class="sd">		at x instead of a float number.</span>
-<span class="sd">		Default is False.</span>
-<span class="sd">	integratedPrediction : boolean, optional</span>
+<span class="sd">		at x instead of a float number.  </span>
+<span class="sd">		Default is False.  </span>
+<span class="sd">	`integratedPrediction` : boolean, optional  </span>
 <span class="sd">		A boolean specifying if the method should return the fully Bayesian</span>
 <span class="sd">		prediction, ie compute the expectation given the posterior in the</span>
 <span class="sd">		original space. If False, the returned value is the inverse value</span>
 <span class="sd">		(by the mapping function) of the GP prediction. This is much more faster</span>
 <span class="sd">		as the integratedPrediction needs to numerically compute the integral.</span>
-<span class="sd">		Default is False.</span>
-<span class="sd">	eval_confidence_bounds : boolean, optional</span>
+<span class="sd">		Default is False.  </span>
+<span class="sd">	`eval_confidence_bounds` : boolean, optional  </span>
 <span class="sd">		A boolean specifying if the method should return the confidence bounds.</span>
 <span class="sd">		Because of the non-linearity of the mapping function, this cannot be computed</span>
-<span class="sd">		directly with the MSE, but needs to invert the mapping function.</span>
-<span class="sd">		Default is False. If True, coef_bound specifies the boundary to compute.</span>
-<span class="sd">	coef_bound : float, optional</span>
+<span class="sd">		directly with the MSE, but needs to invert the mapping function.  </span>
+<span class="sd">		Default is False. If True, coef_bound specifies the boundary to compute.  </span>
+<span class="sd">	`coef_bound` : float, optional  </span>
 <span class="sd">		A float specifying the confidence bounds to compute. Upper and lower</span>
 <span class="sd">		confidence bounds are computed as the inverse of m + coef_bound*sigma</span>
 <span class="sd">		where m and sigma are the mean and the std of the posterior in the GP</span>
-<span class="sd">		space.</span>
-<span class="sd">		Default is 1.96 which corresponds to the 95% confidence bounds.</span>
-<span class="sd">	batch_size : integer, optional</span>
+<span class="sd">		space.  </span>
+<span class="sd">		Default is 1.96 which corresponds to the 95% confidence bounds.  </span>
+<span class="sd">	`batch_size` : integer, optional  </span>
 <span class="sd">		An integer giving the maximum number of points that can be</span>
 <span class="sd">		evaluated simultaneously (depending on the available memory).</span>
 <span class="sd">		Default is None so that all given points are evaluated at the same</span>
-<span class="sd">		time.</span>
+<span class="sd">		time.  </span>
 <span class="sd">	Returns</span>
 <span class="sd">	-------</span>
-<span class="sd">	y : array_like, shape (n_samples,)</span>
+<span class="sd">	`y` : array_like, shape (n_samples,)  </span>
 <span class="sd">		Prediction at x.</span>
-<span class="sd">	MSE : array_like, optional (if eval_MSE == True)</span>
+<span class="sd">	`MSE` : array_like, optional (if eval_MSE == True)  </span>
 <span class="sd">		Mean Squared Error at x.</span>
-<span class="sd">	LCB : array_like, optional (if eval_confidence_bounds == True)</span>
+<span class="sd">	`LCB` : array_like, optional (if eval_confidence_bounds == True)  </span>
 <span class="sd">		Lower confidence bound.</span>
-<span class="sd">	UCB : array_like, optional (if eval_confidence_bounds == True)</span>
+<span class="sd">	`UCB` : array_like, optional (if eval_confidence_bounds == True)  </span>
 <span class="sd">		Upper confidence bound.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="c"># Check input shapes</span>
@@ -4710,16 +4710,16 @@ equivalent to maximizing the likelihood of the assumed joint Gaussian
 distribution of the observations y evaluated onto the design of
 experiments X.</p>
 <h2>Parameters</h2>
-<p>theta : array_like, optional
+<p><code>theta</code> : array_like, optional
         An array containing the autocorrelation parameters at which the
         Gaussian Process model parameters should be determined.
         Default uses the built-in autocorrelation parameters
         (ie <code>theta = self.theta_</code>).</p>
 <h2>Returns</h2>
-<p>reduced_likelihood_function_value : double
+<p><code>reduced_likelihood_function_value</code> : double
         The value of the reduced likelihood function associated to the
         given autocorrelation parameters theta.</p>
-<p>par : dict
+<p><code>par</code> : dict
         A dictionary containing the requested Gaussian Process model
         parameters:</p>
 <div class="codehilite"><pre>            sigma2
@@ -4750,17 +4750,17 @@ experiments X.</p>
 <span class="sd">	experiments X.</span>
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
-<span class="sd">	theta : array_like, optional</span>
+<span class="sd">	`theta` : array_like, optional</span>
 <span class="sd">		An array containing the autocorrelation parameters at which the</span>
 <span class="sd">		Gaussian Process model parameters should be determined.</span>
 <span class="sd">		Default uses the built-in autocorrelation parameters</span>
 <span class="sd">		(ie ``theta = self.theta_``).</span>
 <span class="sd">	Returns</span>
 <span class="sd">	-------</span>
-<span class="sd">	reduced_likelihood_function_value : double</span>
+<span class="sd">	`reduced_likelihood_function_value` : double</span>
 <span class="sd">		The value of the reduced likelihood function associated to the</span>
 <span class="sd">		given autocorrelation parameters theta.</span>
-<span class="sd">	par : dict</span>
+<span class="sd">	`par` : dict</span>
 <span class="sd">		A dictionary containing the requested Gaussian Process model</span>
 <span class="sd">		parameters:</span>
 <span class="sd">			sigma2</span>

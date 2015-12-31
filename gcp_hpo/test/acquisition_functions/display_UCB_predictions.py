@@ -24,7 +24,6 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import sys
 import os
 
 import gcp_hpo.search_utils as utils 

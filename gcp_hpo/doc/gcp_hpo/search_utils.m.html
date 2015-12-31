@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <title>gcp_hpo.search_utils API documentation</title>
-    <meta name="description" content="" />
+    <meta name="description" content="Utilities for the SmartSearch class." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1075,11 +1075,15 @@ table {
 
   <header id="section-intro">
   <h1 class="title"><span class="name">gcp_hpo.search_utils</span> module</h1>
-  
+  <p>Utilities for the SmartSearch class.</p>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.search_utils', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.search_utils" class="source">
-    <div class="codehilite"><pre><span class="c"># Author: Sebastien Dubois </span>
+    <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities for the SmartSearch class.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c"># Author: Sebastien Dubois </span>
 <span class="c">#		  for ALFA Group, CSAIL, MIT</span>
 
 <span class="c"># The MIT License (MIT)</span>
@@ -1108,16 +1112,13 @@ table {
 <span class="kn">from</span> <span class="nn">sklearn.gaussian_process</span> <span class="kn">import</span> <span class="n">GaussianProcess</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">integrate</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;../&quot;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">DeepMining.gcp_hpo.gcp.gcp</span> <span class="kn">import</span> <span class="n">GaussianCopulaProcess</span>
+<span class="kn">from</span> <span class="nn">gcp_hpo.gcp.gcp</span> <span class="kn">import</span> <span class="n">GaussianCopulaProcess</span>
 
 <span class="n">max_f_value</span> <span class="o">=</span> <span class="mf">1.</span>
 
 <span class="c">#------------------------------------ Utilities for smartSampling ------------------------------------#</span>
 
 <span class="k">def</span> <span class="nf">find_best_candidate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">raw_Y</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">rand_candidates</span><span class="p">,</span><span class="n">verbose</span><span class="p">,</span><span class="n">acquisition_function</span><span class="o">=</span><span class="s">&#39;Simple&#39;</span><span class="p">):</span>
-	
 	<span class="n">mean_Y</span><span class="p">,</span><span class="n">std_Y</span> <span class="o">=</span> <span class="p">[],[]</span>
 	<span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">raw_Y</span><span class="p">:</span>
 		<span class="n">mean_Y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">o</span><span class="p">))</span>
@@ -1354,18 +1355,19 @@ table {
 
 
 <span class="k">def</span> <span class="nf">gcp_compute_ei</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">f_best</span><span class="p">,</span><span class="n">Psi</span><span class="p">,</span><span class="n">Psi_prim</span><span class="p">):</span>
-	<span class="c"># Compute Expected improvement for GCP</span>
-	<span class="c"># m,sigma == mean, std from GP predictions</span>
-	<span class="c"># f_best == current best value observed </span>
-	<span class="c"># Psi == mapping function</span>
-	<span class="c"># Psi_prim == the derivative of the mapping function</span>
-	<span class="c"># Note : max_f_value is a boundary to fasten the integration,</span>
-	<span class="c"># for example for prediction accuracy ut shouldn&#39;t be greater</span>
-	<span class="c"># than 1.</span>
-	<span class="c"># When calling Psi and Psi_prim, normalize is set to True as here</span>
-	<span class="c"># we consider directly the observed values and not the normalized </span>
-	<span class="c"># ones (but usually when fitting the GCP there is a normalization step)</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Compute Expected improvement for GCP  </span>
+<span class="sd">	m,sigma : mean, std from GP predictions  </span>
+<span class="sd">	f_best : current best value observed   </span>
+<span class="sd">	Psi : mapping function  </span>
+<span class="sd">	Psi_prim : the derivative of the mapping function  </span>
+<span class="sd">	Note : max_f_value is a boundary to fasten the integration,</span>
+<span class="sd">	for example for prediction accuracy ut shouldn&#39;t be greater</span>
+<span class="sd">	than 1.  </span>
+<span class="sd">	When calling Psi and Psi_prim, normalize is set to True as here</span>
+<span class="sd">	we consider directly the observed values and not the normalized </span>
+<span class="sd">	ones (but usually when fitting the GCP there is a normalization step).</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span><span class="p">(</span><span class="n">f_best</span> <span class="o">&gt;</span> <span class="n">max_f_value</span><span class="p">):</span>
 		<span class="k">print</span><span class="p">(</span><span class="s">&#39;Error in compute_ei : f_best &gt; max_f_value &#39;</span><span class="p">)</span>
 	<span class="k">def</span> <span class="nf">f_to_integrate</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
@@ -1375,10 +1377,11 @@ table {
 	<span class="k">return</span> <span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="n">f_to_integrate</span><span class="p">,</span><span class="mi">0</span><span class="p">,(</span><span class="mf">2.</span><span class="o">*</span><span class="n">max_f_value</span><span class="p">)</span><span class="o">-</span><span class="n">f_best</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="k">def</span> <span class="nf">gp_ompute_ei</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">y_best</span><span class="p">):</span>
-	<span class="c"># Compute Expected improvement for GP</span>
-	<span class="c"># m,sigma == mean, std from GP predictions</span>
-	<span class="c"># f_best == current best value observed 	ei_array = np.zeros(predictions.shape[0])</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Compute Expected improvement for GP  </span>
+<span class="sd">	m,sigma : mean, std from GP predictions  </span>
+<span class="sd">	f_best : current best value observed  </span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_best</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span>
 	<span class="n">ei</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
 	<span class="k">return</span> <span class="n">ei</span>
@@ -1402,9 +1405,10 @@ table {
 	<span class="k">return</span> <span class="n">a1</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span><span class="n">a2</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>	
 
 <span class="k">def</span> <span class="nf">is_in_2darray</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
-	<span class="c"># look for element item in 2darray a</span>
-	<span class="c"># returns True if item is in a, and its index</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Look for element item in 2darray `a`  </span>
+<span class="sd">	Returns True if item is in a, and its index.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">idx0</span> <span class="o">=</span>  <span class="n">a</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 	<span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx0</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
 		<span class="n">idx1</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">idx0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -1417,9 +1421,10 @@ table {
 		<span class="k">return</span> <span class="bp">False</span><span class="p">,</span><span class="mi">0</span>
 
 <span class="k">def</span> <span class="nf">is_in_ndarray</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
-	<span class="c"># look for element item in ndarray a</span>
-	<span class="c"># returns True if item is in a, and its index</span>
-	
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Look for element item in ndarray `a`  </span>
+<span class="sd">	Returns True if item is in a, and its index.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
 	<span class="n">idx_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 	<span class="n">idxk</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -1557,7 +1562,6 @@ table {
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.search_utils.find_best_candidate', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.search_utils.find_best_candidate" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">find_best_candidate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">raw_Y</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">rand_candidates</span><span class="p">,</span><span class="n">verbose</span><span class="p">,</span><span class="n">acquisition_function</span><span class="o">=</span><span class="s">&#39;Simple&#39;</span><span class="p">):</span>
-	
 	<span class="n">mean_Y</span><span class="p">,</span><span class="n">std_Y</span> <span class="o">=</span> <span class="p">[],[]</span>
 	<span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">raw_Y</span><span class="p">:</span>
 		<span class="n">mean_Y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">o</span><span class="p">))</span>
@@ -1752,22 +1756,34 @@ table {
 
     
   
+    <div class="desc"><p>Compute Expected improvement for GCP<br />
+m,sigma : mean, std from GP predictions<br />
+f_best : current best value observed <br />
+Psi : mapping function<br />
+Psi_prim : the derivative of the mapping function<br />
+Note : max_f_value is a boundary to fasten the integration,
+for example for prediction accuracy ut shouldn't be greater
+than 1.<br />
+When calling Psi and Psi_prim, normalize is set to True as here
+we consider directly the observed values and not the normalized 
+ones (but usually when fitting the GCP there is a normalization step).</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.search_utils.gcp_compute_ei', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.search_utils.gcp_compute_ei" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">gcp_compute_ei</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">f_best</span><span class="p">,</span><span class="n">Psi</span><span class="p">,</span><span class="n">Psi_prim</span><span class="p">):</span>
-	<span class="c"># Compute Expected improvement for GCP</span>
-	<span class="c"># m,sigma == mean, std from GP predictions</span>
-	<span class="c"># f_best == current best value observed </span>
-	<span class="c"># Psi == mapping function</span>
-	<span class="c"># Psi_prim == the derivative of the mapping function</span>
-	<span class="c"># Note : max_f_value is a boundary to fasten the integration,</span>
-	<span class="c"># for example for prediction accuracy ut shouldn&#39;t be greater</span>
-	<span class="c"># than 1.</span>
-	<span class="c"># When calling Psi and Psi_prim, normalize is set to True as here</span>
-	<span class="c"># we consider directly the observed values and not the normalized </span>
-	<span class="c"># ones (but usually when fitting the GCP there is a normalization step)</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Compute Expected improvement for GCP  </span>
+<span class="sd">	m,sigma : mean, std from GP predictions  </span>
+<span class="sd">	f_best : current best value observed   </span>
+<span class="sd">	Psi : mapping function  </span>
+<span class="sd">	Psi_prim : the derivative of the mapping function  </span>
+<span class="sd">	Note : max_f_value is a boundary to fasten the integration,</span>
+<span class="sd">	for example for prediction accuracy ut shouldn&#39;t be greater</span>
+<span class="sd">	than 1.  </span>
+<span class="sd">	When calling Psi and Psi_prim, normalize is set to True as here</span>
+<span class="sd">	we consider directly the observed values and not the normalized </span>
+<span class="sd">	ones (but usually when fitting the GCP there is a normalization step).</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span><span class="p">(</span><span class="n">f_best</span> <span class="o">&gt;</span> <span class="n">max_f_value</span><span class="p">):</span>
 		<span class="k">print</span><span class="p">(</span><span class="s">&#39;Error in compute_ei : f_best &gt; max_f_value &#39;</span><span class="p">)</span>
 	<span class="k">def</span> <span class="nf">f_to_integrate</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
@@ -1791,14 +1807,18 @@ table {
 
     
   
+    <div class="desc"><p>Compute Expected improvement for GP<br />
+m,sigma : mean, std from GP predictions<br />
+f_best : current best value observed</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.search_utils.gp_ompute_ei', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.search_utils.gp_ompute_ei" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">gp_ompute_ei</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">y_best</span><span class="p">):</span>
-	<span class="c"># Compute Expected improvement for GP</span>
-	<span class="c"># m,sigma == mean, std from GP predictions</span>
-	<span class="c"># f_best == current best value observed 	ei_array = np.zeros(predictions.shape[0])</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Compute Expected improvement for GP  </span>
+<span class="sd">	m,sigma : mean, std from GP predictions  </span>
+<span class="sd">	f_best : current best value observed  </span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_best</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span>
 	<span class="n">ei</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
 	<span class="k">return</span> <span class="n">ei</span>
@@ -1818,13 +1838,16 @@ table {
 
     
   
+    <div class="desc"><p>Look for element item in 2darray <code>a</code><br />
+Returns True if item is in a, and its index.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.search_utils.is_in_2darray', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.search_utils.is_in_2darray" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">is_in_2darray</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
-	<span class="c"># look for element item in 2darray a</span>
-	<span class="c"># returns True if item is in a, and its index</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Look for element item in 2darray `a`  </span>
+<span class="sd">	Returns True if item is in a, and its index.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">idx0</span> <span class="o">=</span>  <span class="n">a</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 	<span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx0</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
 		<span class="n">idx1</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">idx0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -1851,13 +1874,16 @@ table {
 
     
   
+    <div class="desc"><p>Look for element item in ndarray <code>a</code><br />
+Returns True if item is in a, and its index.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.search_utils.is_in_ndarray', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.search_utils.is_in_ndarray" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">is_in_ndarray</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
-	<span class="c"># look for element item in ndarray a</span>
-	<span class="c"># returns True if item is in a, and its index</span>
-	
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Look for element item in ndarray `a`  </span>
+<span class="sd">	Returns True if item is in a, and its index.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
 	<span class="n">idx_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 	<span class="n">idxk</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>

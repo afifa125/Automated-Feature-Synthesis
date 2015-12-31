@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <title>gcp_hpo.gcp.gcp_utils API documentation</title>
-    <meta name="description" content="" />
+    <meta name="description" content="Utilities for the GaussianCopulaProcess class." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1064,11 +1064,15 @@ table {
 
   <header id="section-intro">
   <h1 class="title"><span class="name">gcp_hpo.gcp.gcp_utils</span> module</h1>
-  
+  <p>Utilities for the GaussianCopulaProcess class.</p>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.gcp.gcp_utils', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.gcp.gcp_utils" class="source">
-    <div class="codehilite"><pre><span class="c"># Author: Sebastien Dubois </span>
+    <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities for the GaussianCopulaProcess class.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c"># Author: Sebastien Dubois </span>
 <span class="c">#		  for ALFA Group, CSAIL, MIT</span>
 
 <span class="c"># The MIT License (MIT)</span>
@@ -1093,7 +1097,7 @@ table {
 <span class="c"># THE SOFTWARE.</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn_utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">sklearn_utils</span> <span class="kn">as</span> <span class="nn">sk_utils</span>
 
 
 <span class="k">def</span> <span class="nf">theta_toOneDim</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
@@ -1134,8 +1138,9 @@ table {
 
 	
 <span class="k">def</span> <span class="nf">find_bounds</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-	<span class="c"># to invert a function by binomial search</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Find approximate bounds for binomial search.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
 	<span class="k">while</span><span class="p">((</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">y</span><span class="p">)</span>  <span class="ow">and</span> <span class="p">(</span><span class="n">x</span><span class="o">&lt;</span><span class="mi">1000483646</span><span class="p">)</span> <span class="p">):</span>
 		<span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span>
@@ -1149,8 +1154,9 @@ table {
 	<span class="k">return</span> <span class="n">lo</span><span class="p">,</span> <span class="n">x</span>
 	
 <span class="k">def</span> <span class="nf">binary_search</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
-	<span class="c"># to invert a function by binomial search</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	To invert a function by binomial search.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">hi</span><span class="o">-</span><span class="n">lo</span><span class="p">)</span><span class="o">/</span><span class="mf">1000000.</span>
 	<span class="k">while</span> <span class="n">lo</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="p">:</span>
 		<span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">lo</span> <span class="o">+</span> <span class="n">hi</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
@@ -1167,10 +1173,11 @@ table {
 		<span class="k">return</span> <span class="n">lo</span>	
 		
 <span class="k">def</span> <span class="nf">listOfList_toArray</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">obs</span><span class="p">):</span>
-	<span class="c"># converts a list of lists (obs) into a one dimensional array </span>
-	<span class="c"># while keeping all the values in obs and repeating the parameters</span>
-	<span class="c"># so that the index correspondence between params and obs is kept</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Convert a list of lists (`obs`) into a one dimensional array </span>
+<span class="sd">	while keeping all the values in `obs` and repeating the parameters</span>
+<span class="sd">	so that the index correspondence between `params` and `obs` is kept.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">array_obs</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="n">all_params</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">obs</span><span class="p">)):</span>
@@ -1184,11 +1191,12 @@ table {
 	<span class="k">return</span> <span class="n">all_params</span><span class="p">,</span><span class="n">array_obs</span>
 
 <span class="k">def</span> <span class="nf">reshape_cluster_labels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span><span class="n">detailed_X</span><span class="p">):</span>
-	<span class="c"># reshape the list labels that matched to the params array</span>
-	<span class="c"># (containing unique values) to all_params array (parameters </span>
-	<span class="c"># are repated to match detailed_obs)</span>
-	<span class="c"># Note that repeated params appear successively</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Reshape the list labels that matched to the params array</span>
+<span class="sd">	(containing unique values) to all_params array (parameters </span>
+<span class="sd">	are repated to match detailed_obs).  </span>
+<span class="sd">	Note that repeated params appear successively.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">detailed_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 	<span class="n">unique_count</span> <span class="o">=</span> <span class="mi">0</span> <span class="c"># to map to &#39;labels&#39; list</span>
 	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">detailed_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -1212,7 +1220,6 @@ table {
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-
 <span class="sd">    D: array with shape (n_samples * (n_samples - 1) / 2, n_features)</span>
 <span class="sd">        The array of componentwise L1 cross-distances.</span>
 
@@ -1220,7 +1227,7 @@ table {
 <span class="sd">        The indices i and j of the vectors in X associated to the cross-</span>
 <span class="sd">        distances in D: D[k] = np.abs(X[ij[k, 0]] - Y[ij[k, 1]]).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">array2d</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">sk_utils</span><span class="o">.</span><span class="n">array2d</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
     <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">n_nonzero_cross_dist</span> <span class="o">=</span> <span class="n">n_samples</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
     <span class="n">ij</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_nonzero_cross_dist</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
@@ -1237,10 +1244,16 @@ table {
 	
 	
 <span class="k">def</span> <span class="nf">sq_exponential</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Squared exponential kernel.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">d</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">exponential_periodic</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Exponential periodic kernel.</span>
+<span class="sd">	&quot;&quot;&quot;</span>	
 	<span class="c"># theta is a numpy array with shape (9,1) or (9,d.shape[1])</span>
 	<span class="n">t0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span> <span class="p">)</span> <span class="o">/</span> <span class="mf">100.</span>
 	<span class="n">t1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span> <span class="p">)</span> <span class="o">/</span> <span class="mf">100.</span>
@@ -1294,12 +1307,14 @@ table {
 
     
   
+    <div class="desc"><p>To invert a function by binomial search.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.gcp.gcp_utils.binary_search', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.gcp.gcp_utils.binary_search" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">binary_search</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
-	<span class="c"># to invert a function by binomial search</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	To invert a function by binomial search.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">hi</span><span class="o">-</span><span class="n">lo</span><span class="p">)</span><span class="o">/</span><span class="mf">1000000.</span>
 	<span class="k">while</span> <span class="n">lo</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="p">:</span>
 		<span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">lo</span> <span class="o">+</span> <span class="n">hi</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
@@ -1330,10 +1345,14 @@ table {
 
     
   
+    <div class="desc"><p>Exponential periodic kernel.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.gcp.gcp_utils.exponential_periodic', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.gcp.gcp_utils.exponential_periodic" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">exponential_periodic</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Exponential periodic kernel.</span>
+<span class="sd">	&quot;&quot;&quot;</span>	
 	<span class="c"># theta is a numpy array with shape (9,1) or (9,d.shape[1])</span>
 	<span class="n">t0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span> <span class="p">)</span> <span class="o">/</span> <span class="mf">100.</span>
 	<span class="n">t1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span> <span class="p">)</span> <span class="o">/</span> <span class="mf">100.</span>
@@ -1385,12 +1404,14 @@ table {
 
     
   
+    <div class="desc"><p>Find approximate bounds for binomial search.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.gcp.gcp_utils.find_bounds', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.gcp.gcp_utils.find_bounds" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">find_bounds</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-	<span class="c"># to invert a function by binomial search</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Find approximate bounds for binomial search.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
 	<span class="k">while</span><span class="p">((</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">y</span><span class="p">)</span>  <span class="ow">and</span> <span class="p">(</span><span class="n">x</span><span class="o">&lt;</span><span class="mi">1000483646</span><span class="p">)</span> <span class="p">):</span>
 		<span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span>
@@ -1445,7 +1466,6 @@ in X.</p>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-
 <span class="sd">    D: array with shape (n_samples * (n_samples - 1) / 2, n_features)</span>
 <span class="sd">        The array of componentwise L1 cross-distances.</span>
 
@@ -1453,7 +1473,7 @@ in X.</p>
 <span class="sd">        The indices i and j of the vectors in X associated to the cross-</span>
 <span class="sd">        distances in D: D[k] = np.abs(X[ij[k, 0]] - Y[ij[k, 1]]).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">array2d</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">sk_utils</span><span class="o">.</span><span class="n">array2d</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
     <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">n_nonzero_cross_dist</span> <span class="o">=</span> <span class="n">n_samples</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
     <span class="n">ij</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_nonzero_cross_dist</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
@@ -1483,14 +1503,18 @@ in X.</p>
 
     
   
+    <div class="desc"><p>Convert a list of lists (<code>obs</code>) into a one dimensional array 
+while keeping all the values in <code>obs</code> and repeating the parameters
+so that the index correspondence between <code>params</code> and <code>obs</code> is kept.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.gcp.gcp_utils.listOfList_toArray', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.gcp.gcp_utils.listOfList_toArray" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">listOfList_toArray</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">obs</span><span class="p">):</span>
-	<span class="c"># converts a list of lists (obs) into a one dimensional array </span>
-	<span class="c"># while keeping all the values in obs and repeating the parameters</span>
-	<span class="c"># so that the index correspondence between params and obs is kept</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Convert a list of lists (`obs`) into a one dimensional array </span>
+<span class="sd">	while keeping all the values in `obs` and repeating the parameters</span>
+<span class="sd">	so that the index correspondence between `params` and `obs` is kept.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">array_obs</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="n">all_params</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">obs</span><span class="p">)):</span>
@@ -1518,15 +1542,20 @@ in X.</p>
 
     
   
+    <div class="desc"><p>Reshape the list labels that matched to the params array
+(containing unique values) to all_params array (parameters 
+are repated to match detailed_obs).<br />
+Note that repeated params appear successively.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.gcp.gcp_utils.reshape_cluster_labels', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.gcp.gcp_utils.reshape_cluster_labels" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">reshape_cluster_labels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span><span class="n">detailed_X</span><span class="p">):</span>
-	<span class="c"># reshape the list labels that matched to the params array</span>
-	<span class="c"># (containing unique values) to all_params array (parameters </span>
-	<span class="c"># are repated to match detailed_obs)</span>
-	<span class="c"># Note that repeated params appear successively</span>
-
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Reshape the list labels that matched to the params array</span>
+<span class="sd">	(containing unique values) to all_params array (parameters </span>
+<span class="sd">	are repated to match detailed_obs).  </span>
+<span class="sd">	Note that repeated params appear successively.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">detailed_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 	<span class="n">unique_count</span> <span class="o">=</span> <span class="mi">0</span> <span class="c"># to map to &#39;labels&#39; list</span>
 	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">detailed_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -1551,10 +1580,14 @@ in X.</p>
 
     
   
+    <div class="desc"><p>Squared exponential kernel.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.gcp.gcp_utils.sq_exponential', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.gcp.gcp_utils.sq_exponential" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">sq_exponential</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Squared exponential kernel.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">d</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="p">)</span>
 </pre></div>
 

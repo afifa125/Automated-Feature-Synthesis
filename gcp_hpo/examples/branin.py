@@ -1,19 +1,19 @@
-import sys
-from gcp_hpo.smart_search import SmartSearch
-import numpy as np
-import math
-
 """
-The Branin function is a classical example to evaluate nonlinear optimization algorithms.
+Testing SmartSearch on the Braning function.  
+
+The Branin function is a classic example to evaluate nonlinear optimization algorithms.  
 The goal is to find the minimum, we use here the opposite of the Branin function to match
 the maximization process.
 """
 # x in [-5,10] -  y in [0,15]
-# min is 0.398
+# min is 0.398from gcp_hpo.smart_search import SmartSearch
+
+import numpy as np
+import math
 
 def branin(x, y):
 	"""
-	The opposite of the Branin function
+	The opposite of the Branin function.
 	"""
 	result = np.square(y - (5.1/(4*np.square(math.pi)))*np.square(x) + \
 		(5/math.pi)*x - 6) + 10*(1-(1./(8*math.pi)))*np.cos(x) + 10
@@ -22,7 +22,7 @@ def branin(x, y):
 
 def noisy_branin(x, y):
 	"""
-	The opposite of the Branin function with an additive Gaussian noise
+	The opposite of the Branin function with an additive Gaussian noise.
 	"""
 	result = np.square(y - (5.1/(4*np.square(math.pi)))*np.square(x) + \
 		(5/math.pi)*x - 6) + 10*(1-(1./(8*math.pi)))*np.cos(x) + 10
@@ -71,4 +71,3 @@ search = SmartSearch(parameters,
 			detailed_res = 0)
 
 search._fit()
-
