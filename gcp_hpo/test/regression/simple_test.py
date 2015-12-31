@@ -30,11 +30,10 @@ Displays graphs and the models' likelihood.
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
-
-sys.path.append("../../")
-from gcp import GaussianCopulaProcess
 from sklearn.gaussian_process import GaussianProcess
-from DeepMining.gcp_hpo.test.function_utils import artificial_f
+
+from gcp_hpo.gcp.gcp import GaussianCopulaProcess
+from gcp_hpo.test.function_utils import artificial_f
 
 ### Set parameters ###
 parameter_bounds = np.asarray( [[0,400]] )

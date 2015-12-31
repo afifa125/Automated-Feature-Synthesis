@@ -23,8 +23,7 @@
 # THE SOFTWARE.
 
 import sys
-sys.path.append('../../..')
-from DeepMining.gcp_hpo.smart_search import SmartSearch
+from gcp_hpo.smart_search import SmartSearch
 import numpy as np
 import os
 import yaml

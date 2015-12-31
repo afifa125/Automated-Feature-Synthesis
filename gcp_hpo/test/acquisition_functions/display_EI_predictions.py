@@ -27,10 +27,9 @@ import matplotlib.pyplot as plt
 import sys
 import os
 
-sys.path.append("../../../..")
-import DeepMining.gcp_hpo.search_utils as utils 
-from DeepMining.gcp_hpo.gcp.gcp import GaussianCopulaProcess
-from DeepMining.gcp_hpo.test.function_utils import artificial_f
+import gcp_hpo.search_utils as utils 
+from gcp_hpo.gcp.gcp import GaussianCopulaProcess
+from gcp_hpo.test.function_utils import artificial_f
 
 save_plots = False
 

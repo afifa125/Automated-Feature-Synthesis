@@ -27,10 +27,9 @@ import sys
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-sys.path.append("../../../..")
-import DeepMining.gcp_hpo.search_utils as utils 
-from DeepMining.gcp_hpo.gcp.gcp import GaussianCopulaProcess
-from DeepMining.gcp_hpo.test.function_utils import branin_f
+import gcp_hpo.search_utils as utils 
+from gcp_hpo.gcp.gcp import GaussianCopulaProcess
+from gcp_hpo.test.function_utils import branin_f
 
 
 save_plots = False

@@ -31,12 +31,12 @@ Averages each test results on n_tests trials.
 import numpy as np
 import sys
 import os
-
-sys.path.append("../../../..")
-from DeepMining.gcp_hpo.gcp.gcp import GaussianCopulaProcess
-from DeepMining.gcp_hpo.test.function_utils import *
 from sklearn.gaussian_process import GaussianProcess
 from sklearn.neighbors import NearestNeighbors
+
+from gcp_hpo.gcp.gcp import GaussianCopulaProcess
+from gcp_hpo.test.function_utils import *
+
 
 save_data = False
 

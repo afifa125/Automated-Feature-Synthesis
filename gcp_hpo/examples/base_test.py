@@ -1,6 +1,5 @@
 import sys
-sys.path.append('../../..')
-from DeepMining.gcp_hpo.smart_search import SmartSearch
+from gcp_hpo.smart_search import SmartSearch
 
 from sklearn.datasets import load_digits
 from sklearn.ensemble import RandomForestClassifier
