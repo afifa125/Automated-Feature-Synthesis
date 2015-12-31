@@ -520,34 +520,34 @@ class GaussianCopulaProcess(BaseEstimator, RegressorMixin):
 
 		Parameters
 		----------
-		X : double array_like
+		`X` : double array_like  
 			An array with shape (n_samples, n_features) with the input at which
-			observations were made.
+			observations were made.  
 
-		y : double array_like
+		`y` : double array_like  
 			An array with shape (n_samples, ) or shape (n_samples, n_targets)
 			with the observations of the output to be predicted.
-			Currently only 1D targets are supported.
+			Currently only 1D targets are supported.  
 
-		detailed_y_obs : double list of list
+		`detailed_y_obs` : double list of list  
 			A list of length n_samples where entry at position i corresponds to 
 			the mutiple noisy observations (given as a list) of the input value X[i,:], 
-			and whose mean is y[i].
+			and whose mean is y[i].  
 			If not None, it can be used to learn the mapping function or fit the GP,
-			see parameters mapWithNoise and useAllNoisyY of the GaussianCopulaProcess class.
+			see parameters mapWithNoise and useAllNoisyY of the GaussianCopulaProcess class.  
 
-		obs_noise : double array
+		`obs_noise` : double array  
 			An array of shape (n_samples,) corresponding to the estimated noise
-			in the observed y outputs.
+			in the observed y outputs.  
 			If not None, it can be used to model the noise with the Estimated
 			Gaussian Noise method, see the model_noise parameter of the 
-			GaussianCopulaProcess class.
+			GaussianCopulaProcess class.  
 
 		Returns
 		-------
-		gcp : self
+		`gcp` : self  
 			A fitted Gaussian Copula Process model object awaiting data to perform
-			predictions.
+			predictions.  
 		"""
 		# Run input checks
 		self._check_params()
@@ -698,71 +698,71 @@ class GaussianCopulaProcess(BaseEstimator, RegressorMixin):
 
 	def predict(self, X, eval_MSE=False, transformY=True, returnRV=False, integratedPrediction= False, eval_confidence_bounds=False,coef_bound=1.96, batch_size=None):
 		"""
-		This function evaluates the Gaussian Process model at x.
+		This function evaluates the Gaussian Process model at x.  
 
 		Parameters
 		----------
-		X : array_like
+		`X` : array_like  
 			An array with shape (n_eval, n_features) giving the point(s) at
-			which the prediction(s) should be made.
+			which the prediction(s) should be made.  
 
-		eval_MSE : boolean, optional
+		`eval_MSE` : boolean, optional  
 			A boolean specifying whether the Mean Squared Error should be
-			evaluated or not.
+			evaluated or not.  
 			Default assumes evalMSE = False and evaluates only the BLUP (mean
-			prediction).
+			prediction).  
 
-		transformY : boolean, optional
+		`transformY` : boolean, optional  
 			A boolean specifying if the predicted values should correspond to
 			the same space as the data given to the fit method, or to the
 			warped space (in which the GP is fitted).
 			Default is True. Setting to False can be useful to compute the Expected
-			Improvement in an optimization process.
+			Improvement in an optimization process.  
 
-		returnRV : boolean, optional
+		`returnRV` : boolean, optional  
 			A boolean specifying if the method should return the predicted random variables
-			at x instead of a float number.
-			Default is False.
+			at x instead of a float number.  
+			Default is False.  
 
-		integratedPrediction : boolean, optional
+		`integratedPrediction` : boolean, optional  
 			A boolean specifying if the method should return the fully Bayesian
 			prediction, ie compute the expectation given the posterior in the
 			original space. If False, the returned value is the inverse value
 			(by the mapping function) of the GP prediction. This is much more faster
 			as the integratedPrediction needs to numerically compute the integral.
-			Default is False.
+			Default is False.  
 
-		eval_confidence_bounds : boolean, optional
+		`eval_confidence_bounds` : boolean, optional  
 			A boolean specifying if the method should return the confidence bounds.
 			Because of the non-linearity of the mapping function, this cannot be computed
-			directly with the MSE, but needs to invert the mapping function.
-			Default is False. If True, coef_bound specifies the boundary to compute.
+			directly with the MSE, but needs to invert the mapping function.  
+			Default is False. If True, coef_bound specifies the boundary to compute.  
 
-		coef_bound : float, optional
+		`coef_bound` : float, optional  
 			A float specifying the confidence bounds to compute. Upper and lower
 			confidence bounds are computed as the inverse of m + coef_bound*sigma
 			where m and sigma are the mean and the std of the posterior in the GP
-			space.
-			Default is 1.96 which corresponds to the 95% confidence bounds.
+			space.  
+			Default is 1.96 which corresponds to the 95% confidence bounds.  
 
-		batch_size : integer, optional
+		`batch_size` : integer, optional  
 			An integer giving the maximum number of points that can be
 			evaluated simultaneously (depending on the available memory).
 			Default is None so that all given points are evaluated at the same
-			time.
+			time.  
 
 		Returns
 		-------
-		y : array_like, shape (n_samples,)
+		`y` : array_like, shape (n_samples,)  
 			Prediction at x.
 
-		MSE : array_like, optional (if eval_MSE == True)
+		`MSE` : array_like, optional (if eval_MSE == True)  
 			Mean Squared Error at x.
 
-		LCB : array_like, optional (if eval_confidence_bounds == True)
+		`LCB` : array_like, optional (if eval_confidence_bounds == True)  
 			Lower confidence bound.
 
-		UCB : array_like, optional (if eval_confidence_bounds == True)
+		`UCB` : array_like, optional (if eval_confidence_bounds == True)  
 			Upper confidence bound.
 		"""
 
@@ -904,7 +904,7 @@ class GaussianCopulaProcess(BaseEstimator, RegressorMixin):
 
 		Parameters
 		----------
-		theta : array_like, optional
+		`theta` : array_like, optional
 			An array containing the autocorrelation parameters at which the
 			Gaussian Process model parameters should be determined.
 			Default uses the built-in autocorrelation parameters
@@ -912,11 +912,11 @@ class GaussianCopulaProcess(BaseEstimator, RegressorMixin):
 
 		Returns
 		-------
-		reduced_likelihood_function_value : double
+		`reduced_likelihood_function_value` : double
 			The value of the reduced likelihood function associated to the
 			given autocorrelation parameters theta.
 
-		par : dict
+		`par` : dict
 			A dictionary containing the requested Gaussian Process model
 			parameters:
 
@@ -1028,18 +1028,18 @@ class GaussianCopulaProcess(BaseEstimator, RegressorMixin):
 
 		Parameters
 		----------
-		self : All parameters are stored in the Gaussian Process model object.
+		`self` : All parameters are stored in the Gaussian Process model object.
 
 		Returns
 		-------
-		optimal_theta : array_like
+		`optimal_theta` : array_like
 			The best set of autocorrelation parameters (the sought maximizer of
 			the reduced likelihood function).
 
-		optimal_reduced_likelihood_function_value : double
+		`optimal_reduced_likelihood_function_value` : double
 			The optimal reduced likelihood function value.
 
-		optimal_par : dict
+		`optimal_par` : dict
 			The BLUP parameters associated to thetaOpt.
 		"""
 		

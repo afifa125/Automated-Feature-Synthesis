@@ -1,6 +1,6 @@
-########################    Utilities from sklearn    ########################		
-		
-"""Utilities for input validation"""
+"""
+Utilities from sklearn for input validation.
+"""
 # Authors: Olivier Grisel
 #          Gael Varoquaux
 #          Andreas Mueller

@@ -1,3 +1,7 @@
+"""
+Hyper-parameter optimization through randomized search, GP-based, and GCP-based.
+"""
+
 # Author: Sebastien Dubois 
 #		  for ALFA Group, CSAIL, MIT
 
@@ -34,7 +38,8 @@ from sklearn.metrics.scorer import check_scoring
 from sklearn.base import is_classifier, clone
 
 class SmartSearch(object):
-	""" The class for GCP-based hyper-parameter optimization.
+	"""The class for GCP-based hyper-parameter optimization.  
+	Also handling randomized and GP-based search.
 
 	**Parameters**
 	----------
@@ -314,11 +319,11 @@ class SmartSearch(object):
 
 		Parameters
 		----------
-		tested_parameter : dict, the parameter to test
+		`tested_parameter` : dict, the parameter to test
 
 		Returns
 		-------
-		score : the CV score, either the list of all cv results or
+		`score` : the CV score, either the list of all cv results or
 			the mean (depending of score_format)
 		"""
 
@@ -360,9 +365,9 @@ class SmartSearch(object):
 
 		Returns
 		-------
-		tested_parameters_ : ndarray, the parameters tested during the process
+		`tested_parameters_` : ndarray, the parameters tested during the process
 
-		cv_scores_ : if score_format == 'cv', list of all the CV results of the 
+		`cv_scores_` : if score_format == 'cv', list of all the CV results of the 
 			parameters tested; if score_format == 'avg', array of the 
 			mean CV results of the parameters tested
 		"""

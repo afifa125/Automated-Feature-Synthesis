@@ -1,3 +1,7 @@
+"""
+Utilities for the GaussianCopulaProcess class.
+"""
+
 # Author: Sebastien Dubois 
 #		  for ALFA Group, CSAIL, MIT
 
@@ -64,8 +68,9 @@ def theta_backToRealShape(theta_1dim,theta_shape):
 
 	
 def find_bounds(f, y):
-	# to invert a function by binomial search
-
+	"""
+	Find approximate bounds for binomial search.
+	"""
 	x = 1
 	while((f(x) < y)  and (x<1000483646) ):
 		x = x * 2
@@ -79,8 +84,9 @@ def find_bounds(f, y):
 	return lo, x
 	
 def binary_search(f, y, lo, hi):
-	# to invert a function by binomial search
-
+	"""
+	To invert a function by binomial search.
+	"""
 	delta = np.float(hi-lo)/1000000.
 	while lo <= hi:
 		x = (lo + hi) / 2
@@ -97,10 +103,11 @@ def binary_search(f, y, lo, hi):
 		return lo	
 		
 def listOfList_toArray(params,obs):
-	# converts a list of lists (obs) into a one dimensional array 
-	# while keeping all the values in obs and repeating the parameters
-	# so that the index correspondence between params and obs is kept
-
+	"""
+	Convert a list of lists (`obs`) into a one dimensional array 
+	while keeping all the values in `obs` and repeating the parameters
+	so that the index correspondence between `params` and `obs` is kept.
+	"""
 	array_obs = []
 	all_params = []
 	for i in range(len(obs)):
@@ -114,11 +121,12 @@ def listOfList_toArray(params,obs):
 	return all_params,array_obs
 
 def reshape_cluster_labels(labels,detailed_X):
-	# reshape the list labels that matched to the params array
-	# (containing unique values) to all_params array (parameters 
-	# are repated to match detailed_obs)
-	# Note that repeated params appear successively
-
+	"""
+	Reshape the list labels that matched to the params array
+	(containing unique values) to all_params array (parameters 
+	are repated to match detailed_obs).  
+	Note that repeated params appear successively.
+	"""
 	detailed_labels = [labels[0]]
 	unique_count = 0 # to map to 'labels' list
 	for i in range(1,detailed_X.shape[0]):
@@ -142,7 +150,6 @@ def l1_cross_distances(X):
 
     Returns
     -------
-
     D: array with shape (n_samples * (n_samples - 1) / 2, n_features)
         The array of componentwise L1 cross-distances.
 
@@ -167,10 +174,16 @@ def l1_cross_distances(X):
 	
 	
 def sq_exponential(theta,d):
+	"""
+	Squared exponential kernel.
+	"""
 	return np.exp( - np.sum( theta * d ** 2, axis=1)  )
 
 
 def exponential_periodic(theta,d):
+	"""
+	Exponential periodic kernel.
+	"""	
 	# theta is a numpy array with shape (9,1) or (9,d.shape[1])
 	t0 = np.mean(theta[0,:] ) / 100.
 	t1 = np.mean(theta[1,:] ) / 100.

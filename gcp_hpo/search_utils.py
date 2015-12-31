@@ -1,3 +1,7 @@
+"""
+Utilities for the SmartSearch class.
+"""
+
 # Author: Sebastien Dubois 
 #		  for ALFA Group, CSAIL, MIT
 
@@ -35,7 +39,6 @@ max_f_value = 1.
 #------------------------------------ Utilities for smartSampling ------------------------------------#
 
 def find_best_candidate(model, X, raw_Y, args, rand_candidates,verbose,acquisition_function='Simple'):
-	
 	mean_Y,std_Y = [],[]
 	for o in raw_Y:
 		mean_Y.append(np.mean(o))
@@ -272,18 +275,19 @@ def add_results(parameters,raw_outputs,score_outputs,std_outputs,new_param,new_o
 
 
 def gcp_compute_ei(x,m,sigma,f_best,Psi,Psi_prim):
-	# Compute Expected improvement for GCP
-	# m,sigma == mean, std from GP predictions
-	# f_best == current best value observed 
-	# Psi == mapping function
-	# Psi_prim == the derivative of the mapping function
-	# Note : max_f_value is a boundary to fasten the integration,
-	# for example for prediction accuracy ut shouldn't be greater
-	# than 1.
-	# When calling Psi and Psi_prim, normalize is set to True as here
-	# we consider directly the observed values and not the normalized 
-	# ones (but usually when fitting the GCP there is a normalization step)
-
+	"""
+	Compute Expected improvement for GCP  
+	m,sigma : mean, std from GP predictions  
+	f_best : current best value observed   
+	Psi : mapping function  
+	Psi_prim : the derivative of the mapping function  
+	Note : max_f_value is a boundary to fasten the integration,
+	for example for prediction accuracy ut shouldn't be greater
+	than 1.  
+	When calling Psi and Psi_prim, normalize is set to True as here
+	we consider directly the observed values and not the normalized 
+	ones (but usually when fitting the GCP there is a normalization step).
+	"""
 	if(f_best > max_f_value):
 		print('Error in compute_ei : f_best > max_f_value ')
 	def f_to_integrate(u):
@@ -293,10 +297,11 @@ def gcp_compute_ei(x,m,sigma,f_best,Psi,Psi_prim):
 	return integrate.quad(f_to_integrate,0,(2.*max_f_value)-f_best)[0]
 
 def gp_ompute_ei(m,sigma,y_best):
-	# Compute Expected improvement for GP
-	# m,sigma == mean, std from GP predictions
-	# f_best == current best value observed 	ei_array = np.zeros(predictions.shape[0])
-
+	"""
+	Compute Expected improvement for GP  
+	m,sigma : mean, std from GP predictions  
+	f_best : current best value observed  
+	"""
 	z = (y_best - m) / sigma
 	ei = sigma * (z * norm.cdf(z) + norm.pdf(z))
 	return ei
@@ -320,9 +325,10 @@ def compute_unique2(a1,a2):
 	return a1[idx],a2[idx]	
 
 def is_in_2darray(item,a):
-	# look for element item in 2darray a
-	# returns True if item is in a, and its index
-
+	"""
+	Look for element item in 2darray `a`  
+	Returns True if item is in a, and its index.
+	"""
 	idx0 =  a[:,0]==item[0]
 	if np.sum(idx0 > 0):
 		idx1 = (a[idx0,1] == item[1])
@@ -335,9 +341,10 @@ def is_in_2darray(item,a):
 		return False,0
 
 def is_in_ndarray(item,a):
-	# look for element item in ndarray a
-	# returns True if item is in a, and its index
-	
+	"""
+	Look for element item in ndarray `a`  
+	Returns True if item is in a, and its index.
+	"""
 	k = 0
 	idx_val = np.asarray(range(a.shape[0]))
 	idxk = range(a.shape[0])
