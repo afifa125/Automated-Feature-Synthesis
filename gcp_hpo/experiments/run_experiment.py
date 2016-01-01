@@ -1,3 +1,11 @@
+"""
+Run a hyper-parameter optimization process for the instance `test_name` 
+given as an argument when running the script. This will set the parameters 
+as defined in the configuration file `test_name/config.yml` and save the 
+data in the folder `test_name/exp_results/expX/` where X is the number given 
+to this experiment.  
+"""
+
 # Author: Sebastien Dubois 
 #     for ALFA Group, CSAIL, MIT
 

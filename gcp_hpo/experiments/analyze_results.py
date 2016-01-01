@@ -1,3 +1,15 @@
+"""
+Analyze the results of a single experiment to computes quality scores for the parameters 
+tested during the search. The quality scores are defined in the paper and aim at giving 
+a more accurate feedback than a list of cross-validation outputs. First, it should consider 
+only significant differences between the means. Second, one can smooth the results by 
+averaging on a parameter's neighborhood.  
+Results will be saved in the folder `test_name/exp_results/transformed_t_TTT_a_AAA/expX/` 
+depending on the threshold and alpha values, or in the folder 
+`test_name/exp_results/transformed_smooth_t_TTT_a_AAA_kKKK_rRRR_bBBB/expX/` if `smoothQ` 
+is set to True.
+"""
+
 # Author: Sebastien Dubois 
 #         for ALFA Group, CSAIL, MIT
 
@@ -24,6 +36,7 @@
 
 import os
 import numpy as np
+import matplotlib.pyplot as plt
 from scipy import stats
 from sklearn.neighbors import NearestNeighbors
 
@@ -34,34 +47,36 @@ def analyzeResults(test_name,n_exp,threshold,alpha,
                    sigma_s = 200.,
                    beta = 5.,
                    verbose= False):
-
     """
-
     Parameters
     ----------
-    test_name : name of the test instance, should correspond to a 
-        folder name in Test/
+    `test_name` : name of the test instance, should correspond to a 
+        folder name in test/
 
-    n_exp : the index number of the experiment to analyze
+    `n_exp` : the index number of the experiment to analyze
 
-    threshold : threshold to use to decide wether the difference between 
-        observations' means is significative, based on Welch's t-test
+    `threshold` : threshold to use to decide whether the difference between 
+        observations' means is significant, based on Welch's t-test
 
-    alpha : trade-off parameter to compute the score from the significative
+    `alpha` : trade-off parameter to compute the score from the significant
         mean and the standard deviation. score == m - alpha * std
 
-    smoothQ : boolean, optional. If True, compute the smooth quality function.
+    `smoothQ` : boolean, optional. If True, compute the smooth quality function.
         See the Deep Mining paper for details.
 
-    kneighbors_s : if smoothQ == True, number of nearest neighbors to take into 
+    `kneighbors_s` : if smoothQ == True, number of nearest neighbors to take into 
         account for the smoothing
 
-    sigma_s : if smoothQ == True, radius used to compute the coefficients based 
+    `sigma_s` : if smoothQ == True, radius used to compute the coefficients based 
         on a neighbor's return_distance for the smoothing
 
-    beta : if smoothQ == True, parameter to balance betwwen the smoothed mean and
+    `beta` : if smoothQ == True, parameter to balance between the smoothed mean and
         and the original one. m = (smoothed_mean + beta * original_mean) / (1+beta)
 
+    Returns
+    -------
+    `scores` : quality scores of the parameters tested during the search, in the same
+        order as in output file of the experiment
     """
 
     
@@ -78,7 +93,6 @@ def analyzeResults(test_name,n_exp,threshold,alpha,
         score = np.genfromtxt(folder+"/exp"+str(n_exp)+".csv",delimiter=',')
         return score
 
-
     mean_outputs = []
     std_outputs = []
     raw_outputs = []
@@ -89,7 +103,7 @@ def analyzeResults(test_name,n_exp,threshold,alpha,
     for l in f:
         l = l[1:-2]
         string_l = l.split(',')
-        raw_outputs.append( [ float(i) for i in string_l] )
+        raw_outputs.append([float(i) for i in string_l] )
     f.close()
 
     c_print = 0
@@ -192,3 +206,29 @@ def analyzeResults(test_name,n_exp,threshold,alpha,
     np.savetxt(folder+"/exp"+str(n_exp)+".csv",parameter_score,delimiter=',')
 
     return np.asarray(parameter_score)
+
+
+if __name__ == '__main__':
+    n_exp = 1
+    test_name = "MNIST"
+
+    threshold = 0.5
+    alpha = 0.5
+
+    smoothQ = False
+    kneighbors_s = 3
+    sigma_s = 200.
+    beta = 5.
+
+    verbose = True
+
+    scores = analyzeResults(test_name,n_exp,threshold,alpha,
+                            smoothQ = smoothQ,
+                            kneighbors_s = kneighbors_s,
+                            sigma_s = sigma_s,
+                            beta = beta,
+                            verbose=verbose)
+
+    fig = plt.figure(figsize=(15,7))
+    plt.plot(range(scores.shape[0]),scores)
+    plt.show() 
