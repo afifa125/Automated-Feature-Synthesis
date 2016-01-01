@@ -1,5 +1,19 @@
 """
-The `gcp_hpo.experiments` modules contains data and scripts that can be used to test GCP-based hyper-parameter optimization.
+The `gcp_hpo.experiments` modules contains data and scripts that can be used to test GCP-based hyper-parameter optimization. Designed for research purposes, 
+this module is relevant when one wants to run several hyper-parameter optimization process with different configurations, in order to compare them for example. That is why this 
+module relies on two different components: off-line and on-line computations.  
+
+### Off-line computations
+First, train and test a pipeline for many parameters, and store their performances in the folder `test_name/scoring_function`. This can be done, for example, by running `SmartSearch` 
+but with randomized search. 
+
+### On-line computations
+Simulate as many hyper-parameter optimization processes as you want, eventually with different configurations, with the script `run_experiment`. There, instead of training/testing 
+a pipeline, the performances of a parameter will actually be a query in the database built from the off-line computations.
+
+### Analyze the results
+Run `iterations_needed` to see how many parameters should be tested to reach a given gain, ie how a SmartSearch configuration performs on this test instance. `analyzed_results` is 
+here to convert the raw outputs from `run_experiment` into quality scores, to simulate what we would observe in a real case.
 
 ### Files and directory structure  
 Each test instance follows the same directory structure, and all files are in the folder `experiments/test_name`:
