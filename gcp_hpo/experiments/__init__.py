@@ -1,5 +1,5 @@
 """
-The `gcp_hpo.experiments` modules contains data and scripts that can be used to test GCP-based hyper-parameter optimization. Designed for research purposes, 
+The `gcp_hpo.experiments` module contains data and scripts that can be used to test GCP-based hyper-parameter optimization. Designed for research purposes, 
 this module is relevant when one wants to run several hyper-parameter optimization process with different configurations, in order to compare them for example. That is why this 
 module relies on two different components: off-line and on-line computations.  
 
