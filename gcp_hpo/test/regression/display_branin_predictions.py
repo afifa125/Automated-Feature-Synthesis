@@ -1,3 +1,7 @@
+"""
+Uses GCP to perform regression on the Branin function, and display the results.
+"""
+
 # Author: Sebastien Dubois 
 #		  for ALFA Group, CSAIL, MIT
 

@@ -1,3 +1,8 @@
+"""
+Comparison of regression with LGCP and GP, with different n_clusters values.
+Displays graphs and the models' likelihood.
+"""
+
 # Author: Sebastien Dubois 
 #		  for ALFA Group, CSAIL, MIT
 
@@ -22,10 +27,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""
-Comparison of regression with LGCP and GP, with different n_clusters values.
-Displays graphs and the models' likelihood.
-"""
 
 import numpy as np
 import matplotlib.pyplot as plt

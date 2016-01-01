@@ -1,3 +1,9 @@
+"""
+Fits a GCP on some training data of a custom function, and computes the 
+confidence bounds in each point, to see how the UCB criterion behaves in 
+a Bayezian optimization framework. Also display the results.
+"""
+
 # Author: Sebastien Dubois 
 #		  for ALFA Group, CSAIL, MIT
 

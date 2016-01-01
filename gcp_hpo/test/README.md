@@ -1,4 +1,5 @@
-"""
+# Test
+
 The `gcp_hpo.test` module contains some scripts to test how GCP behaves.  
 
 ### Regression
@@ -9,4 +10,3 @@ and to measure the likelihood of the fit as well as the mean squared errors of t
 ### Acquisition functions
 In GCP-based Bayezian optimization, a GCP is fitted on an unknown function and the fit is used to compute some acquisition function. The folder `acquisition_functions` folder 
 contains two scripts to see the behaviors of the Expected Improvement and the confidence bounds with GCP. 
-"""

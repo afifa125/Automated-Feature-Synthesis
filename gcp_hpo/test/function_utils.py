@@ -1,3 +1,7 @@
+"""
+Defines functions to use for test purposes.
+"""
+
 # Author: Sebastien Dubois 
 #     for ALFA Group, CSAIL, MIT
 

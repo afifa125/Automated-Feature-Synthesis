@@ -1,3 +1,9 @@
+"""
+Fits a GCP on some training data of a custom function, and computes the EI 
+(Expected Improvement) in each point, as it would be made in Bayezian 
+optimization. Also display the results.
+"""
+
 # Author: Sebastien Dubois 
 #		  for ALFA Group, CSAIL, MIT
 
