@@ -1,5 +1,5 @@
 """
-The `gcp_hpo.examples` module provide some use cases of the SmartSearch class for hyper-parameter optimization.
+The `gcp_hpo.examples` module provides some use cases of the SmartSearch class for hyper-parameter optimization.
 
 `interface` shows two different ways of using SmartSearch with basic examples: with a custom function that one 
 wants to optimize, or with an sklearn pipeline.
