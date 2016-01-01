@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <title>gcp_hpo.gcp.sklearn_utils API documentation</title>
-    <meta name="description" content="Utilities for input validation" />
+    <meta name="description" content="Utilities from sklearn for input validation." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1052,18 +1052,6 @@ table {
 
     </li>
 
-    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
-      <ul>
-        <li class="mono">
-        <span class="class_name"><a href="#gcp_hpo.gcp.sklearn_utils.DataConversionWarning">DataConversionWarning</a></span>
-        
-        </li>
-        <li class="mono">
-        <span class="class_name"><a href="#gcp_hpo.gcp.sklearn_utils.NonBLASDotWarning">NonBLASDotWarning</a></span>
-        
-        </li>
-      </ul>
-    </li>
 
     </ul>
   </div>
@@ -1077,13 +1065,13 @@ table {
 
   <header id="section-intro">
   <h1 class="title"><span class="name">gcp_hpo.gcp.sklearn_utils</span> module</h1>
-  <p>Utilities for input validation</p>
+  <p>Utilities from sklearn for input validation.</p>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.gcp.sklearn_utils', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.gcp.sklearn_utils" class="source">
-    <div class="codehilite"><pre><span class="c">########################    Utilities from sklearn    ########################		</span>
-		
-<span class="sd">&quot;&quot;&quot;Utilities for input validation&quot;&quot;&quot;</span>
+    <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities from sklearn for input validation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="c"># Authors: Olivier Grisel</span>
 <span class="c">#          Gael Varoquaux</span>
 <span class="c">#          Andreas Mueller</span>
@@ -1100,23 +1088,6 @@ table {
 
 <span class="kn">from</span> <span class="nn">sklearn.externals</span> <span class="kn">import</span> <span class="n">six</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.fixes</span> <span class="kn">import</span> <span class="n">safe_copy</span>
-
-
-<span class="k">class</span> <span class="nc">DataConversionWarning</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
-    <span class="s">&quot;A warning on implicit data conversions happening in the code&quot;</span>
-    <span class="k">pass</span>
-
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s">&quot;always&quot;</span><span class="p">,</span> <span class="n">DataConversionWarning</span><span class="p">)</span>
-
-
-<span class="k">class</span> <span class="nc">NonBLASDotWarning</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
-    <span class="s">&quot;A warning on implicit dispatch to numpy.dot&quot;</span>
-    <span class="k">pass</span>
-
-
-<span class="c"># Silenced by default to reduce verbosity. Turn on at runtime for</span>
-<span class="c"># performance profiling.</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">NonBLASDotWarning</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_assert_all_finite</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
@@ -1966,109 +1937,6 @@ False otherwise, for easier input validation.</p></div>
   </div>
   
 
-    <h2 class="section-title" id="header-classes">Classes</h2>
-      
-      <div class="item">
-      <p id="gcp_hpo.gcp.sklearn_utils.DataConversionWarning" class="name">class <span class="ident">DataConversionWarning</span></p>
-      
-  
-    <div class="desc"><p>A warning on implicit data conversions happening in the code</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.gcp.sklearn_utils.DataConversionWarning', this);">Show source &equiv;</a></p>
-  <div id="source-gcp_hpo.gcp.sklearn_utils.DataConversionWarning" class="source">
-    <div class="codehilite"><pre><span class="k">class</span> <span class="nc">DataConversionWarning</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
-    <span class="s">&quot;A warning on implicit data conversions happening in the code&quot;</span>
-    <span class="k">pass</span>
-</pre></div>
-
-  </div>
-</div>
-
-
-      <div class="class">
-          <h3>Ancestors (in MRO)</h3>
-          <ul class="class_list">
-          <li><a href="#gcp_hpo.gcp.sklearn_utils.DataConversionWarning">DataConversionWarning</a></li>
-          <li>exceptions.UserWarning</li>
-          <li>exceptions.Warning</li>
-          <li>exceptions.Exception</li>
-          <li>exceptions.BaseException</li>
-          <li>__builtin__.object</li>
-          </ul>
-          <h3>Class variables</h3>
-            <div class="item">
-            <p id="gcp_hpo.gcp.sklearn_utils.DataConversionWarning.args" class="name">var <span class="ident">args</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="gcp_hpo.gcp.sklearn_utils.DataConversionWarning.message" class="name">var <span class="ident">message</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-      </div>
-      </div>
-      
-      <div class="item">
-      <p id="gcp_hpo.gcp.sklearn_utils.NonBLASDotWarning" class="name">class <span class="ident">NonBLASDotWarning</span></p>
-      
-  
-    <div class="desc"><p>A warning on implicit dispatch to numpy.dot</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.gcp.sklearn_utils.NonBLASDotWarning', this);">Show source &equiv;</a></p>
-  <div id="source-gcp_hpo.gcp.sklearn_utils.NonBLASDotWarning" class="source">
-    <div class="codehilite"><pre><span class="k">class</span> <span class="nc">NonBLASDotWarning</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
-    <span class="s">&quot;A warning on implicit dispatch to numpy.dot&quot;</span>
-    <span class="k">pass</span>
-</pre></div>
-
-  </div>
-</div>
-
-
-      <div class="class">
-          <h3>Ancestors (in MRO)</h3>
-          <ul class="class_list">
-          <li><a href="#gcp_hpo.gcp.sklearn_utils.NonBLASDotWarning">NonBLASDotWarning</a></li>
-          <li>exceptions.UserWarning</li>
-          <li>exceptions.Warning</li>
-          <li>exceptions.Exception</li>
-          <li>exceptions.BaseException</li>
-          <li>__builtin__.object</li>
-          </ul>
-          <h3>Class variables</h3>
-            <div class="item">
-            <p id="gcp_hpo.gcp.sklearn_utils.NonBLASDotWarning.args" class="name">var <span class="ident">args</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="gcp_hpo.gcp.sklearn_utils.NonBLASDotWarning.message" class="name">var <span class="ident">message</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-      </div>
-      </div>
 
   </section>
 

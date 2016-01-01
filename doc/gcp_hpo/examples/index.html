@@ -3,8 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>gcp_hpo API documentation</title>
-    <meta name="description" content="" />
+    <title>gcp_hpo.examples API documentation</title>
+    <meta name="description" content="The `gcp_hpo.examples` module provides some use cases of the SmartSearch class for hyper-parameter o..." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1039,12 +1039,7 @@ table {
 
     <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
       <ul>
-        <li class="mono"><a href="examples/index.html">gcp_hpo.examples</a></li>
-        <li class="mono"><a href="experiments/index.html">gcp_hpo.experiments</a></li>
-        <li class="mono"><a href="gcp/index.html">gcp_hpo.gcp</a></li>
-        <li class="mono"><a href="search_utils.m.html">gcp_hpo.search_utils</a></li>
-        <li class="mono"><a href="smart_search.m.html">gcp_hpo.smart_search</a></li>
-        <li class="mono"><a href="test/index.html">gcp_hpo.test</a></li>
+        <li class="mono"><a href="interface.m.html">gcp_hpo.examples.interface</a></li>
       </ul>
     </li>
     </ul>
@@ -1058,9 +1053,27 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">gcp_hpo</span> module</h1>
+  <h1 class="title"><span class="name">gcp_hpo.examples</span> module</h1>
+  <p>The <code>gcp_hpo.examples</code> module provides some use cases of the SmartSearch class for hyper-parameter optimization.</p>
+<p><code>interface</code> shows two different ways of using SmartSearch with basic examples: with a custom function that one 
+wants to optimize, or with an sklearn pipeline.</p>
+<p><code>branin</code> and <code>har6</code> can be used to see how randomized/GP-based/GCP-based search perform on these two functions, 
+that are often used in optimization.</p>
   
-  
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.examples', this);">Show source &equiv;</a></p>
+  <div id="source-gcp_hpo.examples" class="source">
+    <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The `gcp_hpo.examples` module provides some use cases of the SmartSearch class for hyper-parameter optimization.</span>
+
+<span class="sd">`interface` shows two different ways of using SmartSearch with basic examples: with a custom function that one </span>
+<span class="sd">wants to optimize, or with an sklearn pipeline.</span>
+
+<span class="sd">`branin` and `har6` can be used to see how randomized/GP-based/GCP-based search perform on these two functions, </span>
+<span class="sd">that are often used in optimization.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+  </div>
 
   </header>
 
@@ -1070,52 +1083,10 @@ table {
 
     <h2 class="section-title" id="header-submodules">Sub-modules</h2>
       <div class="item">
-      <p class="name"><a href="examples/index.html">gcp_hpo.examples</a></p>
+      <p class="name"><a href="interface.m.html">gcp_hpo.examples.interface</a></p>
       
   
-    <div class="desc"><p>The <a href="examples/index.html"><code>gcp_hpo.examples</code></a> module provides some use cases of the SmartSearch class for hyper-parameter optimization.</p>
-<p><code>interface</code> shows two different ways of using SmartSearch with basic examples: with a custom function that one 
-wants to optimize, or with an sklearn pipeline.</p>
-<p><code>branin</code> and <code>har6</code> can b...</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="experiments/index.html">gcp_hpo.experiments</a></p>
-      
-  
-    <div class="desc"><p>The <a href="experiments/index.html"><code>gcp_hpo.experiments</code></a> module contains data and scripts that can be used to test GCP-based hyper-parameter optimization. Designed for research purposes, 
-this module is relevant when one wants to run several hyper-parameter optimization process with different configurations, in order to compare t...</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="gcp/index.html">gcp_hpo.gcp</a></p>
-      
-  
-    <div class="desc"><p>The <a href="gcp/index.html"><code>gcp_hpo.gcp</code></a> module provides the class GaussianCopulaProcess.</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="search_utils.m.html">gcp_hpo.search_utils</a></p>
-      
-  
-    <div class="desc"><p>Utilities for the SmartSearch class.</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="smart_search.m.html">gcp_hpo.smart_search</a></p>
-      
-  
-    <div class="desc"><p>Hyper-parameter optimization through randomized search, GP-based, and GCP-based.</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="test/index.html">gcp_hpo.test</a></p>
-      
-  
-    <div class="desc"><p>The <a href="test/index.html"><code>gcp_hpo.test</code></a> module contains some scripts to test how GCP behaves.  </p>
-<h3>Regression</h3>
-<p>The regression folder tests GCP on regression tasks. While <code>display_branin_function.py</code> and <code>simple_test.py</code> are mostly there to visualize what is happening, 
-<code>full_test.py</code> can be used to quantify its accurac...</p></div>
+    <div class="desc"><p>Simple examples to show how to use SmartSearch.</p></div>
 
       </div>
   </section>

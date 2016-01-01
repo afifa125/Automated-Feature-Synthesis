@@ -3,8 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>gcp_hpo API documentation</title>
-    <meta name="description" content="" />
+    <title>gcp_hpo.examples.interface API documentation</title>
+    <meta name="description" content="Simple examples to show how to use SmartSearch." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1035,18 +1035,16 @@ table {
     <h1>Index</h1>
     <ul id="index">
 
+    <li class="set"><h3><a href="#header-functions">Functions</a></h3>
+      
+  <ul>
+    <li class="mono"><a href="#gcp_hpo.examples.interface.hpo_custom_function">hpo_custom_function</a></li>
+    <li class="mono"><a href="#gcp_hpo.examples.interface.hpo_sklearn_pipeline">hpo_sklearn_pipeline</a></li>
+  </ul>
 
-
-    <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
-      <ul>
-        <li class="mono"><a href="examples/index.html">gcp_hpo.examples</a></li>
-        <li class="mono"><a href="experiments/index.html">gcp_hpo.experiments</a></li>
-        <li class="mono"><a href="gcp/index.html">gcp_hpo.gcp</a></li>
-        <li class="mono"><a href="search_utils.m.html">gcp_hpo.search_utils</a></li>
-        <li class="mono"><a href="smart_search.m.html">gcp_hpo.smart_search</a></li>
-        <li class="mono"><a href="test/index.html">gcp_hpo.test</a></li>
-      </ul>
     </li>
+
+
     </ul>
   </div>
 
@@ -1058,66 +1056,142 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">gcp_hpo</span> module</h1>
+  <h1 class="title"><span class="name">gcp_hpo.examples.interface</span> module</h1>
+  <p>Simple examples to show how to use SmartSearch.</p>
   
-  
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.examples.interface', this);">Show source &equiv;</a></p>
+  <div id="source-gcp_hpo.examples.interface" class="source">
+    <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Simple examples to show how to use SmartSearch.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">gcp_hpo.smart_search</span> <span class="kn">import</span> <span class="n">SmartSearch</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_digits</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">fetch_20newsgroups</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfTransformer</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.grid_search</span> <span class="kn">import</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">RandomizedSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+
+<span class="k">def</span> <span class="nf">hpo_custom_function</span><span class="p">():</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;kernel&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;rbf&#39;</span><span class="p">,</span> <span class="s">&#39;poly&#39;</span><span class="p">]],</span>
+                  <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span>
+                  <span class="s">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;float&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]]}</span>
+
+    <span class="k">def</span> <span class="nf">scoring_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span>
+
+    <span class="n">search</span> <span class="o">=</span> <span class="n">SmartSearch</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s">&#39;GP&#39;</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">scoring_function</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">search</span><span class="o">.</span><span class="n">_fit</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">hpo_sklearn_pipeline</span><span class="p">():</span>
+    <span class="n">iris</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">()</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+    <span class="c"># specify parameters and distributions to sample from</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span>
+                  <span class="s">&quot;max_features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">]],</span>
+                  <span class="s">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">]],</span>
+                  <span class="s">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">]],</span>
+                  <span class="s">&quot;bootstrap&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">]],</span>
+                  <span class="s">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;gini&quot;</span><span class="p">,</span> <span class="s">&quot;entropy&quot;</span><span class="p">]]}</span>
+
+    <span class="n">search</span> <span class="o">=</span> <span class="n">SmartSearch</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">search</span><span class="o">.</span><span class="n">_fit</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="k">print</span> <span class="s">&#39;Run examples&#39;</span>
+    <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">Hyper-parameter optimization with a custom function&#39;</span>
+    <span class="n">hpo_custom_function</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">Hyper-parameter optimization with an sklearn pipeline&#39;</span> \
+          <span class="s">&#39; and the Iris dataset&#39;</span>
+    <span class="n">hpo_sklearn_pipeline</span><span class="p">()</span>
+</pre></div>
+
+  </div>
 
   </header>
 
   <section id="section-items">
 
-
-
-    <h2 class="section-title" id="header-submodules">Sub-modules</h2>
-      <div class="item">
-      <p class="name"><a href="examples/index.html">gcp_hpo.examples</a></p>
+    <h2 class="section-title" id="header-functions">Functions</h2>
       
-  
-    <div class="desc"><p>The <a href="examples/index.html"><code>gcp_hpo.examples</code></a> module provides some use cases of the SmartSearch class for hyper-parameter optimization.</p>
-<p><code>interface</code> shows two different ways of using SmartSearch with basic examples: with a custom function that one 
-wants to optimize, or with an sklearn pipeline.</p>
-<p><code>branin</code> and <code>har6</code> can b...</p></div>
+  <div class="item">
+    <div class="name def" id="gcp_hpo.examples.interface.hpo_custom_function">
+    <p>def <span class="ident">hpo_custom_function</span>(</p><p>)</p>
+    </div>
+    
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="experiments/index.html">gcp_hpo.experiments</a></p>
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.examples.interface.hpo_custom_function', this);">Show source &equiv;</a></p>
+  <div id="source-gcp_hpo.examples.interface.hpo_custom_function" class="source">
+    <div class="codehilite"><pre><span class="k">def</span> <span class="nf">hpo_custom_function</span><span class="p">():</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;kernel&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;rbf&#39;</span><span class="p">,</span> <span class="s">&#39;poly&#39;</span><span class="p">]],</span>
+                  <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span>
+                  <span class="s">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;float&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]]}</span>
+
+    <span class="k">def</span> <span class="nf">scoring_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span>
+
+    <span class="n">search</span> <span class="o">=</span> <span class="n">SmartSearch</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s">&#39;GP&#39;</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">scoring_function</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">search</span><span class="o">.</span><span class="n">_fit</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
       
-  
-    <div class="desc"><p>The <a href="experiments/index.html"><code>gcp_hpo.experiments</code></a> module contains data and scripts that can be used to test GCP-based hyper-parameter optimization. Designed for research purposes, 
-this module is relevant when one wants to run several hyper-parameter optimization process with different configurations, in order to compare t...</p></div>
+  <div class="item">
+    <div class="name def" id="gcp_hpo.examples.interface.hpo_sklearn_pipeline">
+    <p>def <span class="ident">hpo_sklearn_pipeline</span>(</p><p>)</p>
+    </div>
+    
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="gcp/index.html">gcp_hpo.gcp</a></p>
-      
+    
   
-    <div class="desc"><p>The <a href="gcp/index.html"><code>gcp_hpo.gcp</code></a> module provides the class GaussianCopulaProcess.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.examples.interface.hpo_sklearn_pipeline', this);">Show source &equiv;</a></p>
+  <div id="source-gcp_hpo.examples.interface.hpo_sklearn_pipeline" class="source">
+    <div class="codehilite"><pre><span class="k">def</span> <span class="nf">hpo_sklearn_pipeline</span><span class="p">():</span>
+    <span class="n">iris</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">()</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="search_utils.m.html">gcp_hpo.search_utils</a></p>
-      
+    <span class="c"># specify parameters and distributions to sample from</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span>
+                  <span class="s">&quot;max_features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">]],</span>
+                  <span class="s">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">]],</span>
+                  <span class="s">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">]],</span>
+                  <span class="s">&quot;bootstrap&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">]],</span>
+                  <span class="s">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;gini&quot;</span><span class="p">,</span> <span class="s">&quot;entropy&quot;</span><span class="p">]]}</span>
+
+    <span class="n">search</span> <span class="o">=</span> <span class="n">SmartSearch</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">search</span><span class="o">.</span><span class="n">_fit</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
   
-    <div class="desc"><p>Utilities for the SmartSearch class.</p></div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="smart_search.m.html">gcp_hpo.smart_search</a></p>
-      
-  
-    <div class="desc"><p>Hyper-parameter optimization through randomized search, GP-based, and GCP-based.</p></div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="test/index.html">gcp_hpo.test</a></p>
-      
-  
-    <div class="desc"><p>The <a href="test/index.html"><code>gcp_hpo.test</code></a> module contains some scripts to test how GCP behaves.  </p>
-<h3>Regression</h3>
-<p>The regression folder tests GCP on regression tasks. While <code>display_branin_function.py</code> and <code>simple_test.py</code> are mostly there to visualize what is happening, 
-<code>full_test.py</code> can be used to quantify its accurac...</p></div>
-
-      </div>
   </section>
 
     </article>

@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <title>gcp_hpo.smart_search API documentation</title>
-    <meta name="description" content="" />
+    <meta name="description" content="Hyper-parameter optimization through randomized search, GP-based, and GCP-based." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1064,11 +1064,15 @@ table {
 
   <header id="section-intro">
   <h1 class="title"><span class="name">gcp_hpo.smart_search</span> module</h1>
-  
+  <p>Hyper-parameter optimization through randomized search, GP-based, and GCP-based.</p>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.smart_search', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.smart_search" class="source">
-    <div class="codehilite"><pre><span class="c"># Author: Sebastien Dubois </span>
+    <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Hyper-parameter optimization through randomized search, GP-based, and GCP-based.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c"># Author: Sebastien Dubois </span>
 <span class="c">#		  for ALFA Group, CSAIL, MIT</span>
 
 <span class="c"># The MIT License (MIT)</span>
@@ -1095,9 +1099,7 @@ table {
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span><span class="p">,</span> <span class="n">randrange</span>
 <span class="kn">import</span> <span class="nn">search_utils</span> <span class="kn">as</span> <span class="nn">utils</span> 
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;../&quot;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">DeepMining.gcp_hpo.gcp.gcp</span> <span class="kn">import</span> <span class="n">GaussianCopulaProcess</span>
+<span class="kn">from</span> <span class="nn">gcp_hpo.gcp.gcp</span> <span class="kn">import</span> <span class="n">GaussianCopulaProcess</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.gaussian_process</span> <span class="kn">import</span> <span class="n">GaussianProcess</span>
 <span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">check_cv</span><span class="p">,</span> <span class="n">_fit_and_score</span>
@@ -1105,7 +1107,8 @@ table {
 <span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">is_classifier</span><span class="p">,</span> <span class="n">clone</span>
 
 <span class="k">class</span> <span class="nc">SmartSearch</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot; The class for GCP-based hyper-parameter optimization.</span>
+	<span class="sd">&quot;&quot;&quot;The class for GCP-based hyper-parameter optimization.  </span>
+<span class="sd">	Also handling randomized and GP-based search.</span>
 
 <span class="sd">	**Parameters**</span>
 <span class="sd">	----------</span>
@@ -1385,11 +1388,11 @@ table {
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
-<span class="sd">		tested_parameter : dict, the parameter to test</span>
+<span class="sd">		`tested_parameter` : dict, the parameter to test</span>
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		score : the CV score, either the list of all cv results or</span>
+<span class="sd">		`score` : the CV score, either the list of all cv results or</span>
 <span class="sd">			the mean (depending of score_format)</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 
@@ -1431,9 +1434,9 @@ table {
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		tested_parameters_ : ndarray, the parameters tested during the process</span>
+<span class="sd">		`tested_parameters_` : ndarray, the parameters tested during the process</span>
 
-<span class="sd">		cv_scores_ : if score_format == &#39;cv&#39;, list of all the CV results of the </span>
+<span class="sd">		`cv_scores_` : if score_format == &#39;cv&#39;, list of all the CV results of the </span>
 <span class="sd">			parameters tested; if score_format == &#39;avg&#39;, array of the </span>
 <span class="sd">			mean CV results of the parameters tested</span>
 <span class="sd">		&quot;&quot;&quot;</span>
@@ -1600,7 +1603,8 @@ table {
       <p id="gcp_hpo.smart_search.SmartSearch" class="name">class <span class="ident">SmartSearch</span></p>
       
   
-    <div class="desc"><p>The class for GCP-based hyper-parameter optimization.</p>
+    <div class="desc"><p>The class for GCP-based hyper-parameter optimization.<br />
+Also handling randomized and GP-based search.</p>
 <h2><strong>Parameters</strong></h2>
 <p><code>parameters</code> : dict, parameter space on which to optimize the estimator<br />
         The keys of the dictionnary should be the names of the parameters,
@@ -1739,7 +1743,8 @@ table {
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.smart_search.SmartSearch', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.smart_search.SmartSearch" class="source">
     <div class="codehilite"><pre><span class="k">class</span> <span class="nc">SmartSearch</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot; The class for GCP-based hyper-parameter optimization.</span>
+	<span class="sd">&quot;&quot;&quot;The class for GCP-based hyper-parameter optimization.  </span>
+<span class="sd">	Also handling randomized and GP-based search.</span>
 
 <span class="sd">	**Parameters**</span>
 <span class="sd">	----------</span>
@@ -2019,11 +2024,11 @@ table {
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
-<span class="sd">		tested_parameter : dict, the parameter to test</span>
+<span class="sd">		`tested_parameter` : dict, the parameter to test</span>
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		score : the CV score, either the list of all cv results or</span>
+<span class="sd">		`score` : the CV score, either the list of all cv results or</span>
 <span class="sd">			the mean (depending of score_format)</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 
@@ -2065,9 +2070,9 @@ table {
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		tested_parameters_ : ndarray, the parameters tested during the process</span>
+<span class="sd">		`tested_parameters_` : ndarray, the parameters tested during the process</span>
 
-<span class="sd">		cv_scores_ : if score_format == &#39;cv&#39;, list of all the CV results of the </span>
+<span class="sd">		`cv_scores_` : if score_format == &#39;cv&#39;, list of all the CV results of the </span>
 <span class="sd">			parameters tested; if score_format == &#39;avg&#39;, array of the </span>
 <span class="sd">			mean CV results of the parameters tested</span>
 <span class="sd">		&quot;&quot;&quot;</span>
@@ -2668,9 +2673,9 @@ table {
     <div class="desc"><p>The score function to call in order to evaluate the quality 
 of the parameter test_parameter</p>
 <h2>Parameters</h2>
-<p>tested_parameter : dict, the parameter to test</p>
+<p><code>tested_parameter</code> : dict, the parameter to test</p>
 <h2>Returns</h2>
-<p>score : the CV score, either the list of all cv results or
+<p><code>score</code> : the CV score, either the list of all cv results or
         the mean (depending of score_format)</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.smart_search.SmartSearch.score', this);">Show source &equiv;</a></p>
@@ -2681,10 +2686,10 @@ of the parameter test_parameter</p>
 <span class="sd">	of the parameter test_parameter</span>
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
-<span class="sd">	tested_parameter : dict, the parameter to test</span>
+<span class="sd">	`tested_parameter` : dict, the parameter to test</span>
 <span class="sd">	Returns</span>
 <span class="sd">	-------</span>
-<span class="sd">	score : the CV score, either the list of all cv results or</span>
+<span class="sd">	`score` : the CV score, either the list of all cv results or</span>
 <span class="sd">		the mean (depending of score_format)</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callable_estimator</span><span class="p">:</span>
