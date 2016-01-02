@@ -6,8 +6,9 @@ The goal is to find the minimum, we use here the opposite of the Branin function
 the maximization process.
 """
 # x in [-5,10] -  y in [0,15]
-# min is 0.398from gcp_hpo.smart_search import SmartSearch
+# min is 0.398
 
+from gcp_hpo.smart_search import SmartSearch
 import numpy as np
 import math
 
