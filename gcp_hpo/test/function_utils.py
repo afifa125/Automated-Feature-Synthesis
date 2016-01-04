@@ -28,7 +28,11 @@ Defines functions to use for test purposes.
 
 import numpy as np
 import math
+import os
+import gcp_hpo.experiments
 from sklearn.neighbors import NearestNeighbors
+
+dir_ = os.path.dirname(gcp_hpo.experiments.__file__)
 
 def artificial_f(x):
 	x = x[0]
@@ -67,25 +71,25 @@ def har6(x):
 
 # MNIST data
 mnist_output = []
-f =open(("../../experiments/MNIST/scoring_function/output.csv"),'r')
+f =open((dir_ + "/MNIST/scoring_function/output.csv"),'r')
 for l in f:
   l = l[1:-3]
   string_l = l.split(',')
   mnist_output.append( [ float(i) for i in string_l] )
 f.close()
-mnist_params = np.genfromtxt(("../../experiments/MNIST/scoring_function/params.csv"),delimiter=',')
+mnist_params = np.genfromtxt((dir_ + "/MNIST/scoring_function/params.csv"),delimiter=',')
 mnist_KNN = NearestNeighbors()
 mnist_KNN.fit(mnist_params)
 
 # Popcorn data
 popcorn_output = []
-f =open(("../../experiments/Bags_of_Popcorn/scoring_function/output.csv"),'r')
+f =open((dir_ + "/Bags_of_Popcorn/scoring_function/output.csv"),'r')
 for l in f:
   l = l[1:-3]
   string_l = l.split(',')
   popcorn_output.append( [ float(i) for i in string_l] )
 f.close()
-popcorn_params = np.genfromtxt(("../../experiments/Bags_of_Popcorn/scoring_function/params.csv"),delimiter=',')
+popcorn_params = np.genfromtxt((dir_ + "/Bags_of_Popcorn/scoring_function/params.csv"),delimiter=',')
 popcorn_KNN = NearestNeighbors()
 popcorn_KNN.fit(popcorn_params)
 

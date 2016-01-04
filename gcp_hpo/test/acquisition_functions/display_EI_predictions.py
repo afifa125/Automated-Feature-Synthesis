@@ -36,92 +36,97 @@ import gcp_hpo.search_utils as utils
 from gcp_hpo.gcp.gcp import GaussianCopulaProcess
 from gcp_hpo.test.function_utils import artificial_f
 
-save_plots = False
-
-### Set parameters ###
-nugget = 1.e-10
-all_n_clusters = [1,2]
-corr_kernel = 'exponential_periodic'
-GCP_mapWithNoise= False
-sampling_model = 'GCP'
-coef_latent_mapping = 0.1
-prediction_size = 400
-
-### Set parameters ###
-parameter_bounds = np.asarray( [[0,400]] )
-training_size = 30
 
 def scoring_function(x):
 	return artificial_f([x])[0]
 
-abs = np.atleast_2d(range(0,400)).T
-f_plot = [scoring_function(i) for i in abs[:,0]]
+def main():
+	save_plots = False
 
-x_training = []
-y_training = []
-for i in range(training_size):
-	x = np.random.uniform(0,400)
-	x_training.append(x)
-	y_training.append(scoring_function(x))
-x_training = np.atleast_2d(x_training).T
-candidates = abs
+	### Set parameters ###
+	nugget = 1.e-10
+	all_n_clusters = [1,2]
+	corr_kernel = 'exponential_periodic'
+	GCP_mapWithNoise= False
+	sampling_model = 'GCP'
+	coef_latent_mapping = 0.1
+	prediction_size = 400
 
-if (save_plots):
-	if not os.path.exists('data_EI'):
-		os.mkdir('data_EI')
+	### Set parameters ###
+	parameter_bounds = np.asarray( [[0,400]] )
+	training_size = 30
 
-	# store training data
-	g=open('data_EI/training_data.csv','w')
-	g.write('x,y\n')
+	abs = np.atleast_2d(range(0,400)).T
+	f_plot = [scoring_function(i) for i in abs[:,0]]
+
+	x_training = []
+	y_training = []
 	for i in range(training_size):
-		g.write( str(x_training[i]) + ',' + str(y_training[i]) + '\n')
-	g.close()
+		x = np.random.uniform(0,400)
+		x_training.append(x)
+		y_training.append(scoring_function(x))
+	x_training = np.atleast_2d(x_training).T
+	candidates = abs
 
-count = 0
-fig = plt.figure()
-
-for n_clusters in all_n_clusters:
 	if (save_plots):
-		f=open('data_EI/cluster' + str(n_clusters) +'.csv','w')
-		f.write('x,y,pred,ei\n')
+		if not os.path.exists('data_EI'):
+			os.mkdir('data_EI')
 
-	count += 1
-	ax = fig.add_subplot(len(all_n_clusters),1,count)
-	ax.set_title("GCP prediction")
+		# store training data
+		g=open('data_EI/training_data.csv','w')
+		g.write('x,y\n')
+		for i in range(training_size):
+			g.write( str(x_training[i]) + ',' + str(y_training[i]) + '\n')
+		g.close()
 
-	gcp = GaussianCopulaProcess(nugget = nugget,
-								corr = corr_kernel,
-								random_start = 5,
-								n_clusters = n_clusters,
-	                            coef_latent_mapping = coef_latent_mapping,
-							 	mapWithNoise = GCP_mapWithNoise,
-				 				useAllNoisyY = False,
-				 				model_noise = None,
-								try_optimize = True)
-	gcp.fit(x_training,y_training)
+	count = 0
+	fig = plt.figure()
 
-	print '\nLGCP fitted -', n_clusters, 'clusters'
-	print 'Likelihood', np.exp(gcp.reduced_likelihood_function_value_)
+	for n_clusters in all_n_clusters:
+		if (save_plots):
+			f=open('data_EI/cluster' + str(n_clusters) +'.csv','w')
+			f.write('x,y,pred,ei\n')
 
-	predictions = gcp.predict(candidates,eval_MSE=False,eval_confidence_bounds=False,coef_bound = 1.96,integratedPrediction=False)
+		count += 1
+		ax = fig.add_subplot(len(all_n_clusters),1,count)
+		ax.set_title("GCP prediction")
 
-	pred,mse = gcp.predict(candidates,eval_MSE=True,transformY=False)
-	y_best =np.max(y_training)
-	sigma = np.sqrt(mse)
-	ei = [ utils.gcp_compute_ei((candidates[i]- gcp.X_mean) / gcp.X_std,pred[i],sigma[i],y_best, \
-	                gcp.mapping,gcp.mapping_derivative) \
-	        for i in range(candidates.shape[0]) ]
-	ei = np.asarray(ei)
+		gcp = GaussianCopulaProcess(nugget = nugget,
+									corr = corr_kernel,
+									random_start = 5,
+									n_clusters = n_clusters,
+		                            coef_latent_mapping = coef_latent_mapping,
+								 	mapWithNoise = GCP_mapWithNoise,
+					 				useAllNoisyY = False,
+					 				model_noise = None,
+									try_optimize = True)
+		gcp.fit(x_training,y_training)
 
-	if(save_plots):
-		for i in range(abs.shape[0]):
-			f.write( str(candidates[i,0]) + ',' + str(f_plot[i]) +',' + str(predictions[i]) + ',' + str(ei[i]) +'\n' )
-		f.close()
+		print '\nLGCP fitted -', n_clusters, 'clusters'
+		print 'Likelihood', np.exp(gcp.reduced_likelihood_function_value_)
 
-	ax.plot(abs,f_plot)
-	ax.plot(candidates,predictions,'r+',label='GCP predictions')
-	ax.plot(x_training,y_training,'bo',label='Training points')
-	ax.plot(candidates,100.*ei,'g+',label='EI')
+		predictions = gcp.predict(candidates,eval_MSE=False,eval_confidence_bounds=False,coef_bound = 1.96,integratedPrediction=False)
 
-plt.legend()
-plt.show()
+		pred,mse = gcp.predict(candidates,eval_MSE=True,transformY=False)
+		y_best =np.max(y_training)
+		sigma = np.sqrt(mse)
+		ei = [ utils.gcp_compute_ei((candidates[i]- gcp.X_mean) / gcp.X_std,pred[i],sigma[i],y_best, \
+		                gcp.mapping,gcp.mapping_derivative) \
+		        for i in range(candidates.shape[0]) ]
+		ei = np.asarray(ei)
+
+		if(save_plots):
+			for i in range(abs.shape[0]):
+				f.write( str(candidates[i,0]) + ',' + str(f_plot[i]) +',' + str(predictions[i]) + ',' + str(ei[i]) +'\n' )
+			f.close()
+
+		ax.plot(abs,f_plot)
+		ax.plot(candidates,predictions,'r+',label='GCP predictions')
+		ax.plot(x_training,y_training,'bo',label='Training points')
+		ax.plot(candidates,100.*ei,'g+',label='EI')
+
+	plt.legend()
+	plt.show()
+
+if __name__ == '__main__':
+	main()

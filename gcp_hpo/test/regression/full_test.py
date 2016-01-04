@@ -38,7 +38,6 @@ from sklearn.neighbors import NearestNeighbors
 from gcp_hpo.gcp.gcp import GaussianCopulaProcess
 from gcp_hpo.test.function_utils import *
 
-
 save_data = False
 
 ### Set parameters ###
@@ -47,9 +46,6 @@ n_clusters_max = 3
 integratedPrediction = False
 n_tests = 20
 coef_latent_mapping = 0.1
-print 'Average on n_tests =',n_tests,', nugget = ',nugget, \
-	  ', integratedPrediction = ',integratedPrediction, \
-	  ',coef_latent_mapping =',coef_latent_mapping
 
 
 all_parameter_bounds = {'artificial_f': np.asarray( [[0,400]] ),
@@ -83,26 +79,31 @@ tests = {'function' : ['har6'],
 functions = {'artificial_f':artificial_f,'branin':branin_f,'har6':har6, 'mnist':mnist_f, 'popcorn':popcorn_f}
 
 filename_suffixe = '_LGCP_EP_coef1_pred1000_20tests'
-
 files ={}
-if(save_data):
-	if not os.path.exists('data_regression_test'):
-		os.mkdir('data_regression_test')
-	for function in tests['function']:
-		# file = open(function + '_pred1000_20tests.csv','w')
-		# file.write('Training size,Likelihood_GP,lkh_err_GP,SMSE_GP,smse_err_GP,\
-		# 	Likelihood_GCP_SE,lkh_err_GCP_SE,SMSE_GCP_SE,smse_err_GCP_SE,\
-		# 	Likelihood_GCP_EP,lkh_err_GCP_EP,SMSE_GCP_EP,smse_err_GCP_EP\n')
-		file = open('data_regression_test/'+ function + filename_suffixe + '.csv','w')
-		print 'Writing resutls in file...', 'data_regression_test/'+ function + filename_suffixe
-		file.write('Training size,Likelihood_GP,lkh_err_GP,SMSE_GP,smse_err_GP')
-		for n in range(n_clusters_max):
-			file.write(',Likelihood_' + str(n) \
-				+ ',lkh_err_' + str(n) \
-				+ ',SMSE_' + str(n) \
-				+ ',smse_err_' + str(n))
-		file.write('\n')
-		files[function] = file
+
+def init():
+	print 'Average on n_tests =',n_tests,', nugget = ',nugget, \
+		  ', integratedPrediction = ',integratedPrediction, \
+		  ',coef_latent_mapping =',coef_latent_mapping
+
+	if(save_data):
+		if not os.path.exists('data_regression_test'):
+			os.mkdir('data_regression_test')
+		for function in tests['function']:
+			# file = open(function + '_pred1000_20tests.csv','w')
+			# file.write('Training size,Likelihood_GP,lkh_err_GP,SMSE_GP,smse_err_GP,\
+			# 	Likelihood_GCP_SE,lkh_err_GCP_SE,SMSE_GCP_SE,smse_err_GCP_SE,\
+			# 	Likelihood_GCP_EP,lkh_err_GCP_EP,SMSE_GCP_EP,smse_err_GCP_EP\n')
+			file = open('data_regression_test/'+ function + filename_suffixe + '.csv','w')
+			print 'Writing resutls in file...', 'data_regression_test/'+ function + filename_suffixe
+			file.write('Training size,Likelihood_GP,lkh_err_GP,SMSE_GP,smse_err_GP')
+			for n in range(n_clusters_max):
+				file.write(',Likelihood_' + str(n) \
+					+ ',lkh_err_' + str(n) \
+					+ ',SMSE_' + str(n) \
+					+ ',smse_err_' + str(n))
+			file.write('\n')
+			files[function] = file
 
 def compute_unique2(a1,a2):
 	# keep only unique rows of a1, and delete the corresponding rows in a2
@@ -168,33 +169,35 @@ def run_test(training_size,prediction_size,function_name,corr_kernel,n_cluster,p
 	likelihood = np.exp(likelihood)
 	return [mse,likelihood]
 
-# print results
-for f in tests['function']:
-	print ' **  Test function',f,' ** '
-	if(save_data):
-		file = files[f]
-	for t_size in training_sizes[f]:
-		for p_size in prediction_sizes[f]:
-			print 'Training size :',t_size,'- Prediction size :',p_size
-			res = np.asarray( [run_test(t_size,p_size,f,'',0,prior='GP') for j in range(n_tests)] )
-			print '\t\t\t\t GP - Lklhood =',np.mean(res[:,1]),'\t',np.std(res[:,1]),'\t- MSE =',np.mean(res[:,0]),'\t',np.std(res[:,0]),'\n'
-			if(save_data):
-				# file.write(str(t_size) + ',')
-				file.write(str(t_size) + ',' + str(np.mean(res[:,1])) + ',' + str(np.std(res[:,1])) + ',' + str(np.mean(res[:,0])) + ',' + str(np.std(res[:,0]) ) +',' )
-			for k in tests['corr_kernel']:
-				for n_clusters in range(1,n_clusters_max):
-					res = np.asarray( [run_test(t_size,p_size,f,k,n_clusters) for j in range(n_tests)] )
-					idx = (res[:,0] < 10000)
-					if( np.sum(idx) != n_tests):
-						print('Warning : only ' + str(np.sum(idx)) +' tests passed')
-						res = res[idx,:]
-					print 'corr_kernel:',k,'- n_clusters:',n_clusters,'\t- Lklhood =',np.mean(res[:,1]),'\t',np.std(res[:,1]),'\t- MSE =',np.mean(res[:,0]),'\t',np.std(res[:,0])
-					if(save_data):
-						file.write( str(np.mean(res[:,1])) + ',' + str(np.std(res[:,1])) + ',' + str(np.mean(res[:,0])) + ',' + str(np.std(res[:,0]) ) +',' )
+def main():
+	for f in tests['function']:
+		print ' **  Test function',f,' ** '
+		if(save_data):
+			file = files[f]
+		for t_size in training_sizes[f]:
+			for p_size in prediction_sizes[f]:
+				print 'Training size :',t_size,'- Prediction size :',p_size
+				res = np.asarray( [run_test(t_size,p_size,f,'',0,prior='GP') for j in range(n_tests)] )
+				print '\t\t\t\t GP - Lklhood =',np.mean(res[:,1]),'\t',np.std(res[:,1]),'\t- MSE =',np.mean(res[:,0]),'\t',np.std(res[:,0]),'\n'
 				if(save_data):
-					file.write('\n')
+					# file.write(str(t_size) + ',')
+					file.write(str(t_size) + ',' + str(np.mean(res[:,1])) + ',' + str(np.std(res[:,1])) + ',' + str(np.mean(res[:,0])) + ',' + str(np.std(res[:,0]) ) +',' )
+				for k in tests['corr_kernel']:
+					for n_clusters in range(1,n_clusters_max):
+						res = np.asarray( [run_test(t_size,p_size,f,k,n_clusters) for j in range(n_tests)] )
+						idx = (res[:,0] < 10000)
+						if( np.sum(idx) != n_tests):
+							print('Warning : only ' + str(np.sum(idx)) +' tests passed')
+							res = res[idx,:]
+						print 'corr_kernel:',k,'- n_clusters:',n_clusters,'\t- Lklhood =',np.mean(res[:,1]),'\t',np.std(res[:,1]),'\t- MSE =',np.mean(res[:,0]),'\t',np.std(res[:,0])
+						if(save_data):
+							file.write( str(np.mean(res[:,1])) + ',' + str(np.std(res[:,1])) + ',' + str(np.mean(res[:,0])) + ',' + str(np.std(res[:,0]) ) +',' )
+					if(save_data):
+						file.write('\n')
+			print ''
 		print ''
 	print ''
-print ''
 
-
+if __name__ == '__main__':
+	init()
+	main()
