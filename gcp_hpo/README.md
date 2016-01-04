@@ -14,10 +14,12 @@ Check the examples for details on how to use SmartSearch.
 *An example of the Smart Search process. The function to optimize is the blue line, and we start the process with 10 random points for which we know the real value (blue points). At each step, the performance function is modeled by a GCP and predictions are made (red crosses) based on the known data (blue and red points). The cyan zone shows the 95% condifence bounds. At each step the selected point (the one that maximizes the upper confidence bound) is shown in yellow. This point is then added to the known data so that the model becomes more and more accurate.*  
 
 
-### Real-world examples for research ###
+### Real-world examples for hyper-parameter optimization research ### - `gcp_hpo.experiments`
 Two real examples are included in the repository: the **Sentiment Analysis problem** for IMDB reviews (cf. [Kaggle's competition](https://www.kaggle.com/c/word2vec-nlp-tutorial)) in folder `experiments/Bags_of_Popcorn`, and the **Handwritten digits** one from the MNIST database (cf. [Kaggle's competition](https://www.kaggle.com/c/digit-recognizer)) in folder `experiments/MNIST`.
 These can be used to test the GCP and GCP-based hyper-parameter optimization faster. See the `experiments` folder for more details on how to use the package for research purposes.  
 
+### Understand Gaussian Copula Processes ### - `gcp_hpo.test`
+In the `test` folder, you will find some utilities and scripts to either quantify the performances of GCP for regression purposes (eg. `test/full_test.py`) or to display what it does.  
 
 ---------------
 
