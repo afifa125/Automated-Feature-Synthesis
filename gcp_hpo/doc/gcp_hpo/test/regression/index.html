@@ -3,11 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>gcp_hpo.test API documentation</title>
-    <meta name="description" content="The `gcp_hpo.test` module contains some scripts to test how GCP behaves.  
-
-### Regression
-The regre..." />
+    <title>gcp_hpo.test.regression API documentation</title>
+    <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1042,9 +1039,9 @@ table {
 
     <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
       <ul>
-        <li class="mono"><a href="acquisition_functions/index.html">gcp_hpo.test.acquisition_functions</a></li>
-        <li class="mono"><a href="function_utils.m.html">gcp_hpo.test.function_utils</a></li>
-        <li class="mono"><a href="regression/index.html">gcp_hpo.test.regression</a></li>
+        <li class="mono"><a href="display_branin_predictions.m.html">gcp_hpo.test.regression.display_branin_predictions</a></li>
+        <li class="mono"><a href="full_test.m.html">gcp_hpo.test.regression.full_test</a></li>
+        <li class="mono"><a href="simple_test.m.html">gcp_hpo.test.regression.simple_test</a></li>
       </ul>
     </li>
     </ul>
@@ -1058,33 +1055,9 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">gcp_hpo.test</span> module</h1>
-  <p>The <code>gcp_hpo.test</code> module contains some scripts to test how GCP behaves.  </p>
-<h3>Regression</h3>
-<p>The regression folder tests GCP on regression tasks. While <code>display_branin_function.py</code> and <code>simple_test.py</code> are mostly there to visualize what is happening, 
-<code>full_test.py</code> can be used to quantify its accuracy. More precisely, this enables to test GCP for regression on different functions (see the file <code>function_utils.py</code>) 
-and to measure the likelihood of the fit as well as the mean squared errors of the predictions.</p>
-<h3>Acquisition functions</h3>
-<p>In GCP-based Bayezian optimization, a GCP is fitted on an unknown function and the fit is used to compute some acquisition function. The folder <code>acquisition_functions</code> folder 
-contains two scripts to see the behaviors of the Expected Improvement and the confidence bounds with GCP.</p>
+  <h1 class="title"><span class="name">gcp_hpo.test.regression</span> module</h1>
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.test', this);">Show source &equiv;</a></p>
-  <div id="source-gcp_hpo.test" class="source">
-    <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">The `gcp_hpo.test` module contains some scripts to test how GCP behaves.  </span>
-
-<span class="sd">### Regression</span>
-<span class="sd">The regression folder tests GCP on regression tasks. While `display_branin_function.py` and `simple_test.py` are mostly there to visualize what is happening, </span>
-<span class="sd">`full_test.py` can be used to quantify its accuracy. More precisely, this enables to test GCP for regression on different functions (see the file `function_utils.py`) </span>
-<span class="sd">and to measure the likelihood of the fit as well as the mean squared errors of the predictions.</span>
-
-<span class="sd">### Acquisition functions</span>
-<span class="sd">In GCP-based Bayezian optimization, a GCP is fitted on an unknown function and the fit is used to compute some acquisition function. The folder `acquisition_functions` folder </span>
-<span class="sd">contains two scripts to see the behaviors of the Expected Improvement and the confidence bounds with GCP. </span>
-<span class="sd">&quot;&quot;&quot;</span>
-</pre></div>
-
-  </div>
+  
 
   </header>
 
@@ -1094,22 +1067,27 @@ contains two scripts to see the behaviors of the Expected Improvement and the co
 
     <h2 class="section-title" id="header-submodules">Sub-modules</h2>
       <div class="item">
-      <p class="name"><a href="acquisition_functions/index.html">gcp_hpo.test.acquisition_functions</a></p>
+      <p class="name"><a href="display_branin_predictions.m.html">gcp_hpo.test.regression.display_branin_predictions</a></p>
       
   
+    <div class="desc"><p>Uses GCP to perform regression on the Branin function, and display the results.</p></div>
 
       </div>
       <div class="item">
-      <p class="name"><a href="function_utils.m.html">gcp_hpo.test.function_utils</a></p>
+      <p class="name"><a href="full_test.m.html">gcp_hpo.test.regression.full_test</a></p>
       
   
-    <div class="desc"><p>Defines functions to use for test purposes.</p></div>
+    <div class="desc"><p>Performs all regression tests for LGCP with different functions, and save the results in a file.<br />
+Handles different training sizes, predictions sizes, n_clusters for LGCP, and compares this with GP.<br />
+Averages each test results on n_tests trials.</p></div>
 
       </div>
       <div class="item">
-      <p class="name"><a href="regression/index.html">gcp_hpo.test.regression</a></p>
+      <p class="name"><a href="simple_test.m.html">gcp_hpo.test.regression.simple_test</a></p>
       
   
+    <div class="desc"><p>Comparison of regression with LGCP and GP, with different n_clusters values.
+Displays graphs and the models' likelihood.</p></div>
 
       </div>
   </section>

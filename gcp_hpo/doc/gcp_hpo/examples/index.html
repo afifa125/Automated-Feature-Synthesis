@@ -3,11 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>gcp_hpo.test API documentation</title>
-    <meta name="description" content="The `gcp_hpo.test` module contains some scripts to test how GCP behaves.  
-
-### Regression
-The regre..." />
+    <title>gcp_hpo.examples API documentation</title>
+    <meta name="description" content="The `gcp_hpo.examples` module provides some use cases of the SmartSearch class for hyper-parameter o..." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1042,9 +1039,9 @@ table {
 
     <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
       <ul>
-        <li class="mono"><a href="acquisition_functions/index.html">gcp_hpo.test.acquisition_functions</a></li>
-        <li class="mono"><a href="function_utils.m.html">gcp_hpo.test.function_utils</a></li>
-        <li class="mono"><a href="regression/index.html">gcp_hpo.test.regression</a></li>
+        <li class="mono"><a href="branin.m.html">gcp_hpo.examples.branin</a></li>
+        <li class="mono"><a href="har6.m.html">gcp_hpo.examples.har6</a></li>
+        <li class="mono"><a href="interface.m.html">gcp_hpo.examples.interface</a></li>
       </ul>
     </li>
     </ul>
@@ -1058,29 +1055,23 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">gcp_hpo.test</span> module</h1>
-  <p>The <code>gcp_hpo.test</code> module contains some scripts to test how GCP behaves.  </p>
-<h3>Regression</h3>
-<p>The regression folder tests GCP on regression tasks. While <code>display_branin_function.py</code> and <code>simple_test.py</code> are mostly there to visualize what is happening, 
-<code>full_test.py</code> can be used to quantify its accuracy. More precisely, this enables to test GCP for regression on different functions (see the file <code>function_utils.py</code>) 
-and to measure the likelihood of the fit as well as the mean squared errors of the predictions.</p>
-<h3>Acquisition functions</h3>
-<p>In GCP-based Bayezian optimization, a GCP is fitted on an unknown function and the fit is used to compute some acquisition function. The folder <code>acquisition_functions</code> folder 
-contains two scripts to see the behaviors of the Expected Improvement and the confidence bounds with GCP.</p>
+  <h1 class="title"><span class="name">gcp_hpo.examples</span> module</h1>
+  <p>The <code>gcp_hpo.examples</code> module provides some use cases of the SmartSearch class for hyper-parameter optimization.</p>
+<p><code>interface</code> shows two different ways of using SmartSearch with basic examples: with a custom function that one 
+wants to optimize, or with an sklearn pipeline.</p>
+<p><code>branin</code> and <code>har6</code> can be used to see how randomized/GP-based/GCP-based search perform on these two functions, 
+that are often used in optimization.</p>
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.test', this);">Show source &equiv;</a></p>
-  <div id="source-gcp_hpo.test" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.examples', this);">Show source &equiv;</a></p>
+  <div id="source-gcp_hpo.examples" class="source">
     <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">The `gcp_hpo.test` module contains some scripts to test how GCP behaves.  </span>
+<span class="sd">The `gcp_hpo.examples` module provides some use cases of the SmartSearch class for hyper-parameter optimization.</span>
 
-<span class="sd">### Regression</span>
-<span class="sd">The regression folder tests GCP on regression tasks. While `display_branin_function.py` and `simple_test.py` are mostly there to visualize what is happening, </span>
-<span class="sd">`full_test.py` can be used to quantify its accuracy. More precisely, this enables to test GCP for regression on different functions (see the file `function_utils.py`) </span>
-<span class="sd">and to measure the likelihood of the fit as well as the mean squared errors of the predictions.</span>
+<span class="sd">`interface` shows two different ways of using SmartSearch with basic examples: with a custom function that one </span>
+<span class="sd">wants to optimize, or with an sklearn pipeline.</span>
 
-<span class="sd">### Acquisition functions</span>
-<span class="sd">In GCP-based Bayezian optimization, a GCP is fitted on an unknown function and the fit is used to compute some acquisition function. The folder `acquisition_functions` folder </span>
-<span class="sd">contains two scripts to see the behaviors of the Expected Improvement and the confidence bounds with GCP. </span>
+<span class="sd">`branin` and `har6` can be used to see how randomized/GP-based/GCP-based search perform on these two functions, </span>
+<span class="sd">that are often used in optimization.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
@@ -1094,22 +1085,28 @@ contains two scripts to see the behaviors of the Expected Improvement and the co
 
     <h2 class="section-title" id="header-submodules">Sub-modules</h2>
       <div class="item">
-      <p class="name"><a href="acquisition_functions/index.html">gcp_hpo.test.acquisition_functions</a></p>
+      <p class="name"><a href="branin.m.html">gcp_hpo.examples.branin</a></p>
       
   
+    <div class="desc"><p>Testing SmartSearch on the Braning function.  </p>
+<p>The Branin function is a classic example to evaluate nonlinear optimization algorithms.<br />
+The goal is to find the minimum, we use here the opposite of the Branin function to match
+the maximization process.</p></div>
 
       </div>
       <div class="item">
-      <p class="name"><a href="function_utils.m.html">gcp_hpo.test.function_utils</a></p>
+      <p class="name"><a href="har6.m.html">gcp_hpo.examples.har6</a></p>
       
   
-    <div class="desc"><p>Defines functions to use for test purposes.</p></div>
+    <div class="desc"><p>Testing SmartSearch on the Hartmann 6D function.  </p>
+<p>The Hartmann 6D function is a classic example to evaluate nonlinear optimization algorithms.</p></div>
 
       </div>
       <div class="item">
-      <p class="name"><a href="regression/index.html">gcp_hpo.test.regression</a></p>
+      <p class="name"><a href="interface.m.html">gcp_hpo.examples.interface</a></p>
       
   
+    <div class="desc"><p>Simple examples to show how to use SmartSearch.</p></div>
 
       </div>
   </section>

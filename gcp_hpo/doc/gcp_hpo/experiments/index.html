@@ -3,11 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>gcp_hpo.test API documentation</title>
-    <meta name="description" content="The `gcp_hpo.test` module contains some scripts to test how GCP behaves.  
-
-### Regression
-The regre..." />
+    <title>gcp_hpo.experiments API documentation</title>
+    <meta name="description" content="The `gcp_hpo.experiments` module contains data and scripts that can be used to test GCP-based hyper-..." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1042,9 +1039,9 @@ table {
 
     <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
       <ul>
-        <li class="mono"><a href="acquisition_functions/index.html">gcp_hpo.test.acquisition_functions</a></li>
-        <li class="mono"><a href="function_utils.m.html">gcp_hpo.test.function_utils</a></li>
-        <li class="mono"><a href="regression/index.html">gcp_hpo.test.regression</a></li>
+        <li class="mono"><a href="analyze_results.m.html">gcp_hpo.experiments.analyze_results</a></li>
+        <li class="mono"><a href="iterations_needed.m.html">gcp_hpo.experiments.iterations_needed</a></li>
+        <li class="mono"><a href="run_experiment.m.html">gcp_hpo.experiments.run_experiment</a></li>
       </ul>
     </li>
     </ul>
@@ -1058,29 +1055,75 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">gcp_hpo.test</span> module</h1>
-  <p>The <code>gcp_hpo.test</code> module contains some scripts to test how GCP behaves.  </p>
-<h3>Regression</h3>
-<p>The regression folder tests GCP on regression tasks. While <code>display_branin_function.py</code> and <code>simple_test.py</code> are mostly there to visualize what is happening, 
-<code>full_test.py</code> can be used to quantify its accuracy. More precisely, this enables to test GCP for regression on different functions (see the file <code>function_utils.py</code>) 
-and to measure the likelihood of the fit as well as the mean squared errors of the predictions.</p>
-<h3>Acquisition functions</h3>
-<p>In GCP-based Bayezian optimization, a GCP is fitted on an unknown function and the fit is used to compute some acquisition function. The folder <code>acquisition_functions</code> folder 
-contains two scripts to see the behaviors of the Expected Improvement and the confidence bounds with GCP.</p>
+  <h1 class="title"><span class="name">gcp_hpo.experiments</span> module</h1>
+  <p>The <code>gcp_hpo.experiments</code> module contains data and scripts that can be used to test GCP-based hyper-parameter optimization. Designed for research purposes, 
+this module is relevant when one wants to run several hyper-parameter optimization process with different configurations, in order to compare them for example. That is why this 
+module relies on two different components: off-line and on-line computations.  </p>
+<h3>Off-line computations</h3>
+<p>First, train and test a pipeline for many parameters, and store their performances in the folder <code>test_name/scoring_function</code>. This can be done, for example, by running <code>SmartSearch</code> 
+but with randomized search. </p>
+<h3>On-line computations</h3>
+<p>Simulate as many hyper-parameter optimization processes as you want, eventually with different configurations, with the script <code>run_experiment</code>. There, instead of training/testing 
+a pipeline, the performances of a parameter will actually be a query in the database built from the off-line computations.</p>
+<h3>Analyze the results</h3>
+<p>Run <code>iterations_needed</code> to see how many parameters should be tested to reach a given gain, ie how a SmartSearch configuration performs on this test instance. <code>analyzed_results</code> is 
+here to convert the raw outputs from <code>run_experiment</code> into quality scores, to simulate what we would observe in a real case.</p>
+<h3>Files and directory structure</h3>
+<p>Each test instance follows the same directory structure, and all files are in the folder <code>experiments/test_name</code>:  </p>
+<ul>
+<li>
+<p><code>config.yml</code> : a yaml file to set the parameters used to run <code>SmartSearch</code>  </p>
+</li>
+<li>
+<p><code>scoring_function/</code> : data from off-line computations. <code>params.csv</code> contains the parameters tested, and <code>output.csv</code> the raw outputs given by the scoring function (all the cross-validation estimations). The files <em>true_score_t_TTT_a_AAA</em> contain the quality scores Q computed with a threshold == TTT and alpha == AAA (see <em>considering only significant differences</em> in the paper), using all the data available; this is supposed to represent the ground truth about the performance function.  </p>
+</li>
+<li>
+<p><code>exp_results/expXXX/</code> : data returned by <code>runExperiment</code>, where XXX is the number set in the config file.  </p>
+</li>
+<li>
+<p><code>exp_results/transformed_t_TTT_a_AAA/expXXX/</code> : analyzed results from the trial expXXX, computed by run_result_analysis with a threshold == TTT and alpha == AAA.   </p>
+</li>
+<li>
+<p><code>exp_results/transformed_smooth_t_TTT_a_AAA_kKKK_rRRR_bBBB/expXXX/</code> :  analyzed results from the trial expXXX with the <em>smooth</em> quality function, computed by <code>run_result_analysis</code> with a threshold == TTT, alpha == AAA, using the nearest KKK neighbors, a radius coefficient RRR and beta == BBB.   </p>
+</li>
+<li>
+<p><code>exp_results/iterations_needed/expXXX_YYY_t_TTT_a_AAA</code> : the mean, median, first and third quartiles of the iterations needed to reach a given score gain, over experiments XXX to YYY. The score is actually the true score computed with a threshold == TTT and alpha == AAA.</p>
+</li>
+</ul>
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.test', this);">Show source &equiv;</a></p>
-  <div id="source-gcp_hpo.test" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.experiments', this);">Show source &equiv;</a></p>
+  <div id="source-gcp_hpo.experiments" class="source">
     <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">The `gcp_hpo.test` module contains some scripts to test how GCP behaves.  </span>
+<span class="sd">The `gcp_hpo.experiments` module contains data and scripts that can be used to test GCP-based hyper-parameter optimization. Designed for research purposes, </span>
+<span class="sd">this module is relevant when one wants to run several hyper-parameter optimization process with different configurations, in order to compare them for example. That is why this </span>
+<span class="sd">module relies on two different components: off-line and on-line computations.  </span>
 
-<span class="sd">### Regression</span>
-<span class="sd">The regression folder tests GCP on regression tasks. While `display_branin_function.py` and `simple_test.py` are mostly there to visualize what is happening, </span>
-<span class="sd">`full_test.py` can be used to quantify its accuracy. More precisely, this enables to test GCP for regression on different functions (see the file `function_utils.py`) </span>
-<span class="sd">and to measure the likelihood of the fit as well as the mean squared errors of the predictions.</span>
+<span class="sd">### Off-line computations</span>
+<span class="sd">First, train and test a pipeline for many parameters, and store their performances in the folder `test_name/scoring_function`. This can be done, for example, by running `SmartSearch` </span>
+<span class="sd">but with randomized search. </span>
 
-<span class="sd">### Acquisition functions</span>
-<span class="sd">In GCP-based Bayezian optimization, a GCP is fitted on an unknown function and the fit is used to compute some acquisition function. The folder `acquisition_functions` folder </span>
-<span class="sd">contains two scripts to see the behaviors of the Expected Improvement and the confidence bounds with GCP. </span>
+<span class="sd">### On-line computations</span>
+<span class="sd">Simulate as many hyper-parameter optimization processes as you want, eventually with different configurations, with the script `run_experiment`. There, instead of training/testing </span>
+<span class="sd">a pipeline, the performances of a parameter will actually be a query in the database built from the off-line computations.</span>
+
+<span class="sd">### Analyze the results</span>
+<span class="sd">Run `iterations_needed` to see how many parameters should be tested to reach a given gain, ie how a SmartSearch configuration performs on this test instance. `analyzed_results` is </span>
+<span class="sd">here to convert the raw outputs from `run_experiment` into quality scores, to simulate what we would observe in a real case.</span>
+
+<span class="sd">### Files and directory structure  </span>
+<span class="sd">Each test instance follows the same directory structure, and all files are in the folder `experiments/test_name`:  </span>
+
+<span class="sd">- `config.yml` : a yaml file to set the parameters used to run `SmartSearch`  </span>
+
+<span class="sd">- `scoring_function/` : data from off-line computations. `params.csv` contains the parameters tested, and `output.csv` the raw outputs given by the scoring function (all the cross-validation estimations). The files *true_score_t_TTT_a_AAA* contain the quality scores Q computed with a threshold == TTT and alpha == AAA (see *considering only significant differences* in the paper), using all the data available; this is supposed to represent the ground truth about the performance function.  </span>
+
+<span class="sd">- `exp_results/expXXX/` : data returned by `runExperiment`, where XXX is the number set in the config file.  </span>
+
+<span class="sd">- `exp_results/transformed_t_TTT_a_AAA/expXXX/` : analyzed results from the trial expXXX, computed by run_result_analysis with a threshold == TTT and alpha == AAA.   </span>
+
+<span class="sd">- `exp_results/transformed_smooth_t_TTT_a_AAA_kKKK_rRRR_bBBB/expXXX/` :  analyzed results from the trial expXXX with the *smooth* quality function, computed by `run_result_analysis` with a threshold == TTT, alpha == AAA, using the nearest KKK neighbors, a radius coefficient RRR and beta == BBB.   </span>
+
+<span class="sd">- `exp_results/iterations_needed/expXXX_YYY_t_TTT_a_AAA` : the mean, median, first and third quartiles of the iterations needed to reach a given score gain, over experiments XXX to YYY. The score is actually the true score computed with a threshold == TTT and alpha == AAA.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
@@ -1094,22 +1137,31 @@ contains two scripts to see the behaviors of the Expected Improvement and the co
 
     <h2 class="section-title" id="header-submodules">Sub-modules</h2>
       <div class="item">
-      <p class="name"><a href="acquisition_functions/index.html">gcp_hpo.test.acquisition_functions</a></p>
+      <p class="name"><a href="analyze_results.m.html">gcp_hpo.experiments.analyze_results</a></p>
       
   
+    <div class="desc"><p>Analyze the results of a single experiment to computes quality scores for the parameters 
+tested during the search. The quality scores are defined in the paper and aim at giving 
+a more accurate feedback than a list of cross-validation outputs. First, it should consider 
+only significant differences...</p></div>
 
       </div>
       <div class="item">
-      <p class="name"><a href="function_utils.m.html">gcp_hpo.test.function_utils</a></p>
+      <p class="name"><a href="iterations_needed.m.html">gcp_hpo.experiments.iterations_needed</a></p>
       
   
-    <div class="desc"><p>Defines functions to use for test purposes.</p></div>
+    <div class="desc"><p>Computes and display the number of iterations needed as a function of the gain, 
+averaged on several experiment.</p></div>
 
       </div>
       <div class="item">
-      <p class="name"><a href="regression/index.html">gcp_hpo.test.regression</a></p>
+      <p class="name"><a href="run_experiment.m.html">gcp_hpo.experiments.run_experiment</a></p>
       
   
+    <div class="desc"><p>Run a hyper-parameter optimization process for the instance <code>test_name</code> 
+given as an argument when running the script. This will set the parameters 
+as defined in the configuration file <code>test_name/config.yml</code> and save the 
+data in the folder <code>test_name/exp_results/expX/</code> where X is the number given ...</p></div>
 
       </div>
   </section>
