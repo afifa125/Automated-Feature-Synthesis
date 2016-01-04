@@ -4,7 +4,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <title>gcp_hpo.experiments.iterations_needed API documentation</title>
-    <meta name="description" content="" />
+    <meta name="description" content="Computes and display the number of iterations needed as a function of the gain, 
+averaged on several..." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1056,11 +1057,17 @@ table {
 
   <header id="section-intro">
   <h1 class="title"><span class="name">gcp_hpo.experiments.iterations_needed</span> module</h1>
-  
+  <p>Computes and display the number of iterations needed as a function of the gain, 
+averaged on several experiment.</p>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.experiments.iterations_needed', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.experiments.iterations_needed" class="source">
-    <div class="codehilite"><pre><span class="c"># Author: Sebastien Dubois </span>
+    <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Computes and display the number of iterations needed as a function of the gain, </span>
+<span class="sd">averaged on several experiment.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c"># Author: Sebastien Dubois </span>
 <span class="c">#		  for ALFA Group, CSAIL, MIT</span>
 
 <span class="c"># The MIT License (MIT)</span>
@@ -1086,15 +1093,37 @@ table {
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
 
 
 <span class="k">def</span> <span class="nf">iterationsNeeded</span><span class="p">(</span><span class="n">test_name</span><span class="p">,</span><span class="n">first_exp</span><span class="p">,</span><span class="n">last_exp</span><span class="p">,</span><span class="n">threshold</span><span class="p">,</span><span class="n">alpha</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	`test_name` : name of the test instance, should correspond to a </span>
+<span class="sd">		folder name in test/</span>
 
+<span class="sd">	`first_exp` : the index number of the first experiment to take into account</span>
+
+<span class="sd">	`last_exp` : the index number of the last experiment to take into account</span>
+
+<span class="sd">	`threshold` : threshold to use to decide whether the difference between </span>
+<span class="sd">		observations&#39; means is significant, based on Welch&#39;s t-test</span>
+
+<span class="sd">	`alpha` : trade-off parameter to compute the score from the significant</span>
+<span class="sd">		mean and the standard deviation. score == m - alpha * std</span>
+
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	`all_results` : a list of length 4 with the mean, first quartile, median, </span>
+<span class="sd">		third quartile, of the number of iterations needed to reach a given gain.  </span>
+<span class="sd">		This gain depends on the index i and is : 95 + 0.05*i.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">result_path</span> <span class="o">=</span> <span class="n">test_name</span> <span class="o">+</span> <span class="s">&quot;/exp_results/iterations_needed/exp&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">first_exp</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">last_exp</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;_t_&quot;</span> <span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_a_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">+</span><span class="s">&quot;.csv&quot;</span>
 	<span class="n">folder</span> <span class="o">=</span> <span class="n">test_name</span> <span class="o">+</span> <span class="s">&quot;/exp_results/iterations_needed&quot;</span>
-	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">folder</span><span class="p">):</span>
-		<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span> <span class="n">folder</span> <span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
 
 	<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">result_path</span><span class="p">):</span>
 		<span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">result_path</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
@@ -1112,7 +1141,6 @@ table {
 	<span class="n">all_iter_needed</span> <span class="o">=</span> <span class="p">[]</span>
 
 	<span class="k">for</span> <span class="n">n_exp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">first_exp</span><span class="p">,</span><span class="n">last_exp</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-		
 		<span class="n">path</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">test_name</span> <span class="o">+</span> <span class="s">&quot;/exp_results/exp&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">n_exp</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;/param_path_0.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
 		<span class="n">true_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -1144,6 +1172,29 @@ table {
 	<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">result_path</span><span class="p">,</span><span class="n">all_results</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
 
 	<span class="k">return</span> <span class="n">all_results</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+	<span class="n">first_exp</span> <span class="o">=</span> <span class="mi">1</span>
+	<span class="n">last_exp</span> <span class="o">=</span> <span class="mi">10</span>
+	<span class="n">test_name</span> <span class="o">=</span> <span class="s">&quot;MNIST&quot;</span>
+
+	<span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.5</span>
+	<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+	<span class="n">mean_iter_needed</span><span class="p">,</span><span class="n">q1_iter_needed</span><span class="p">,</span><span class="n">median_iter_needed</span><span class="p">,</span><span class="n">q3_iter_needed</span> <span class="o">=</span> \
+					<span class="n">iterationsNeeded</span><span class="p">(</span><span class="n">test_name</span><span class="p">,</span><span class="n">first_exp</span><span class="p">,</span><span class="n">last_exp</span><span class="p">,</span><span class="n">threshold</span><span class="p">,</span><span class="n">alpha</span><span class="p">)</span>
+
+	<span class="nb">abs</span> <span class="o">=</span> <span class="mi">95</span> <span class="o">+</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">101</span><span class="p">))</span>
+
+	<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
+	<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">abs</span><span class="p">,</span><span class="n">median_iter_needed</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">)</span>
+	<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">abs</span><span class="p">,</span><span class="n">q1_iter_needed</span><span class="p">,</span><span class="s">&#39;c-.&#39;</span><span class="p">)</span>
+	<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">abs</span><span class="p">[</span><span class="n">q3_iter_needed</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">],</span><span class="n">q3_iter_needed</span><span class="p">[</span><span class="n">q3_iter_needed</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">],</span><span class="s">&#39;c-.&#39;</span><span class="p">)</span>
+	<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Iterations needed&#39;</span><span class="p">)</span>
+	<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;Percentage of maximum gain&#39;</span><span class="p">)</span>
+	<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;Number of tested parameters&#39;</span><span class="p">)</span>
+	<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
   </div>
@@ -1162,15 +1213,49 @@ table {
 
     
   
+    <div class="desc"><h2>Parameters</h2>
+<p><code>test_name</code> : name of the test instance, should correspond to a 
+        folder name in test/</p>
+<p><code>first_exp</code> : the index number of the first experiment to take into account</p>
+<p><code>last_exp</code> : the index number of the last experiment to take into account</p>
+<p><code>threshold</code> : threshold to use to decide whether the difference between 
+        observations' means is significant, based on Welch's t-test</p>
+<p><code>alpha</code> : trade-off parameter to compute the score from the significant
+        mean and the standard deviation. score == m - alpha * std</p>
+<h2>Returns</h2>
+<p><code>all_results</code> : a list of length 4 with the mean, first quartile, median, 
+        third quartile, of the number of iterations needed to reach a given gain.<br />
+        This gain depends on the index i and is : 95 + 0.05*i.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.experiments.iterations_needed.iterationsNeeded', this);">Show source &equiv;</a></p>
   <div id="source-gcp_hpo.experiments.iterations_needed.iterationsNeeded" class="source">
     <div class="codehilite"><pre><span class="k">def</span> <span class="nf">iterationsNeeded</span><span class="p">(</span><span class="n">test_name</span><span class="p">,</span><span class="n">first_exp</span><span class="p">,</span><span class="n">last_exp</span><span class="p">,</span><span class="n">threshold</span><span class="p">,</span><span class="n">alpha</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	`test_name` : name of the test instance, should correspond to a </span>
+<span class="sd">		folder name in test/</span>
 
+<span class="sd">	`first_exp` : the index number of the first experiment to take into account</span>
+
+<span class="sd">	`last_exp` : the index number of the last experiment to take into account</span>
+
+<span class="sd">	`threshold` : threshold to use to decide whether the difference between </span>
+<span class="sd">		observations&#39; means is significant, based on Welch&#39;s t-test</span>
+
+<span class="sd">	`alpha` : trade-off parameter to compute the score from the significant</span>
+<span class="sd">		mean and the standard deviation. score == m - alpha * std</span>
+
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	`all_results` : a list of length 4 with the mean, first quartile, median, </span>
+<span class="sd">		third quartile, of the number of iterations needed to reach a given gain.  </span>
+<span class="sd">		This gain depends on the index i and is : 95 + 0.05*i.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">result_path</span> <span class="o">=</span> <span class="n">test_name</span> <span class="o">+</span> <span class="s">&quot;/exp_results/iterations_needed/exp&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">first_exp</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">last_exp</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;_t_&quot;</span> <span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_a_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">+</span><span class="s">&quot;.csv&quot;</span>
 	<span class="n">folder</span> <span class="o">=</span> <span class="n">test_name</span> <span class="o">+</span> <span class="s">&quot;/exp_results/iterations_needed&quot;</span>
-	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">folder</span><span class="p">):</span>
-		<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span> <span class="n">folder</span> <span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
 
 	<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">result_path</span><span class="p">):</span>
 		<span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">result_path</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
@@ -1188,7 +1273,6 @@ table {
 	<span class="n">all_iter_needed</span> <span class="o">=</span> <span class="p">[]</span>
 
 	<span class="k">for</span> <span class="n">n_exp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">first_exp</span><span class="p">,</span><span class="n">last_exp</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-		
 		<span class="n">path</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">test_name</span> <span class="o">+</span> <span class="s">&quot;/exp_results/exp&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">n_exp</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;/param_path_0.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
 		<span class="n">true_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>

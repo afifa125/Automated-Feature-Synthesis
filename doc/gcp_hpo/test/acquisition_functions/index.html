@@ -3,8 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>gcp_hpo.examples API documentation</title>
-    <meta name="description" content="The `gcp_hpo.examples` module provides some use cases of the SmartSearch class for hyper-parameter o..." />
+    <title>gcp_hpo.test.acquisition_functions API documentation</title>
+    <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1039,9 +1039,8 @@ table {
 
     <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
       <ul>
-        <li class="mono"><a href="branin.m.html">gcp_hpo.examples.branin</a></li>
-        <li class="mono"><a href="har6.m.html">gcp_hpo.examples.har6</a></li>
-        <li class="mono"><a href="interface.m.html">gcp_hpo.examples.interface</a></li>
+        <li class="mono"><a href="display_EI_predictions.m.html">gcp_hpo.test.acquisition_functions.display_EI_predictions</a></li>
+        <li class="mono"><a href="display_UCB_predictions.m.html">gcp_hpo.test.acquisition_functions.display_UCB_predictions</a></li>
       </ul>
     </li>
     </ul>
@@ -1055,27 +1054,9 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">gcp_hpo.examples</span> module</h1>
-  <p>The <code>gcp_hpo.examples</code> module provides some use cases of the SmartSearch class for hyper-parameter optimization.</p>
-<p><code>interface</code> shows two different ways of using SmartSearch with basic examples: with a custom function that one 
-wants to optimize, or with an sklearn pipeline.</p>
-<p><code>branin</code> and <code>har6</code> can be used to see how randomized/GP-based/GCP-based search perform on these two functions, 
-that are often used in optimization.</p>
+  <h1 class="title"><span class="name">gcp_hpo.test.acquisition_functions</span> module</h1>
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.examples', this);">Show source &equiv;</a></p>
-  <div id="source-gcp_hpo.examples" class="source">
-    <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">The `gcp_hpo.examples` module provides some use cases of the SmartSearch class for hyper-parameter optimization.</span>
-
-<span class="sd">`interface` shows two different ways of using SmartSearch with basic examples: with a custom function that one </span>
-<span class="sd">wants to optimize, or with an sklearn pipeline.</span>
-
-<span class="sd">`branin` and `har6` can be used to see how randomized/GP-based/GCP-based search perform on these two functions, </span>
-<span class="sd">that are often used in optimization.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-</pre></div>
-
-  </div>
+  
 
   </header>
 
@@ -1085,28 +1066,21 @@ that are often used in optimization.</p>
 
     <h2 class="section-title" id="header-submodules">Sub-modules</h2>
       <div class="item">
-      <p class="name"><a href="branin.m.html">gcp_hpo.examples.branin</a></p>
+      <p class="name"><a href="display_EI_predictions.m.html">gcp_hpo.test.acquisition_functions.display_EI_predictions</a></p>
       
   
-    <div class="desc"><p>Testing SmartSearch on the Braning function.  </p>
-<p>The Branin function is a classic example to evaluate nonlinear optimization algorithms.<br />
-The goal is to find the minimum, we use here the opposite of the Branin function to match
-the maximization process.</p></div>
+    <div class="desc"><p>Fits a GCP on some training data of a custom function, and computes the EI 
+(Expected Improvement) in each point, as it would be made in Bayezian 
+optimization. Also display the results.</p></div>
 
       </div>
       <div class="item">
-      <p class="name"><a href="har6.m.html">gcp_hpo.examples.har6</a></p>
+      <p class="name"><a href="display_UCB_predictions.m.html">gcp_hpo.test.acquisition_functions.display_UCB_predictions</a></p>
       
   
-    <div class="desc"><p>Testing SmartSearch on the Hartmann 6D function.  </p>
-<p>The Hartmann 6D function is a classic example to evaluate nonlinear optimization algorithms.</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="interface.m.html">gcp_hpo.examples.interface</a></p>
-      
-  
-    <div class="desc"><p>Simple examples to show how to use SmartSearch.</p></div>
+    <div class="desc"><p>Fits a GCP on some training data of a custom function, and computes the 
+confidence bounds in each point, to see how the UCB criterion behaves in 
+a Bayezian optimization framework. Also display the results.</p></div>
 
       </div>
   </section>
