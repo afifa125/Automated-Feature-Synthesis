@@ -238,7 +238,7 @@ class SmartSearch(object):
 		self.n_init = n_init
 		self.n_final_iter = n_final_iter
 		self.n_candidates = n_candidates
-		self.param_names = parameters.keys()
+		self.param_names = sorted(parameters.keys())
 		self.param_isInt = np.array([ 0 if (parameters[k][0]=='float') else 1 for k in self.param_names ]) 
 		self.param_bounds = np.zeros((self.n_parameters,2))
 		self.verbose = verbose
@@ -284,6 +284,7 @@ class SmartSearch(object):
 
 		# init param_bounds
 		for i in range(self.n_parameters):
+			print self.param_names[i]
 			if(parameters[self.param_names[i]][0]=='cat'):
 				self.param_bounds[i,0] = 0
 				self.param_bounds[i,1] = len(parameters[self.param_names[i]][1])
