@@ -19,7 +19,7 @@ Two real examples are included in the repository: the **Sentiment Analysis probl
 These can be used to test the GCP and GCP-based hyper-parameter optimization faster. See the `experiments` folder for more details on how to use the package for research purposes.  
 
 ### Understand Gaussian Copula Processes ### - `gcp_hpo.test`
-In the `test` folder, you will find some utilities and scripts to either quantify the performances of GCP for regression purposes (eg. `test/full_test.py`) or to display what it does.  
+In the `test` folder, you will find some utilities and scripts to either quantify the performances of GCP for regression purposes (eg. `test/regression/full_test.py`) or to display what it does.  
 
 ---------------
 

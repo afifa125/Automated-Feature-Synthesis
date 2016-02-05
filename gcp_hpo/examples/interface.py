@@ -6,14 +6,8 @@ from gcp_hpo.smart_search import SmartSearch
 
 from sklearn.datasets import load_digits
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.datasets import fetch_20newsgroups
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.linear_model import SGDClassifier
-from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
 from sklearn.pipeline import Pipeline
 
-import logging
 import matplotlib.pyplot as plt
 import numpy as np
 
