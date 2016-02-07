@@ -412,7 +412,7 @@ class SmartSearch(object):
 		i_mod_10 = 0  
 		for i in range(self.n_iter - self.n_init - self.n_final_iter):
 
-			if(i==20 and cluster_evol=='step'):
+			if(i==20 and self.cluster_evol=='step'):
 				self.GCP_args[1] = n_clusters
 
 			if(i/10 > (i_mod_10+2) and self.cluster_evol=='variable'):
