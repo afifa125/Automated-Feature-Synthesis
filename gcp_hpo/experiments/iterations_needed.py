@@ -4,7 +4,7 @@ averaged on several experiment.
 """
 
 # Author: Sebastien Dubois 
-#		  for ALFA Group, CSAIL, MIT
+#         for ALFA Group, CSAIL, MIT
 
 # The MIT License (MIT)
 # Copyright (c) 2015 Sebastien Dubois
@@ -33,101 +33,131 @@ import matplotlib.pyplot as plt
 from sklearn.neighbors import NearestNeighbors
 
 
-def iterationsNeeded(test_name,first_exp,last_exp,threshold,alpha):
-	"""
-	Parameters
-	----------
-	`test_name` : name of the test instance, should correspond to a 
-		folder name in test/
+def iterationsNeeded(test_name,
+                     model_dir, ref_size,
+                     first_exp, last_exp):
+    """
+    Parameters
+    ----------
+    `test_name` : name of the test instance, should correspond to a 
+        folder name in test/
 
-	`first_exp` : the index number of the first experiment to take into account
+    `model_dir`: a string corresponding to the model and subsize to use,
+        written as a path. Ex: 'GCP/5000'
 
-	`last_exp` : the index number of the last experiment to take into account
+    `ref_size` : the subsampling size to consider as a reference for the 'true' score,
+        in general this should be the biggest subsampling size available
 
-	`threshold` : threshold to use to decide whether the difference between 
-		observations' means is significant, based on Welch's t-test
+    `first_exp` : the index number of the first experiment to take into account
 
-	`alpha` : trade-off parameter to compute the score from the significant
-		mean and the standard deviation. score == m - alpha * std
+    `last_exp` : the index number of the last experiment to take into account
 
-	Returns
-	-------
-	`all_results` : a list of length 4 with the mean, first quartile, median, 
-		third quartile, of the number of iterations needed to reach a given gain.  
-		This gain depends on the index i and is : 95 + 0.05*i.
-	"""
-	result_path = test_name + "/exp_results/iterations_needed/exp" + str(first_exp) + "_" + str(last_exp) + "_t_" +str(threshold)+"_a_"+str(alpha) +".csv"
-	folder = test_name + "/exp_results/iterations_needed"
-	if not os.path.exists(folder):
-		os.mkdir(folder)
+    Returns
+    -------
+    `all_results` : a list of length 4 with the mean, first quartile, median, 
+        third quartile, of the number of iterations needed to reach a given gain.  
+        This gain depends on the index i and is : 95 + 0.05*i.
+    """
 
-	if os.path.exists(result_path):
-		result = np.genfromtxt(result_path,delimiter=',')
-		return result
+    # TODO : support transformed output to change a bit the parameter path
+    # `threshold` : threshold to use to decide whether the difference between 
+    #   observations' means is significant, based on Welch's t-test
 
-	p_dir = test_name + "/scoring_function/params.csv"
-	scores = np.genfromtxt(test_name + "/scoring_function/true_score_t_"+str(threshold)+"_a_"+str(alpha) + ".csv",delimiter=',')
-	all_params = np.genfromtxt(p_dir,delimiter=',')
-	KNN = NearestNeighbors()
-	KNN.fit(all_params)
+    # `alpha` : trade-off parameter to compute the score from the significant
+    #   mean and the standard deviation. score == m - alpha * std
 
-	m = np.min(scores)
-	M = np.max(scores)
+    result_path = test_name + "/exp_results/" + model_dir + "/iterations_needed/exp" + \
+                  str(first_exp) + "_" + str(last_exp) + ".csv"
+                  # "_t_" +str(threshold)+"_a_"+str(alpha) +
+    folder = test_name + "/exp_results/" + model_dir + "/iterations_needed"
 
-	all_iter_needed = []
+    if not os.path.exists(folder):
+        os.mkdir(folder)
 
-	for n_exp in range(first_exp,last_exp+1):
-		path = np.genfromtxt(test_name + "/exp_results/exp"+str(n_exp)+"/param_path_0.csv",delimiter=',')
-		true_score = np.zeros(path.shape[0])
-		for i in range(path.shape[0]):
-			neighbor_idx = KNN.kneighbors(path[i,:],1,return_distance=False)[0]
-			true_score[i] = 100.* (scores[neighbor_idx]-m)/(M-m)
+    if os.path.exists(result_path):
+        result = np.genfromtxt(result_path, delimiter = ',')
+        return result
 
-		n_iter_needed =  np.zeros(101)
+    # load 'true' scores
+    f = open(test_name + "/scoring_function/" + str(ref_size) + "_output.csv", 'r')
+    mean_outputs = []
+    for l in f:
+        l = l[1:-2]
+        string_l = l.split(',')
+        all_o = [float(i) for i in string_l]
+        mean_outputs.append(np.mean(all_o))
+    f.close()
+    scores = np.asarray(mean_outputs)
 
-		starting_score = 95.
-		nb_iter = 0
-		for i in range(101):
-			while(nb_iter < path.shape[0] and true_score[nb_iter] < starting_score + 0.05*i):
-				nb_iter += 1
-			if(nb_iter == path.shape[0]):
-				print 'Exp is too short'
-				nb_iter = 1500
-			n_iter_needed[i] = nb_iter
+    #load the corresponding parameters
+    p_dir = test_name + "/scoring_function/" + str(ref_size) + "_params.csv"
+    all_params = np.genfromtxt(p_dir,delimiter=',')
 
-		all_iter_needed.append(n_iter_needed)
+    KNN = NearestNeighbors()
+    KNN.fit(all_params)
 
-	mean_iter_needed = [np.mean([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)]) for i in range(101) ]
-	median_iter_needed = [np.median([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)]) for i in range(101) ]
-	q1_iter_needed = [np.percentile([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)],q=25) for i in range(101) ]
-	q3_iter_needed = [np.percentile([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)],q=75) for i in range(101) ]
+    m = np.min(scores)
+    M = np.max(scores)
 
-	all_results = np.concatenate((np.atleast_2d(mean_iter_needed),np.atleast_2d(q1_iter_needed), \
-											np.atleast_2d(median_iter_needed),np.atleast_2d(q3_iter_needed)))
+    all_iter_needed = []
 
-	np.savetxt(result_path,all_results,delimiter=',')
+    for n_exp in range(first_exp,last_exp+1):
+        path = np.genfromtxt(test_name + "/exp_results/" + model_dir + "/exp" + str(n_exp) + "/param_path.csv",
+                             delimiter=',')
+        true_score = np.zeros(path.shape[0])
+        for i in range(path.shape[0]):
+            neighbor_idx = KNN.kneighbors(path[i,:],1,return_distance=False)[0]
+            true_score[i] = 100.* (scores[neighbor_idx]-m)/(M-m)
 
-	return all_results
+        n_iter_needed =  np.zeros(101)
+
+        starting_score = 95.
+        nb_iter = 0
+        for i in range(101):
+            while(nb_iter < path.shape[0] and true_score[nb_iter] < starting_score + 0.05*i):
+                nb_iter += 1
+            if(nb_iter == path.shape[0]):
+                print 'Exp is too short'
+                nb_iter = 1500
+            n_iter_needed[i] = nb_iter
+
+        all_iter_needed.append(n_iter_needed)
+
+    mean_iter_needed = [np.mean([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)]) for i in range(101) ]
+    median_iter_needed = [np.median([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)]) for i in range(101) ]
+    q1_iter_needed = [np.percentile([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)],q=25) for i in range(101) ]
+    q3_iter_needed = [np.percentile([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)],q=75) for i in range(101) ]
+
+    all_results = np.concatenate((np.atleast_2d(mean_iter_needed),np.atleast_2d(q1_iter_needed), \
+                                            np.atleast_2d(median_iter_needed),np.atleast_2d(q3_iter_needed)))
+
+    np.savetxt(result_path, all_results, delimiter=',')
+
+    return all_results
 
 
 if __name__ == '__main__':
-	first_exp = 1
-	last_exp = 10
-	test_name = "MNIST"
+    first_exp = 1
+    last_exp = 20
+    test_name = "SentimentAnalysis"
+    model_dir = "rand/5000"
+    ref_size = 15000
 
-	threshold = 0.5
-	alpha = 0.5
+    # threshold = 0.5
+    # alpha = 0.5
 
-	mean_iter_needed,q1_iter_needed,median_iter_needed,q3_iter_needed = \
-					iterationsNeeded(test_name,first_exp,last_exp,threshold,alpha)
+    mean_iter_needed,q1_iter_needed,median_iter_needed,q3_iter_needed = \
+        iterationsNeeded(test_name,
+                         model_dir, ref_size,
+                         first_exp, last_exp)
 
-	abs = 95 + 0.05 * np.asarray(range(101))
+    abs = 95 + 0.05 * np.asarray(range(101))
 
-	fig = plt.figure(figsize=(15,7))
-	plt.plot(abs,median_iter_needed,'c')
-	plt.plot(abs,q1_iter_needed,'c-.')
-	plt.plot(abs[q3_iter_needed < 1000],q3_iter_needed[q3_iter_needed < 1000],'c-.')
-	plt.title('Iterations needed')
-	plt.xlabel('Percentage of maximum gain')
-	plt.ylabel('Number of tested parameters')
-	plt.show()
+    fig = plt.figure(figsize=(15,7))
+    plt.plot(abs[median_iter_needed < 1000],median_iter_needed[median_iter_needed < 1000],'c')
+    plt.plot(abs[q1_iter_needed < 1000],q1_iter_needed[q1_iter_needed < 1000],'c-.')
+    plt.plot(abs[q3_iter_needed < 1000],q3_iter_needed[q3_iter_needed < 1000],'c-.')
+    plt.title('Iterations needed')
+    plt.xlabel('Percentage of maximum gain')
+    plt.ylabel('Number of tested parameters')
+    plt.show()
