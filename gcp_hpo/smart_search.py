@@ -284,7 +284,6 @@ class SmartSearch(object):
 
 		# init param_bounds
 		for i in range(self.n_parameters):
-			print self.param_names[i]
 			if(parameters[self.param_names[i]][0]=='cat'):
 				self.param_bounds[i,0] = 0
 				self.param_bounds[i,1] = len(parameters[self.param_names[i]][1])
