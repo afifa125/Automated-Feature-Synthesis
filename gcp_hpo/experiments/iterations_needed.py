@@ -35,7 +35,8 @@ from sklearn.neighbors import NearestNeighbors
 
 def iterationsNeeded(test_name,
                      model_dir, ref_size,
-                     first_exp, last_exp):
+                     first_exp, last_exp,
+                     path_file = 'path'):
     """
     Parameters
     ----------
@@ -51,6 +52,9 @@ def iterationsNeeded(test_name,
     `first_exp` : the index number of the first experiment to take into account
 
     `last_exp` : the index number of the last experiment to take into account
+    
+    `path_file` : suffixe for the path file to use.
+                  Ex 'path' for param_path.csv, 'opt_path' for param_opt_path.csv, ...
 
     Returns
     -------
@@ -67,14 +71,14 @@ def iterationsNeeded(test_name,
     #   mean and the standard deviation. score == m - alpha * std
 
     # prepare files and folders
-    result_path = test_name + "/exp_results/" + model_dir + "/iterations_needed_" + str(ref_size) + "/exp" + \
-                  str(first_exp) + "_" + str(last_exp) + ".csv"
+    result_path = test_name + "/exp_results/" + model_dir + "/iterations_needed_" + \
+                  str(ref_size) + "_" + path_file + "/exp" + str(first_exp) + "_" + str(last_exp) + ".csv"
                   # "_t_" +str(threshold)+"_a_"+str(alpha) +
-    result_path_cs = test_name + "/exp_results/" + model_dir + "/cumul_score_" + str(ref_size) + "/exp" + \
-                  str(first_exp) + "_" + str(last_exp) + ".csv"
+    result_path_cs = test_name + "/exp_results/" + model_dir + "/cumul_score_" + \
+                  str(ref_size) + "_" + path_file + "/exp" + str(first_exp) + "_" + str(last_exp) + ".csv"
 
-    folder = test_name + "/exp_results/" + model_dir + "/iterations_needed_" + str(ref_size)
-    folder_cs = test_name + "/exp_results/" + model_dir + "/cumul_score_" + str(ref_size)
+    folder = test_name + "/exp_results/" + model_dir + "/iterations_needed_" + str(ref_size) + "_" + path_file
+    folder_cs = test_name + "/exp_results/" + model_dir + "/cumul_score_" + str(ref_size) + "_" + path_file
 
     if not os.path.exists(folder):
         os.mkdir(folder)
@@ -111,7 +115,7 @@ def iterationsNeeded(test_name,
     all_cumul_score = []
 
     for n_exp in range(first_exp,last_exp+1):
-        path = np.genfromtxt(test_name + "/exp_results/" + model_dir + "/exp" + str(n_exp) + "/param_path.csv",
+        path = np.genfromtxt(test_name + "/exp_results/" + model_dir + "/exp" + str(n_exp) + "/param_" + path_file + ".csv",
                              delimiter=',')
         true_score = np.zeros(path.shape[0])
         cumul_score = np.zeros(path.shape[0])
@@ -125,10 +129,10 @@ def iterationsNeeded(test_name,
 
         n_iter_needed =  np.zeros(101)
 
-        starting_score = 95.
+        starting_score = 80.
         nb_iter = 0
         for i in range(101):
-            while(nb_iter < path.shape[0] and true_score[nb_iter] < starting_score + 0.05*i):
+            while(nb_iter < path.shape[0] and true_score[nb_iter] < starting_score + 0.2*i):
                 nb_iter += 1
             if(nb_iter == path.shape[0]):
                 print 'Exp is too short'
@@ -160,6 +164,7 @@ if __name__ == '__main__':
     test_name = "SentimentAnalysis"
     model_dir = "rand/5000"
     ref_size = 15000
+    path_file = "path"
 
     # threshold = 0.5
     # alpha = 0.5
@@ -167,7 +172,8 @@ if __name__ == '__main__':
     mean_iter_needed,q1_iter_needed,median_iter_needed,q3_iter_needed = \
         iterationsNeeded(test_name,
                          model_dir, ref_size,
-                         first_exp, last_exp)
+                         first_exp, last_exp,
+                         path_file = path_file)
 
     abs = 95 + 0.05 * np.asarray(range(101))
 

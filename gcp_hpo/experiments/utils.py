@@ -53,6 +53,22 @@ def load_data(subsize, dir_ = ''):
     return raw_outputs, mean_outputs, params
 
 
+def load_output(dir_):
+    mean_outputs = []
+    std_outputs = []
+    f = open(dir_ + "/output.csv",'r')
+
+    for l in f:
+        l = l[1:-2]
+        string_l = l.split(',')
+        all_o = [float(i) for i in string_l]
+        mean_outputs.append(np.mean(all_o))
+        std_outputs.append(np.std(all_o))
+    f.close()
+
+    return mean_outputs, std_outputs
+
+
 def score_distribution(subsize, dir_ = ''):
     raw_outputs, mean_outputs, params = load_data(subsize, dir_)
     plt.figure()
@@ -61,7 +77,7 @@ def score_distribution(subsize, dir_ = ''):
     plt.show()
 
 
-def show_iter_needed(test_name, first_exp, last_exp, models, ref_size):
+def show_iter_needed(test_name, first_exp, last_exp, models, ref_size, path_file = "path"):
     colors_ = list(six.iteritems(colors.cnames))
 
     fig = plt.figure(figsize=(15,7))
@@ -72,7 +88,8 @@ def show_iter_needed(test_name, first_exp, last_exp, models, ref_size):
         mean_iter_needed,q1_iter_needed,median_iter_needed,q3_iter_needed = \
             iterationsNeeded(test_name,
                              model_dir, ref_size,
-                             first_exp, last_exp)
+                             first_exp, last_exp,
+                             path_file = path_file)
 
         plt.plot(abs[median_iter_needed < 1000],median_iter_needed[median_iter_needed < 1000], color = colors_[c][0])
         # plt.plot(abs[q1_iter_needed < 1000],q1_iter_needed[q1_iter_needed < 1000], marker = '-.')
@@ -85,7 +102,7 @@ def show_iter_needed(test_name, first_exp, last_exp, models, ref_size):
     plt.show()
 
 
-def show_cumul_score(test_name, first_exp, last_exp, models, ref_size):
+def show_cumul_score(test_name, first_exp, last_exp, models, ref_size, path_file = "path"):
     colors_ = list(six.iteritems(colors.cnames))
 
     fig = plt.figure(figsize=(15,7))
@@ -93,8 +110,8 @@ def show_cumul_score(test_name, first_exp, last_exp, models, ref_size):
 
     c = 0
     for model_dir in models:
-        path = test_name + "/exp_results/" + model_dir + "/cumul_score_" + str(ref_size) + "/exp" + \
-               str(first_exp) + "_" + str(last_exp) + ".csv"
+        path = test_name + "/exp_results/" + model_dir + "/cumul_score_" + str(ref_size) + \
+               "_" + path_file + "/exp" + str(first_exp) + "_" + str(last_exp) + ".csv"
         
         median_cumul_score = np.genfromtxt(path, delimiter = ',')
         n_steps = median_cumul_score.shape[0]

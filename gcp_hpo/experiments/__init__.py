@@ -4,29 +4,39 @@ this module is relevant when one wants to run several hyper-parameter optimizati
 module relies on two different components: off-line and on-line computations.  
 
 ### Off-line computations
+
 First, train and test a pipeline for many parameters, and store their performances in the folder `test_name/scoring_function`. This can be done, for example, by running `SmartSearch` 
 but with randomized search. 
 
 ### On-line computations
+
 Simulate as many hyper-parameter optimization processes as you want, eventually with different configurations, with the script `run_experiment`. There, instead of training/testing 
 a pipeline, the performances of a parameter will actually be a query in the database built from the off-line computations.
 
 ### Transform the results
-Run `iterations_needed` to see how many parameters should be tested to reach a given gain, ie how a SmartSearch configuration performs on this test instance. `transform_results` is 
-here to convert the raw outputs from `run_experiment` into quality scores, to simulate what we would observe in a real case.
+
+Run `transform_results` to convert the path of the tested hyper-parameters into the series of the best guess at each step, to simulate the hyper-parameter that
+would have been selected with a given budget of computations.
+Then run `iterations_needed` to see how many parameters should be tested to reach a given gain, ie how a SmartSearch configuration performs on this test instance. When doing so,
+you can choose the file to use for the hyper-parameter path. This will also compute the `cumul_score`, which is the averaged true score of all the hyperparameters visited up to each step,
+which should provide an idea of the overall quality of the hyperparameters tested.
 
 ### Files and directory structure  
+
 Each test instance follows the same directory structure, and all files are in the folder `experiments/test_name`:  
 
-- `config.yml` : a yaml file to set the parameters used to run `SmartSearch`  
+- `config.yml` : a yaml file to set the parameters used to run `SmartSearch`    
 
-- `scoring_function/` : data from off-line computations. `params.csv` contains the parameters tested, and `output.csv` the raw outputs given by the scoring function (all the cross-validation estimations). The files *true_score_t_TTT_a_AAA* contain the quality scores Q computed with a threshold == TTT and alpha == AAA (see *considering only significant differences* in the paper), using all the data available; this is supposed to represent the ground truth about the performance function.  
+- `scoring_function/` : data from off-line computations. `params.csv` contains the parameters tested, and `output.csv` the raw outputs given by the scoring function 
+(all the cross-validation estimations). The files *true_score_t_TTT_a_AAA* contain the quality scores Q computed with a threshold == TTT and alpha == AAA (see *considering 
+only significant differences* in the paper), using all the data available; this is supposed to represent the ground truth about the performance function.  
 
-- `exp_results/expXXX/` : data returned by `runExperiment`, where XXX is the number set in the config file.  
+- `exp_results/model/subsize/expXXX/` : data returned by `runExperiment`, where XXX is the number set in the config file, `subsize` is the sub-sample size used
+by SmartSearch, and `model` is either `rand`, `GP`, or `GCP`.  
 
-- `exp_results/transformed_t_TTT_a_AAA/expXXX/` : transformed results from the trial expXXX, computed by run_result_analysis with a threshold == TTT and alpha == AAA.   
+- `exp_results/model/subsize/iterations_needed_refSize_pathFile/expXXX_YYY` : the mean, median, first and third quartiles of the iterations needed to reach a given score gain, over experiments 
+XXX to YYY, using the dataset of size `refSize` to set the 'true scores', and the file `pathFile` for the parameter path.  
 
-- `exp_results/transformed_smooth_t_TTT_a_AAA_kKKK_rRRR_bBBB/expXXX/` :  transformed results from the trial expXXX with the *smooth* quality function, computed by `run_result_analysis` with a threshold == TTT, alpha == AAA, using the nearest KKK neighbors, a radius coefficient RRR and beta == BBB.   
-
-- `exp_results/iterations_needed/expXXX_YYY_t_TTT_a_AAA` : the mean, median, first and third quartiles of the iterations needed to reach a given score gain, over experiments XXX to YYY. The score is actually the true score computed with a threshold == TTT and alpha == AAA.
+- `exp_results/model/subsize/cumul_score_refSize_pathFile/expXXX_YYY` : the median of the averaged gain of all hyperparameters tested up to each iteration, over experiments 
+XXX to YYY, using the dataset of size `refSize` to set the 'true scores', and the file `pathFile` for the parameter path.
 """
