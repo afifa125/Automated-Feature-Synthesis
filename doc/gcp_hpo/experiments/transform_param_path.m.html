@@ -3,8 +3,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>gcp_hpo.examples.interface API documentation</title>
-    <meta name="description" content="Simple examples to show how to use SmartSearch." />
+    <title>gcp_hpo.experiments.transform_param_path API documentation</title>
+    <meta name="description" content="Transform the `param_path.csv` file into a new path were the hyper-parameter at
+step k is the best g..." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1038,8 +1039,7 @@ table {
     <li class="set"><h3><a href="#header-functions">Functions</a></h3>
       
   <ul>
-    <li class="mono"><a href="#gcp_hpo.examples.interface.hpo_custom_function">hpo_custom_function</a></li>
-    <li class="mono"><a href="#gcp_hpo.examples.interface.hpo_sklearn_pipeline">hpo_sklearn_pipeline</a></li>
+    <li class="mono"><a href="#gcp_hpo.experiments.transform_param_path.transformPath">transformPath</a></li>
   </ul>
 
     </li>
@@ -1056,62 +1056,91 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">gcp_hpo.examples.interface</span> module</h1>
-  <p>Simple examples to show how to use SmartSearch.</p>
+  <h1 class="title"><span class="name">gcp_hpo.experiments.transform_param_path</span> module</h1>
+  <p>Transform the <code>param_path.csv</code> file into a new path were the hyper-parameter at
+step k is the best guess with the data available up to this step.</p>
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.examples.interface', this);">Show source &equiv;</a></p>
-  <div id="source-gcp_hpo.examples.interface" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.experiments.transform_param_path', this);">Show source &equiv;</a></p>
+  <div id="source-gcp_hpo.experiments.transform_param_path" class="source">
     <div class="codehilite"><pre><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Simple examples to show how to use SmartSearch.</span>
+<span class="sd">Transform the `param_path.csv` file into a new path were the hyper-parameter at</span>
+<span class="sd">step k is the best guess with the data available up to this step.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">gcp_hpo.smart_search</span> <span class="kn">import</span> <span class="n">SmartSearch</span>
+<span class="c"># Author: Sebastien Dubois </span>
+<span class="c">#         for ALFA Group, CSAIL, MIT</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_digits</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="c"># The MIT License (MIT)</span>
+<span class="c"># Copyright (c) 2015 Sebastien Dubois</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="c"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c"># in the Software without restriction, including without limitation the rights</span>
+<span class="c"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c"># furnished to do so, subject to the following conditions:</span>
+
+<span class="c"># The above copyright notice and this permission notice shall be included in</span>
+<span class="c"># all copies or substantial portions of the Software.</span>
+
+<span class="c"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="c"># THE SOFTWARE.</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">gcp_hpo.experiments.utils</span> <span class="kn">import</span> <span class="n">load_output</span>
+
+<span class="k">def</span> <span class="nf">transformPath</span><span class="p">(</span><span class="n">test_name</span><span class="p">,</span>
+                  <span class="n">model_dir</span><span class="p">,</span>
+                  <span class="n">first_exp</span><span class="p">,</span> <span class="n">last_exp</span><span class="p">,</span>
+                  <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+                  <span class="n">path_file</span> <span class="o">=</span> <span class="s">&#39;opt_path&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    `test_name` : name of the test instance, should correspond to a </span>
+<span class="sd">        folder name in test/</span>
+
+<span class="sd">    `model_dir`: a string corresponding to the model and subsize to use,</span>
+<span class="sd">        written as a path. Ex: &#39;GCP/5000&#39;</span>
+
+<span class="sd">    `first_exp` : the index number of the first experiment to take into account</span>
+
+<span class="sd">    `last_exp` : the index number of the last experiment to take into account</span>
+
+<span class="sd">    `alpha` : the quality of a CV result is defined as mean(CV) - alpha * std(CV)</span>
+
+<span class="sd">    `path_file` : suffixe for the path file to use.</span>
+<span class="sd">                  Ex:&#39;opt_path&#39; for param_opt_path.csv</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">n_exp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">first_exp</span><span class="p">,</span><span class="n">last_exp</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">dir_</span> <span class="o">=</span> <span class="n">test_name</span> <span class="o">+</span> <span class="s">&quot;/exp_results/&quot;</span> <span class="o">+</span> <span class="n">model_dir</span> <span class="o">+</span> <span class="s">&quot;/exp&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_exp</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">dir_</span> <span class="o">+</span> <span class="s">&quot;/param_path.csv&quot;</span><span class="p">,</span>
+                             <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">mean_outputs</span><span class="p">,</span> <span class="n">std_outputs</span> <span class="o">=</span> <span class="n">load_output</span><span class="p">(</span><span class="n">dir_</span><span class="p">)</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="p">[</span><span class="n">mean_outputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">std_outputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mean_outputs</span><span class="p">))]</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+        
+        <span class="n">opt_path</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">path</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">scores</span><span class="p">[:(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)]),</span> <span class="p">:]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+        
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">dir_</span> <span class="o">+</span> <span class="s">&quot;/param_&quot;</span> <span class="o">+</span> <span class="n">path_file</span> <span class="o">+</span> <span class="s">&quot;.csv&quot;</span><span class="p">,</span> <span class="n">opt_path</span><span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s">&#39;,&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">hpo_custom_function</span><span class="p">():</span>
-    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;kernel&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;rbf&#39;</span><span class="p">,</span> <span class="s">&#39;poly&#39;</span><span class="p">]],</span>
-                  <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span>
-                  <span class="s">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;float&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]]}</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">first_exp</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">last_exp</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">test_name</span> <span class="o">=</span> <span class="s">&quot;SentimentAnalysis&quot;</span>
+    <span class="n">model_dir</span> <span class="o">=</span> <span class="s">&quot;rand/5000&quot;</span>
+    <span class="c"># alpha = 1</span>
 
-    <span class="k">def</span> <span class="nf">scoring_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span>
-
-    <span class="n">search</span> <span class="o">=</span> <span class="n">SmartSearch</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s">&#39;GP&#39;</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">scoring_function</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-    <span class="n">search</span><span class="o">.</span><span class="n">_fit</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">hpo_sklearn_pipeline</span><span class="p">():</span>
-    <span class="n">iris</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">()</span>
-    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
-    <span class="n">clf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-
-    <span class="c"># specify parameters and distributions to sample from</span>
-    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span>
-                  <span class="s">&quot;max_features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">]],</span>
-                  <span class="s">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">]],</span>
-                  <span class="s">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">]],</span>
-                  <span class="s">&quot;bootstrap&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">]],</span>
-                  <span class="s">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;gini&quot;</span><span class="p">,</span> <span class="s">&quot;entropy&quot;</span><span class="p">]]}</span>
-
-    <span class="n">search</span> <span class="o">=</span> <span class="n">SmartSearch</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-    <span class="n">search</span><span class="o">.</span><span class="n">_fit</span><span class="p">()</span>
-
-
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
-
-    <span class="k">print</span> <span class="s">&#39;Run examples&#39;</span>
-    <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">Hyper-parameter optimization with a custom function&#39;</span>
-    <span class="n">hpo_custom_function</span><span class="p">()</span>
-    <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">Hyper-parameter optimization with an sklearn pipeline&#39;</span> \
-          <span class="s">&#39; and the Iris dataset&#39;</span>
-    <span class="n">hpo_sklearn_pipeline</span><span class="p">()</span>
+    <span class="n">transformPath</span><span class="p">(</span><span class="n">test_name</span><span class="p">,</span> <span class="n">model_dir</span><span class="p">,</span>
+                  <span class="n">first_exp</span><span class="p">,</span> <span class="n">last_exp</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1123,60 +1152,61 @@ table {
     <h2 class="section-title" id="header-functions">Functions</h2>
       
   <div class="item">
-    <div class="name def" id="gcp_hpo.examples.interface.hpo_custom_function">
-    <p>def <span class="ident">hpo_custom_function</span>(</p><p>)</p>
+    <div class="name def" id="gcp_hpo.experiments.transform_param_path.transformPath">
+    <p>def <span class="ident">transformPath</span>(</p><p>test_name, model_dir, first_exp, last_exp, alpha=1.0, path_file=&#39;opt_path&#39;)</p>
     </div>
     
 
     
   
+    <div class="desc"><h2>Parameters</h2>
+<p><code>test_name</code> : name of the test instance, should correspond to a 
+    folder name in test/</p>
+<p><code>model_dir</code>: a string corresponding to the model and subsize to use,
+    written as a path. Ex: 'GCP/5000'</p>
+<p><code>first_exp</code> : the index number of the first experiment to take into account</p>
+<p><code>last_exp</code> : the index number of the last experiment to take into account</p>
+<p><code>alpha</code> : the quality of a CV result is defined as mean(CV) - alpha * std(CV)</p>
+<p><code>path_file</code> : suffixe for the path file to use.
+              Ex:'opt_path' for param_opt_path.csv</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.examples.interface.hpo_custom_function', this);">Show source &equiv;</a></p>
-  <div id="source-gcp_hpo.examples.interface.hpo_custom_function" class="source">
-    <div class="codehilite"><pre><span class="k">def</span> <span class="nf">hpo_custom_function</span><span class="p">():</span>
-    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;kernel&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;rbf&#39;</span><span class="p">,</span> <span class="s">&#39;poly&#39;</span><span class="p">]],</span>
-                  <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span>
-                  <span class="s">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;float&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]]}</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.experiments.transform_param_path.transformPath', this);">Show source &equiv;</a></p>
+  <div id="source-gcp_hpo.experiments.transform_param_path.transformPath" class="source">
+    <div class="codehilite"><pre><span class="k">def</span> <span class="nf">transformPath</span><span class="p">(</span><span class="n">test_name</span><span class="p">,</span>
+                  <span class="n">model_dir</span><span class="p">,</span>
+                  <span class="n">first_exp</span><span class="p">,</span> <span class="n">last_exp</span><span class="p">,</span>
+                  <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+                  <span class="n">path_file</span> <span class="o">=</span> <span class="s">&#39;opt_path&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    `test_name` : name of the test instance, should correspond to a </span>
+<span class="sd">        folder name in test/</span>
 
-    <span class="k">def</span> <span class="nf">scoring_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span>
+<span class="sd">    `model_dir`: a string corresponding to the model and subsize to use,</span>
+<span class="sd">        written as a path. Ex: &#39;GCP/5000&#39;</span>
 
-    <span class="n">search</span> <span class="o">=</span> <span class="n">SmartSearch</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s">&#39;GP&#39;</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">scoring_function</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-    <span class="n">search</span><span class="o">.</span><span class="n">_fit</span><span class="p">()</span>
-</pre></div>
+<span class="sd">    `first_exp` : the index number of the first experiment to take into account</span>
 
-  </div>
-</div>
+<span class="sd">    `last_exp` : the index number of the last experiment to take into account</span>
 
-  </div>
-  
-      
-  <div class="item">
-    <div class="name def" id="gcp_hpo.examples.interface.hpo_sklearn_pipeline">
-    <p>def <span class="ident">hpo_sklearn_pipeline</span>(</p><p>)</p>
-    </div>
-    
+<span class="sd">    `alpha` : the quality of a CV result is defined as mean(CV) - alpha * std(CV)</span>
 
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-gcp_hpo.examples.interface.hpo_sklearn_pipeline', this);">Show source &equiv;</a></p>
-  <div id="source-gcp_hpo.examples.interface.hpo_sklearn_pipeline" class="source">
-    <div class="codehilite"><pre><span class="k">def</span> <span class="nf">hpo_sklearn_pipeline</span><span class="p">():</span>
-    <span class="n">iris</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">()</span>
-    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
-    <span class="n">clf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="sd">    `path_file` : suffixe for the path file to use.</span>
+<span class="sd">                  Ex:&#39;opt_path&#39; for param_opt_path.csv</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c"># specify parameters and distributions to sample from</span>
-    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span>
-                  <span class="s">&quot;max_features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">]],</span>
-                  <span class="s">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">]],</span>
-                  <span class="s">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">]],</span>
-                  <span class="s">&quot;bootstrap&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">]],</span>
-                  <span class="s">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;gini&quot;</span><span class="p">,</span> <span class="s">&quot;entropy&quot;</span><span class="p">]]}</span>
-
-    <span class="n">search</span> <span class="o">=</span> <span class="n">SmartSearch</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-    <span class="n">search</span><span class="o">.</span><span class="n">_fit</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">n_exp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">first_exp</span><span class="p">,</span><span class="n">last_exp</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">dir_</span> <span class="o">=</span> <span class="n">test_name</span> <span class="o">+</span> <span class="s">&quot;/exp_results/&quot;</span> <span class="o">+</span> <span class="n">model_dir</span> <span class="o">+</span> <span class="s">&quot;/exp&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_exp</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">dir_</span> <span class="o">+</span> <span class="s">&quot;/param_path.csv&quot;</span><span class="p">,</span>
+                             <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">mean_outputs</span><span class="p">,</span> <span class="n">std_outputs</span> <span class="o">=</span> <span class="n">load_output</span><span class="p">(</span><span class="n">dir_</span><span class="p">)</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="p">[</span><span class="n">mean_outputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">std_outputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mean_outputs</span><span class="p">))]</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+        
+        <span class="n">opt_path</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">path</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">scores</span><span class="p">[:(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)]),</span> <span class="p">:]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+        
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">dir_</span> <span class="o">+</span> <span class="s">&quot;/param_&quot;</span> <span class="o">+</span> <span class="n">path_file</span> <span class="o">+</span> <span class="s">&quot;.csv&quot;</span><span class="p">,</span> <span class="n">opt_path</span><span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s">&#39;,&#39;</span><span class="p">)</span>
 </pre></div>
 
   </div>
