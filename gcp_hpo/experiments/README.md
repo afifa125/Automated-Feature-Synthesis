@@ -13,7 +13,7 @@ Simulate as many hyper-parameter optimization processes as you want, eventually 
 a pipeline, the performances of a parameter will actually be a query in the database built from the off-line computations.
 
 ### Transform the results
-Run `transform_results` to convert the path of the tested hyper-parameters into the series of the best guess at each step, to simulate the hyper-parameter that
+Run `transform_param_path` to convert the path of the tested hyper-parameters into the series of the best guess at each step, to simulate the hyper-parameter that
 would have been selected with a given budget of computations.  
 
 Then run `iterations_needed` to see how many parameters should be tested to reach a given gain, ie how a SmartSearch configuration performs on this test instance. When doing so,
@@ -23,9 +23,8 @@ which should provide an idea of the overall quality of the hyperparameters teste
 ### Files and directory structure  
 Each test instance follows the same directory structure, and all files are in the folder `experiments/test_name`:  
 - `config.yml` : a yaml file to set the parameters used to run `SmartSearch`  
-- `scoring_function/` : data from off-line computations. `params.csv` contains the parameters tested, and `output.csv` the raw outputs given by the scoring function 
-(all the cross-validation estimations). The files *true_score_t_TTT_a_AAA* contain the quality scores Q computed with a threshold == TTT and alpha == AAA (see *considering 
-only significant differences* in the paper), using all the data available; this is supposed to represent the ground truth about the performance function.  
+- `scoring_function/` : data from off-line computations. `subsize_params.csv` contains the parameters tested, and `subsize_output.csv` the raw outputs given by the scoring function 
+(all the cross-validation estimations) on sub-sampled datasets of size `subsize`.   
 - `exp_results/model/subsize/expXXX/` : data returned by `runExperiment`, where XXX is the number set in the config file, `subsize` is the sub-sample size used
 by SmartSearch, and `model` is either `rand`, `GP`, or `GCP`.  
 - `exp_results/model/subsize/iterations_needed_refSize_pathFile/expXXX_YYY` : the mean, median, first and third quartiles of the iterations needed to reach a given score gain, over experiments 

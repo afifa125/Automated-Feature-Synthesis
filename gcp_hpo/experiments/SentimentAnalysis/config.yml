@@ -3,7 +3,7 @@ first_exp : 1
 
 ###  Parameters  ###
 subsize : 5000
-model : 'rand'
+model : 'GP'
 n_candidates : 1000
 model_noise : None
 n_random_init : 20

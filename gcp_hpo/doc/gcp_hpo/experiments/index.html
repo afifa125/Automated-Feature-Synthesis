@@ -1039,9 +1039,10 @@ table {
 
     <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
       <ul>
-        <li class="mono"><a href="analyze_results.m.html">gcp_hpo.experiments.analyze_results</a></li>
         <li class="mono"><a href="iterations_needed.m.html">gcp_hpo.experiments.iterations_needed</a></li>
         <li class="mono"><a href="run_experiment.m.html">gcp_hpo.experiments.run_experiment</a></li>
+        <li class="mono"><a href="transform_param_path.m.html">gcp_hpo.experiments.transform_param_path</a></li>
+        <li class="mono"><a href="utils.m.html">gcp_hpo.experiments.utils</a></li>
       </ul>
     </li>
     </ul>
@@ -1065,29 +1066,33 @@ but with randomized search. </p>
 <h3>On-line computations</h3>
 <p>Simulate as many hyper-parameter optimization processes as you want, eventually with different configurations, with the script <code>run_experiment</code>. There, instead of training/testing 
 a pipeline, the performances of a parameter will actually be a query in the database built from the off-line computations.</p>
-<h3>Analyze the results</h3>
-<p>Run <code>iterations_needed</code> to see how many parameters should be tested to reach a given gain, ie how a SmartSearch configuration performs on this test instance. <code>analyzed_results</code> is 
-here to convert the raw outputs from <code>run_experiment</code> into quality scores, to simulate what we would observe in a real case.</p>
+<h3>Transform the results</h3>
+<p>Run <code>transform_param_path</code> to convert the path of the tested hyper-parameters into the series of the best guess at each step, to simulate the hyper-parameter that
+would have been selected with a given budget of computations.
+Then run <code>iterations_needed</code> to see how many parameters should be tested to reach a given gain, ie how a SmartSearch configuration performs on this test instance. When doing so,
+you can choose the file to use for the hyper-parameter path. This will also compute the <code>cumul_score</code>, which is the averaged true score of all the hyperparameters visited up to each step,
+which should provide an idea of the overall quality of the hyperparameters tested.</p>
 <h3>Files and directory structure</h3>
 <p>Each test instance follows the same directory structure, and all files are in the folder <code>experiments/test_name</code>:  </p>
 <ul>
 <li>
-<p><code>config.yml</code> : a yaml file to set the parameters used to run <code>SmartSearch</code>  </p>
+<p><code>config.yml</code> : a yaml file to set the parameters used to run <code>SmartSearch</code>    </p>
 </li>
 <li>
-<p><code>scoring_function/</code> : data from off-line computations. <code>params.csv</code> contains the parameters tested, and <code>output.csv</code> the raw outputs given by the scoring function (all the cross-validation estimations). The files <em>true_score_t_TTT_a_AAA</em> contain the quality scores Q computed with a threshold == TTT and alpha == AAA (see <em>considering only significant differences</em> in the paper), using all the data available; this is supposed to represent the ground truth about the performance function.  </p>
+<p><code>scoring_function/</code> : data from off-line computations. <code>subsize_params.csv</code> contains the parameters tested, and <code>subsize_output.csv</code> the raw outputs given by the scoring function 
+(all the cross-validation estimations) on sub-sampled datasets of size <code>subsize</code>.  </p>
 </li>
 <li>
-<p><code>exp_results/expXXX/</code> : data returned by <code>runExperiment</code>, where XXX is the number set in the config file.  </p>
+<p><code>exp_results/model/subsize/expXXX/</code> : data returned by <code>runExperiment</code>, where XXX is the number set in the config file, <code>subsize</code> is the sub-sample size used
+by SmartSearch, and <code>model</code> is either <code>rand</code>, <code>GP</code>, or <code>GCP</code>.  </p>
 </li>
 <li>
-<p><code>exp_results/transformed_t_TTT_a_AAA/expXXX/</code> : analyzed results from the trial expXXX, computed by run_result_analysis with a threshold == TTT and alpha == AAA.   </p>
+<p><code>exp_results/model/subsize/iterations_needed_refSize_pathFile/expXXX_YYY</code> : the mean, median, first and third quartiles of the iterations needed to reach a given score gain, over experiments 
+XXX to YYY, using the dataset of size <code>refSize</code> to set the 'true scores', and the file <code>pathFile</code> for the parameter path.  </p>
 </li>
 <li>
-<p><code>exp_results/transformed_smooth_t_TTT_a_AAA_kKKK_rRRR_bBBB/expXXX/</code> :  analyzed results from the trial expXXX with the <em>smooth</em> quality function, computed by <code>run_result_analysis</code> with a threshold == TTT, alpha == AAA, using the nearest KKK neighbors, a radius coefficient RRR and beta == BBB.   </p>
-</li>
-<li>
-<p><code>exp_results/iterations_needed/expXXX_YYY_t_TTT_a_AAA</code> : the mean, median, first and third quartiles of the iterations needed to reach a given score gain, over experiments XXX to YYY. The score is actually the true score computed with a threshold == TTT and alpha == AAA.</p>
+<p><code>exp_results/model/subsize/cumul_score_refSize_pathFile/expXXX_YYY</code> : the median of the averaged gain of all hyperparameters tested up to each iteration, over experiments 
+XXX to YYY, using the dataset of size <code>refSize</code> to set the 'true scores', and the file <code>pathFile</code> for the parameter path.</p>
 </li>
 </ul>
   
@@ -1099,31 +1104,40 @@ here to convert the raw outputs from <code>run_experiment</code> into quality sc
 <span class="sd">module relies on two different components: off-line and on-line computations.  </span>
 
 <span class="sd">### Off-line computations</span>
+
 <span class="sd">First, train and test a pipeline for many parameters, and store their performances in the folder `test_name/scoring_function`. This can be done, for example, by running `SmartSearch` </span>
 <span class="sd">but with randomized search. </span>
 
 <span class="sd">### On-line computations</span>
+
 <span class="sd">Simulate as many hyper-parameter optimization processes as you want, eventually with different configurations, with the script `run_experiment`. There, instead of training/testing </span>
 <span class="sd">a pipeline, the performances of a parameter will actually be a query in the database built from the off-line computations.</span>
 
-<span class="sd">### Analyze the results</span>
-<span class="sd">Run `iterations_needed` to see how many parameters should be tested to reach a given gain, ie how a SmartSearch configuration performs on this test instance. `analyzed_results` is </span>
-<span class="sd">here to convert the raw outputs from `run_experiment` into quality scores, to simulate what we would observe in a real case.</span>
+<span class="sd">### Transform the results</span>
+
+<span class="sd">Run `transform_param_path` to convert the path of the tested hyper-parameters into the series of the best guess at each step, to simulate the hyper-parameter that</span>
+<span class="sd">would have been selected with a given budget of computations.</span>
+<span class="sd">Then run `iterations_needed` to see how many parameters should be tested to reach a given gain, ie how a SmartSearch configuration performs on this test instance. When doing so,</span>
+<span class="sd">you can choose the file to use for the hyper-parameter path. This will also compute the `cumul_score`, which is the averaged true score of all the hyperparameters visited up to each step,</span>
+<span class="sd">which should provide an idea of the overall quality of the hyperparameters tested.</span>
 
 <span class="sd">### Files and directory structure  </span>
+
 <span class="sd">Each test instance follows the same directory structure, and all files are in the folder `experiments/test_name`:  </span>
 
-<span class="sd">- `config.yml` : a yaml file to set the parameters used to run `SmartSearch`  </span>
+<span class="sd">- `config.yml` : a yaml file to set the parameters used to run `SmartSearch`    </span>
 
-<span class="sd">- `scoring_function/` : data from off-line computations. `params.csv` contains the parameters tested, and `output.csv` the raw outputs given by the scoring function (all the cross-validation estimations). The files *true_score_t_TTT_a_AAA* contain the quality scores Q computed with a threshold == TTT and alpha == AAA (see *considering only significant differences* in the paper), using all the data available; this is supposed to represent the ground truth about the performance function.  </span>
+<span class="sd">- `scoring_function/` : data from off-line computations. `subsize_params.csv` contains the parameters tested, and `subsize_output.csv` the raw outputs given by the scoring function </span>
+<span class="sd">(all the cross-validation estimations) on sub-sampled datasets of size `subsize`.  </span>
 
-<span class="sd">- `exp_results/expXXX/` : data returned by `runExperiment`, where XXX is the number set in the config file.  </span>
+<span class="sd">- `exp_results/model/subsize/expXXX/` : data returned by `runExperiment`, where XXX is the number set in the config file, `subsize` is the sub-sample size used</span>
+<span class="sd">by SmartSearch, and `model` is either `rand`, `GP`, or `GCP`.  </span>
 
-<span class="sd">- `exp_results/transformed_t_TTT_a_AAA/expXXX/` : analyzed results from the trial expXXX, computed by run_result_analysis with a threshold == TTT and alpha == AAA.   </span>
+<span class="sd">- `exp_results/model/subsize/iterations_needed_refSize_pathFile/expXXX_YYY` : the mean, median, first and third quartiles of the iterations needed to reach a given score gain, over experiments </span>
+<span class="sd">XXX to YYY, using the dataset of size `refSize` to set the &#39;true scores&#39;, and the file `pathFile` for the parameter path.  </span>
 
-<span class="sd">- `exp_results/transformed_smooth_t_TTT_a_AAA_kKKK_rRRR_bBBB/expXXX/` :  analyzed results from the trial expXXX with the *smooth* quality function, computed by `run_result_analysis` with a threshold == TTT, alpha == AAA, using the nearest KKK neighbors, a radius coefficient RRR and beta == BBB.   </span>
-
-<span class="sd">- `exp_results/iterations_needed/expXXX_YYY_t_TTT_a_AAA` : the mean, median, first and third quartiles of the iterations needed to reach a given score gain, over experiments XXX to YYY. The score is actually the true score computed with a threshold == TTT and alpha == AAA.</span>
+<span class="sd">- `exp_results/model/subsize/cumul_score_refSize_pathFile/expXXX_YYY` : the median of the averaged gain of all hyperparameters tested up to each iteration, over experiments </span>
+<span class="sd">XXX to YYY, using the dataset of size `refSize` to set the &#39;true scores&#39;, and the file `pathFile` for the parameter path.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
@@ -1136,16 +1150,6 @@ here to convert the raw outputs from <code>run_experiment</code> into quality sc
 
 
     <h2 class="section-title" id="header-submodules">Sub-modules</h2>
-      <div class="item">
-      <p class="name"><a href="analyze_results.m.html">gcp_hpo.experiments.analyze_results</a></p>
-      
-  
-    <div class="desc"><p>Analyze the results of a single experiment to computes quality scores for the parameters 
-tested during the search. The quality scores are defined in the paper and aim at giving 
-a more accurate feedback than a list of cross-validation outputs. First, it should consider 
-only significant differences...</p></div>
-
-      </div>
       <div class="item">
       <p class="name"><a href="iterations_needed.m.html">gcp_hpo.experiments.iterations_needed</a></p>
       
@@ -1162,6 +1166,21 @@ averaged on several experiment.</p></div>
 given as an argument when running the script. This will set the parameters 
 as defined in the configuration file <code>test_name/config.yml</code> and save the 
 data in the folder <code>test_name/exp_results/expX/</code> where X is the number given ...</p></div>
+
+      </div>
+      <div class="item">
+      <p class="name"><a href="transform_param_path.m.html">gcp_hpo.experiments.transform_param_path</a></p>
+      
+  
+    <div class="desc"><p>Transform the <code>param_path.csv</code> file into a new path were the hyper-parameter at
+step k is the best guess with the data available up to this step.</p></div>
+
+      </div>
+      <div class="item">
+      <p class="name"><a href="utils.m.html">gcp_hpo.experiments.utils</a></p>
+      
+  
+    <div class="desc"><p>Utilities to analyze the results of HPO experiments.</p></div>
 
       </div>
   </section>
