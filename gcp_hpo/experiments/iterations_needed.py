@@ -66,13 +66,21 @@ def iterationsNeeded(test_name,
     # `alpha` : trade-off parameter to compute the score from the significant
     #   mean and the standard deviation. score == m - alpha * std
 
-    result_path = test_name + "/exp_results/" + model_dir + "/iterations_needed/exp" + \
+    # prepare files and folders
+    result_path = test_name + "/exp_results/" + model_dir + "/iterations_needed_" + str(ref_size) + "/exp" + \
                   str(first_exp) + "_" + str(last_exp) + ".csv"
                   # "_t_" +str(threshold)+"_a_"+str(alpha) +
-    folder = test_name + "/exp_results/" + model_dir + "/iterations_needed"
+    result_path_cs = test_name + "/exp_results/" + model_dir + "/cumul_score_" + str(ref_size) + "/exp" + \
+                  str(first_exp) + "_" + str(last_exp) + ".csv"
+
+    folder = test_name + "/exp_results/" + model_dir + "/iterations_needed_" + str(ref_size)
+    folder_cs = test_name + "/exp_results/" + model_dir + "/cumul_score_" + str(ref_size)
 
     if not os.path.exists(folder):
         os.mkdir(folder)
+
+    if not os.path.exists(folder_cs):
+        os.mkdir(folder_cs)
 
     if os.path.exists(result_path):
         result = np.genfromtxt(result_path, delimiter = ',')
@@ -89,7 +97,7 @@ def iterationsNeeded(test_name,
     f.close()
     scores = np.asarray(mean_outputs)
 
-    #load the corresponding parameters
+    # load the corresponding parameters
     p_dir = test_name + "/scoring_function/" + str(ref_size) + "_params.csv"
     all_params = np.genfromtxt(p_dir,delimiter=',')
 
@@ -100,14 +108,20 @@ def iterationsNeeded(test_name,
     M = np.max(scores)
 
     all_iter_needed = []
+    all_cumul_score = []
 
     for n_exp in range(first_exp,last_exp+1):
         path = np.genfromtxt(test_name + "/exp_results/" + model_dir + "/exp" + str(n_exp) + "/param_path.csv",
                              delimiter=',')
         true_score = np.zeros(path.shape[0])
+        cumul_score = np.zeros(path.shape[0])
+        s = 0
+        
         for i in range(path.shape[0]):
             neighbor_idx = KNN.kneighbors(path[i,:],1,return_distance=False)[0]
-            true_score[i] = 100.* (scores[neighbor_idx]-m)/(M-m)
+            s += scores[neighbor_idx]
+            true_score[i]  = 100. * (scores[neighbor_idx] - m) / (M - m)
+            cumul_score[i] = 100. * ((s/(i+1)) - m) / (M - m)
 
         n_iter_needed =  np.zeros(101)
 
@@ -122,23 +136,27 @@ def iterationsNeeded(test_name,
             n_iter_needed[i] = nb_iter
 
         all_iter_needed.append(n_iter_needed)
+        all_cumul_score.append(cumul_score)
 
-    mean_iter_needed = [np.mean([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)]) for i in range(101) ]
-    median_iter_needed = [np.median([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)]) for i in range(101) ]
-    q1_iter_needed = [np.percentile([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)],q=25) for i in range(101) ]
-    q3_iter_needed = [np.percentile([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)],q=75) for i in range(101) ]
+    mean_iter_needed   = [np.mean([all_iter_needed[j][i]       for j in range(last_exp+1-first_exp)])      for i in range(101)]
+    median_iter_needed = [np.median([all_iter_needed[j][i]     for j in range(last_exp+1-first_exp)])      for i in range(101)]
+    q1_iter_needed     = [np.percentile([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)],q=25) for i in range(101)]
+    q3_iter_needed     = [np.percentile([all_iter_needed[j][i] for j in range(last_exp+1-first_exp)],q=75) for i in range(101)]
 
-    all_results = np.concatenate((np.atleast_2d(mean_iter_needed),np.atleast_2d(q1_iter_needed), \
-                                            np.atleast_2d(median_iter_needed),np.atleast_2d(q3_iter_needed)))
+    median_cumul_score = [np.median([all_cumul_score[j][i]     for j in range(last_exp+1-first_exp)])      for i in range((all_cumul_score[0]).shape[0])]
 
-    np.savetxt(result_path, all_results, delimiter=',')
+    all_results = np.concatenate((np.atleast_2d(mean_iter_needed),   np.atleast_2d(q1_iter_needed), \
+                                  np.atleast_2d(median_iter_needed), np.atleast_2d(q3_iter_needed)))
+
+    np.savetxt(result_path, all_results, delimiter = ',')
+    np.savetxt(result_path_cs, np.asarray(median_cumul_score), delimiter = ',')
 
     return all_results
 
 
 if __name__ == '__main__':
     first_exp = 1
-    last_exp = 20
+    last_exp = 50
     test_name = "SentimentAnalysis"
     model_dir = "rand/5000"
     ref_size = 15000
