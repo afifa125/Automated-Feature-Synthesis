@@ -12,7 +12,7 @@ Check the examples for details on how to use SmartSearch.
 
 ### Real-world examples for hyper-parameter optimization research 
 #### - `gcp_hpo.experiments`
-Two real examples are included in the repository: the **Sentiment Analysis problem** for IMDB reviews (cf. [Kaggle's competition](https://www.kaggle.com/c/word2vec-nlp-tutorial)) in folder `experiments/Bags_of_Popcorn`, and the **Handwritten digits** one from the MNIST database (cf. [Kaggle's competition](https://www.kaggle.com/c/digit-recognizer)) in folder `experiments/MNIST`.
+Two real examples are included in the repository: the **Sentiment Analysis problem** for IMDB reviews (cf. [Kaggle's competition](https://www.kaggle.com/c/word2vec-nlp-tutorial)) in folder `experiments/SentimentAnalysis`, and the **Handwritten digits** one from the MNIST database (cf. [Kaggle's competition](https://www.kaggle.com/c/digit-recognizer)) in folder `experiments/MNIST`.
 These can be used to test the GCP and GCP-based hyper-parameter optimization faster. See the `experiments` folder for more details on how to use the package for research purposes.  
 
 ### Understand Gaussian Copula Processes 
