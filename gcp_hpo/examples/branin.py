@@ -9,6 +9,7 @@ the maximization process.
 # min is 0.398
 
 from gcp_hpo.smart_search import SmartSearch
+# from ..smart_search import SmartSearch # Alec edit
 import numpy as np
 import math
 

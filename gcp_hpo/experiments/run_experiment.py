@@ -59,7 +59,8 @@ def runExperiment(first_exp,
 
   # Load data
   output = []
-  f =open(( dir_ + 'scoring_function/' + str(subsize) + '_output.csv'),'r')
+  # f =open(( dir_ + 'scoring_function/' + str(subsize) + '_output.csv'),'r')
+  f =open(( dir_ + 'scoring_function/' + 'output.csv'),'r') # Alec edit
   for l in f:
       l = l[1:-3]
       string_l = l.split(',')
@@ -67,8 +68,8 @@ def runExperiment(first_exp,
   f.close()
   print 'Loaded output file,', len(output),'rows'
 
-  params = np.genfromtxt((dir_ + 'scoring_function/' + str(subsize) + '_params.csv'), 
-                         delimiter=',')
+  # params = np.genfromtxt((dir_ + 'scoring_function/' + str(subsize) + '_params.csv'), delimiter=',')
+  params = np.genfromtxt((dir_ + 'scoring_function/' + 'params.csv'), delimiter=',')
   print 'Loaded parameters file, shape :', params.shape
 
   KNN = NearestNeighbors()
@@ -126,6 +127,7 @@ def runExperiment(first_exp,
                         verbose = 2,
                         acquisition_function = acquisition_function,
                         detailed_res = 2)
+                        # nugget = 1e-1) # Alec edit
 
       all_parameters, all_search_path, all_raw_outputs, all_mean_outputs = search._fit()
 
@@ -150,12 +152,16 @@ if __name__ == '__main__':
 
   config = yaml.safe_load(open(dir_ + 'config.yml'))
 
+  # print 'config',config
+
   runExperiment(first_exp = config['first_exp'],
               n_exp = config['n_exp'],
               dir_ = dir_,
               model = config['model'],
               parameters = config['parameters'],
-              subsize = config['subsize'],
+              # subsize = config['subsize'], # missing
+              subsize = '5000', # for SentimentAnalysis
+              # subsize = '', # For MNIST/Bags_of_Popcorn
               n_random_init = config['n_random_init'],
               n_total_iter = config['n_iter'],
               corr_kernel = config['corr_kernel'],
