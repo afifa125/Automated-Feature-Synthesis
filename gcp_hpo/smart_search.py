@@ -193,6 +193,7 @@ class SmartSearch(object):
 		>>> from sklearn.datasets import load_digits
 		>>> iris = load_digits()
 		>>> X, y = iris.data, iris.target
+		>>> from sklearn.ensemble import RandomForestClassifier
 		>>> clf = RandomForestClassifier(n_estimators=20)
 		>>> parameters = {
 				"max_depth": ['int',[3, 3]],
@@ -201,7 +202,7 @@ class SmartSearch(object):
 				"min_samples_leaf": ['int',[1,11]],
 				"bootstrap": ['cat',[True, False]],
 				"criterion": ['cat',["gini", "entropy"]]}
-
+		>>> from gcp_hpo.smart_search import SmartSearch
 		>>> search = SmartSearch(parameters,estimator=clf,X=X,y=y,n_iter=20)
 		>>> search._fit()
 	"""
