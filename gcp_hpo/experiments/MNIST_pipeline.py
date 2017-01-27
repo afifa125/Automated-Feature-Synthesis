@@ -34,7 +34,7 @@ def mnist_pipeline_tmp():
 # 	y= y
 # 	return branin(x,y)
 
-def import_all_data():
+def import_data():
 	train_data = np.loadtxt('/Users/aandersonlaptop/Desktop/MNIST_train.csv',skiprows=1,delimiter=',')
     train_x = train_data[:,1:]
     train_y = train_data[:,0]
@@ -73,7 +73,7 @@ def main():
 
 	### Set parameters ###
 	parameters = { 'blur_sigma' : ['int',[0,1]],
-	               'blur_ksize' : ['int',[0,4]],
+	               'blur_ksize' : ['int',[1,1]],
 	               'pca_dim' : ['int',[50,300]],
 	               'degree_poly' : ['int',[1,4]],
 	               'gamma' : ['int',[int(10**(-3)),int(10**(1))]] }
