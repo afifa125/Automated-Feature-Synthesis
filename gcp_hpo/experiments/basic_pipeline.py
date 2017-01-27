@@ -13,7 +13,21 @@ Hyperparameters to be optimized:
     Parameter             Description                        Range
     pca_dim               dimension of PCA                   [0,4]
     number_estimators     number of trees in random forest   [5,30]
+"""
 
+"""
+INSTRUCTIONS FOR IMPLEMENTING SMARTSEARCH ON YOUR PIPELINE
+
+Essentially, just follow the format of this file using the steps below.
+
+	1. Specify a parameter range
+		- In the main() function, simply put in the dictionary "parameters" the names, ranges, and types
+		of the hyperparameters you would like to optimize over.
+	2. Define a scoring function
+		- The return value is how you would like alternative models to be evaluated (cross validation is also used)
+		- Be sure to import your data outside of this function so that you don't repeat unnecessary steps
+		- Define helper functions outside of this function as needed
+		- All parameters on which you are optimizing must be defined in p_dict
 """
 
 from gcp_hpo.smart_search import SmartSearch
@@ -28,7 +42,6 @@ from sklearn.ensemble import RandomForestClassifier
 def load_data():
 	# Import data
     data = load_iris()
-#     print 'data',data
     X = data['data']
     y = data['target']
     return train_test_split(X,y,test_size=0.33) 
