@@ -34,28 +34,59 @@ def mnist_pipeline_tmp():
 # 	y= y
 # 	return branin(x,y)
 
+def import_all_data():
+	train_data = np.loadtxt('/Users/aandersonlaptop/Desktop/MNIST_train.csv',skiprows=1,delimiter=',')
+    train_x = train_data[:,1:]
+    train_y = train_data[:,0]
+    # print 'train Y',train_y
+    # print 'train X',train_x
+    test_data = np.loadtxt('/Users/aandersonlaptop/Desktop/MNIST_test.csv',skiprows=1,delimiter=',') # way slower than pandas
+    test_x = test_data[:,1:]
+    test_y = test_data[:,0]
+    # print 'test Y',test_y
+    # print 'test X',test_x
+    return train_x,train_y,test_x,test_y
+
+# TODO set X_train and y_train here (subsets, first 5000, etc)
+# X_train =
+# y_train =
+# X_test =
+# y_test = 
+
 def scoring_function(p_dict):
 	# parameters: blur_ksize,blur_sigma,pca_dim/10,degree,log10(gamma*1000)
-	pass
+
+	# Train model
+	blurred_X_train = gaussian_blur(X_train,stddev=p_dict['blur_sigma'],k_size=p_dict['blur_ksize'])
+	pca_X_train = do_pca(blurred_X_train,num_components=p_dict['pca_dim'])
+	model = do_svm(pca_X_train,y_train,degree=p_dict['degree_poly'],gamma_coeff=p_dict['gamma'])
+
+	# Test model
+	blurred_X_test = gaussian_blur(X_test,stddev=p_dict['blur_sigma'],k_size=p_dict['blur_ksize'])
+	pca_X_test = do_pca(blurred_X_test,num_components=p_dict['pca_dim'])
+	return model.score(pca_X_test,y_test)
+
 
 
 def main():
-	# TODO change parameters
 	# TODO maybe change the arguments to SmartSearch to be the same as for MNIST in the experiments folder
 
 	### Set parameters ###
-	parameters = { 'x' : ['float',[0,15]],
-				   'y' : ['float',[0,15]] }
+	parameters = { 'blur_sigma' : ['int',[0,1]],
+	               'blur_ksize' : ['int',[0,4]],
+	               'pca_dim' : ['int',[50,300]],
+	               'degree_poly' : ['int',[1,4]],
+	               'gamma' : ['int',[int(10**(-3)),int(10**(1))]] }
 	nugget = 1.e-10
 	n_clusters = 1
 	cluster_evol ='constant'
-	corr_kernel = 'squared_exponential'
+	corr_kernel = 'exponential_periodic'
 	mapWithNoise= False
 	model_noise = None
 	sampling_model = 'GCP'
-	n_candidates= 300
-	n_random_init= 15
-	n_iter = 100
+	n_candidates= 100
+	n_random_init= 10
+	n_iter = 20
 	nb_iter_final = 0
 	acquisition_function = 'UCB'
 
@@ -73,7 +104,7 @@ def main():
 				n_clusters=n_clusters, 
 				cluster_evol = cluster_evol,
 				verbose=2,
-				detailed_res = 0)
+				detailed_res = 2)
 
 	search._fit()
 
