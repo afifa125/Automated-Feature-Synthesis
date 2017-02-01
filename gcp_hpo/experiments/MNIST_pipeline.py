@@ -13,6 +13,7 @@ from sklearn.svm import SVC
 from cv2 import GaussianBlur
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+from pipeline_utils import do_pca,random_forest,blb
 
 def import_data(selected_data,size_test_data):
     """
@@ -33,7 +34,7 @@ def import_data(selected_data,size_test_data):
 
     return train_test_split(X,y,test_size=size_test_data)
 
-X_train,X_test,y_train,y_test = import_data(0.1,0.33)
+X_train,X_test,y_train,y_test = import_data(0.01,0.33)
     
 
 def gaussian_blur(X,kernel_size,stddev):
@@ -42,21 +43,6 @@ def gaussian_blur(X,kernel_size,stddev):
         output[i,]= np.reshape(GaussianBlur(X[i,],(kernel_size,kernel_size),sigmaX=stddev,sigmaY=stddev),\
                          (X.shape[1]))
     return output
-
-def do_pca(X,num_components,fit,fitted_model=None):
-    if fit:
-        pca = PCA(n_components = num_components)
-        pca = pca.fit(X)
-        return pca,pca.transform(X)
-    else:
-        return fitted_model.transform(X)
-
-def random_forest(X,y,num_estimators):
-    clf = RandomForestClassifier(n_estimators=num_estimators)
-    clf.fit(X,y)
-    print 'accuracy on training set',clf.score(X,y)
-    return clf
-
 
 # Old, non-BLB scoring function
 # def scoring_function(p_dict):
@@ -75,31 +61,10 @@ def random_forest(X,y,num_estimators):
 # 		fitted_model=pca_model)
 # 	return [model.score(pca_X_test,y_test)]
 
-def blb_main(X,y,calculate_statistic,p_dict,pca_model,forest_model):
-	#### Define variables ######
-	n = X.shape[0] # Size of data
-	b = int(n**(0.6)) # subset size
-	s = 1 # Number of sampled subsets
-	r = 20 # Number of Monte Carlo iterations
-
-	#### Algorithm ####
-	subsample_estimate_sum = 0.0
-	pval_array = np.ones(b)/float(b)
-	# Randomly sample subset of indices
-	idx = np.random.randint(low=0,high=n,size=(s,b))
-	for j in range(s):
-	    # Approximate the measure
-	    monte_carlo_estimate_sum= 0.0
-	    multinomial_sample = np.random.multinomial(n,pvals=pval_array,size=r)
-	    for k in range(r):
-	        monte_carlo_estimate_sum += calculate_statistic(X,y,multinomial_sample[k,]\
-	                                             ,idx[j,],p_dict,pca_model,forest_model)
-	    subsample_estimate_sum += monte_carlo_estimate_sum/float(r)
-
-	return subsample_estimate_sum/float(s)
-
-def calculate_score(X,y,sample,indices,p_dict,pca_model,forest_model):
+def calculate_score(X,y,sample,indices,p_dict,score_fnc_args):
 	# NOTE: The multinomial sample weights are currently not included for PCA
+
+	pca_model,forest_model = score_fnc_args
 	sampled_X = X[indices]
 	sampled_y = y[indices]
 
@@ -117,7 +82,7 @@ def scoring_function(p_dict):
 	pca_model,pca_X_train = do_pca(blurred_X_train,num_components=p_dict['pca_dim'],fit = True)
 	forest_model = random_forest(pca_X_train,y_train,num_estimators=p_dict['num_trees'])
 
-	return [blb_main(X_test,y_test,calculate_score,p_dict,pca_model,forest_model)]
+	return [blb(X_test,y_test,p_dict,calculate_score,(pca_model,forest_model))]
 
 
 

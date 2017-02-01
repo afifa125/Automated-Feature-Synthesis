@@ -16,7 +16,7 @@ Hyperparameters to be optimized:
 """
 
 """
-INSTRUCTIONS FOR IMPLEMENTING SMARTSEARCH ON YOUR PIPELINE
+INSTRUCTIONS FOR IMPLEMENTING SMARTSEARCH ON NEW PIPELINES
 
 Essentially, just follow the format of this file using the steps below.
 
@@ -37,6 +37,7 @@ from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
+from pipeline_utils import do_pca,random_forest,blb
 
 
 def load_data():
@@ -48,53 +49,15 @@ def load_data():
 
 X_train,X_test,y_train,y_test = load_data()
 
-def do_pca(X,num_components,fit,fitted_model=None):
-    if fit:
-        pca = PCA(n_components = num_components)
-        pca = pca.fit(X)
-        return pca,pca.transform(X)
-    else:
-        return fitted_model.transform(X)
 
-def random_forest(X,y,num_estimators):
-    clf = RandomForestClassifier(n_estimators=num_estimators)
-    clf.fit(X,y)
-    print 'accuracy on training set',clf.score(X,y)
-    return clf
-
-def blb_main(X,y,calculate_statistic,p_dict,pca_model,forest_model):
-	#### Define variables ######
-	n = X.shape[0] # Size of data
-	b = int(n**(0.7)) # subset size
-	s = 1 # Number of sampled subsets
-	r = 20 # Number of Monte Carlo iterations
-
-	#### Algorithm ####
-	subsample_estimate_sum = 0.0
-	pval_array = np.ones(b)/float(b)
-	# Randomly sample subset of indices
-	idx = np.random.randint(low=0,high=n,size=(s,b))
-	for j in range(s):
-	    # Approximate the measure
-	    monte_carlo_estimate_sum= 0.0
-	    multinomial_sample = np.random.multinomial(n,pvals=pval_array,size=r)
-	    for k in range(r):
-	        monte_carlo_estimate_sum += calculate_statistic(X,y,multinomial_sample[k,]\
-	                                             ,idx[j,],p_dict,pca_model,forest_model)
-	    subsample_estimate_sum += monte_carlo_estimate_sum/float(r)
-
-	return subsample_estimate_sum/float(s)
-
-
-def calculate_accuracy(X,y,sample,indices,p_dict,pca_model,model):
-	# TODO check everything for correctness
-
+def calculate_accuracy(X,y,sample,indices,p_dict,score_fnc_args):
+	pca_model, forest_model = score_fnc_args
 	sampled_X = X[indices]
 	sampled_Y = y[indices]
 
 	# Test model
 	pca_X_test = do_pca(sampled_X,num_components=p_dict['pca_dim'],fit=False,fitted_model=pca_model)
-	return model.score(pca_X_test,sampled_Y,sample_weight=sample)
+	return forest_model.score(pca_X_test,sampled_Y,sample_weight=sample)
 
 
 def scoring_function(p_dict):
@@ -103,7 +66,7 @@ def scoring_function(p_dict):
 	forest_model = random_forest(pca_X_train,y_train,num_estimators=p_dict['number_estimators'])
 
 	# Test model and output score
-	return [blb_main(X_test,y_test,calculate_accuracy,p_dict,pca_model,forest_model)]
+	return [blb(X_test,y_test,p_dict,calculate_accuracy,(pca_model,forest_model))]
 
 # Old scoring_function, does not use BLB
 # def scoring_function(p_dict):
@@ -117,7 +80,6 @@ def scoring_function(p_dict):
 # 	# Test model
 # 	pca_X_test = do_pca(X_test,num_components=p_dict['pca_dim'],fit=False,fitted_model=pca_model)
 # 	return [model.score(pca_X_test,y_test)]
-
 
 
 def main():
