@@ -87,26 +87,26 @@ def blb_main(X,y,calculate_statistic,p_dict,pca_model,forest_model):
 
 
 def calculate_accuracy(X,y,sample,indices,p_dict,pca_model,model):
-	# TODO use the multinomial sample
+	# TODO check everything for correctness
+
 	sampled_X = X[indices]
 	sampled_Y = y[indices]
 
 	# Test model
 	pca_X_test = do_pca(sampled_X,num_components=p_dict['pca_dim'],fit=False,fitted_model=pca_model)
-	return model.score(pca_X_test,sampled_Y)
+	return model.score(pca_X_test,sampled_Y,sample_weight=sample)
 
 
 def scoring_function(p_dict):
-	# TODO only using train now
-
 	# Train model
 	pca_model,pca_X_train = do_pca(X_train,num_components=p_dict['pca_dim'],fit = True)
 	forest_model = random_forest(pca_X_train,y_train,num_estimators=p_dict['number_estimators'])
 
+	# Test model and output score
 	return [blb_main(X_test,y_test,calculate_accuracy,p_dict,pca_model,forest_model)]
 
+# Old scoring_function, does not use BLB
 # def scoring_function(p_dict):
-# 	# NOTE: old version. this does not use BLB
 
 # 	# parameters: pca_dim,number_estimators
 

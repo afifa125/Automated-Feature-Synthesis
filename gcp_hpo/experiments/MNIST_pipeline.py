@@ -1,5 +1,7 @@
 """
 Running MNIST pipeline entirely online, rather than from csv files like currently done in the experiments folder
+
+NOTE: Currently uses random forest classifier for speed considerations, but can be adapted to SVM
 """
 
 from gcp_hpo.smart_search import SmartSearch
@@ -31,7 +33,7 @@ def import_data(selected_data,size_test_data):
 
     return train_test_split(X,y,test_size=size_test_data)
 
-X_train,X_test,y_train,y_test = import_data(1.0,0.33)
+X_train,X_test,y_train,y_test = import_data(0.1,0.33)
     
 
 def gaussian_blur(X,kernel_size,stddev):
@@ -64,7 +66,7 @@ def random_forest(X,y,num_estimators):
 # 	blurred_X_train = gaussian_blur(X_train,kernel_size = p_dict['blur_ksize'],\
 # 		stddev = p_dict['blur_sigma'])
 # 	pca_model,pca_X_train = do_pca(blurred_X_train,num_components=p_dict['pca_dim'],fit = True)
-# 	model = random_forest(pca_X_train,y_train,num_estimators=20) # TODO change this to pdict['num_trees']
+# 	model = random_forest(pca_X_train,y_train,num_estimators=pdict['num_trees'])
 
 # 	# Test model
 # 	blurred_X_test = gaussian_blur(X_test,kernel_size = p_dict['blur_ksize'],\
@@ -97,33 +99,29 @@ def blb_main(X,y,calculate_statistic,p_dict,pca_model,forest_model):
 	return subsample_estimate_sum/float(s)
 
 def calculate_score(X,y,sample,indices,p_dict,pca_model,forest_model):
-	# TODO use the multinomial sample
+	# NOTE: The multinomial sample weights are currently not included for PCA
 	sampled_X = X[indices]
 	sampled_y = y[indices]
 
 	blurred_X_sample = gaussian_blur(sampled_X,kernel_size = p_dict['blur_ksize'],\
 		stddev = p_dict['blur_sigma'])
-	# print 'second shape',X_train.shape
 	pca_X_sample = do_pca(blurred_X_sample,num_components=p_dict['pca_dim'],fit=False,\
 		fitted_model=pca_model)
-	return forest_model.score(pca_X_sample,sampled_y)
+	return forest_model.score(pca_X_sample,sampled_y,sample_weight=sample)
 
 # New, BLB scoring function
 def scoring_function(p_dict):
 	# Train model
 	blurred_X_train = gaussian_blur(X_train,kernel_size = p_dict['blur_ksize'],\
 		stddev = p_dict['blur_sigma'])
-	# print 'first shape',blurred_X_train.shape
 	pca_model,pca_X_train = do_pca(blurred_X_train,num_components=p_dict['pca_dim'],fit = True)
-	forest_model = random_forest(pca_X_train,y_train,num_estimators=20) # TODO make it num_trees
+	forest_model = random_forest(pca_X_train,y_train,num_estimators=p_dict['num_trees'])
 
 	return [blb_main(X_test,y_test,calculate_score,p_dict,pca_model,forest_model)]
 
 
 
 def main():
-	# TODO maybe change the arguments to SmartSearch to be the same as for MNIST in the experiments folder
-
 	### Set parameters ###
 	parameters = { 'blur_ksize' : ['cat',[3,5]],
 				   'blur_sigma' : ['int',[0,1]],
