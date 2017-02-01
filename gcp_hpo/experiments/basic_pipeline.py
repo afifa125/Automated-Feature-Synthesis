@@ -41,28 +41,44 @@ from pipeline_utils import do_pca,random_forest,blb
 
 
 def load_data():
-	# Import data
-    data = load_iris()
-    X = data['data']
-    y = data['target']
-    return train_test_split(X,y,test_size=0.33) 
+	"""
+	Import sklearn's iris toy dataset and splits into training and test sets
+	"""
+	data = load_iris()
+	X = data['data']
+	y = data['target']
+	return train_test_split(X,y,test_size=0.33) 
 
 X_train,X_test,y_train,y_test = load_data()
 
 
 def calculate_accuracy(X,y,sample,indices,p_dict,score_fnc_args):
+	"""
+	Returns the mean accuracy on the given dataset and labels
+
+	Args:
+		X:						X data
+		y:						y data (labels)
+		p_dict:					dictionary of hyperparameters provided by SmartSearch
+		calculate_statistic: 	function that calculates accuracy/F1 score/value in question
+		score_fnc_args:    		tuple of arguments to the calculate_statistic function
+	"""
 	pca_model, forest_model = score_fnc_args
+
 	sampled_X = X[indices]
 	sampled_Y = y[indices]
 
 	# Test model
-	pca_X_test = do_pca(sampled_X,num_components=p_dict['pca_dim'],fit=False,fitted_model=pca_model)
+	pca_X_test = do_pca(sampled_X,num_components=p_dict['pca_dim'],fitted_model=pca_model)
 	return forest_model.score(pca_X_test,sampled_Y,sample_weight=sample)
 
 
 def scoring_function(p_dict):
+	"""
+	Executes the basic pipeline according to the parameters in p_dict. Returns score
+	"""
 	# Train model
-	pca_model,pca_X_train = do_pca(X_train,num_components=p_dict['pca_dim'],fit = True)
+	pca_model,pca_X_train = do_pca(X_train,num_components=p_dict['pca_dim'])
 	forest_model = random_forest(pca_X_train,y_train,num_estimators=p_dict['number_estimators'])
 
 	# Test model and output score

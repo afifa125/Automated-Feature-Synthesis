@@ -17,6 +17,8 @@ from pipeline_utils import do_pca,random_forest,blb
 
 def import_data(selected_data,size_test_data):
     """
+    Import Kaggle MNIST dataset and return train test split
+
     Args:
         selected_data:   percentage of original data to use for training and testing combined
         size_test_data:  percentage of selected set to use as test data
@@ -38,11 +40,19 @@ X_train,X_test,y_train,y_test = import_data(0.01,0.33)
     
 
 def gaussian_blur(X,kernel_size,stddev):
-    output = np.zeros(X.shape)
-    for i in range(X.shape[0]):
-        output[i,]= np.reshape(GaussianBlur(X[i,],(kernel_size,kernel_size),sigmaX=stddev,sigmaY=stddev),\
-                         (X.shape[1]))
-    return output
+	"""
+	Executes Gaussian blur on the given data
+
+	Args:
+		X: 		 		data to blur
+		kernel_size:	Gaussian kernel size
+		stddev:			Gaussian kernel standard deviation (in both X and Y directions)
+	"""
+	output = np.zeros(X.shape)
+	for i in range(X.shape[0]):
+	    output[i,]= np.reshape(GaussianBlur(X[i,],(kernel_size,kernel_size),sigmaX=stddev,\
+	    	sigmaY=stddev),(X.shape[1]))
+	return output
 
 # Old, non-BLB scoring function
 # def scoring_function(p_dict):
@@ -62,24 +72,38 @@ def gaussian_blur(X,kernel_size,stddev):
 # 	return [model.score(pca_X_test,y_test)]
 
 def calculate_score(X,y,sample,indices,p_dict,score_fnc_args):
-	# NOTE: The multinomial sample weights are currently not included for PCA
+	"""
+	Returns the mean accuracy on the given dataset and labels
 
+	Args:
+		X:						X data
+		y:						y data (labels)
+		p_dict:					dictionary of hyperparameters provided by SmartSearch
+		calculate_statistic: 	function that calculates accuracy/F1 score/value in question
+		score_fnc_args:    		tuple of arguments to the calculate_statistic function
+	"""
+	# NOTE: The multinomial sample weights are currently not included for PCA
 	pca_model,forest_model = score_fnc_args
+
 	sampled_X = X[indices]
 	sampled_y = y[indices]
 
 	blurred_X_sample = gaussian_blur(sampled_X,kernel_size = p_dict['blur_ksize'],\
 		stddev = p_dict['blur_sigma'])
-	pca_X_sample = do_pca(blurred_X_sample,num_components=p_dict['pca_dim'],fit=False,\
+	pca_X_sample = do_pca(blurred_X_sample,num_components=p_dict['pca_dim'],\
 		fitted_model=pca_model)
 	return forest_model.score(pca_X_sample,sampled_y,sample_weight=sample)
 
 # New, BLB scoring function
 def scoring_function(p_dict):
+	"""
+	Executes the MNIST pipeline according to the parameters in p_dict. Returns score
+	"""
+	
 	# Train model
 	blurred_X_train = gaussian_blur(X_train,kernel_size = p_dict['blur_ksize'],\
 		stddev = p_dict['blur_sigma'])
-	pca_model,pca_X_train = do_pca(blurred_X_train,num_components=p_dict['pca_dim'],fit = True)
+	pca_model,pca_X_train = do_pca(blurred_X_train,num_components=p_dict['pca_dim'])
 	forest_model = random_forest(pca_X_train,y_train,num_estimators=p_dict['num_trees'])
 
 	return [blb(X_test,y_test,p_dict,calculate_score,(pca_model,forest_model))]
