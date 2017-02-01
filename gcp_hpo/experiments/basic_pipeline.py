@@ -64,7 +64,7 @@ def random_forest(X,y,num_estimators):
 
 def blb_main(X,y,calculate_statistic,p_dict,pca_model,forest_model):
 	#### Define variables ######
-	n = X_test.shape[0] # Size of data
+	n = X.shape[0] # Size of data
 	b = int(n**(0.7)) # subset size
 	s = 1 # Number of sampled subsets
 	r = 20 # Number of Monte Carlo iterations
@@ -87,6 +87,7 @@ def blb_main(X,y,calculate_statistic,p_dict,pca_model,forest_model):
 
 
 def calculate_accuracy(X,y,sample,indices,p_dict,pca_model,model):
+	# TODO use the multinomial sample
 	sampled_X = X[indices]
 	sampled_Y = y[indices]
 
