@@ -399,7 +399,7 @@ class SmartSearch(object):
 				n_tested_parameters += 1
 			else:
 				if(self.verbose):
-					print('Hyperparameter already tesed')
+					print('Hyperparameter already tested')
 				cv_scores[idx] +=  cv_score
 
 			if(self.detailed_res ==2):
@@ -446,7 +446,7 @@ class SmartSearch(object):
 				n_tested_parameters += 1
 			else:
 				if(self.verbose):
-					print('Hyperparameter already tesed')
+					print('Hyperparameter already tested')
 				cv_scores[idx] += cv_score
 
 			if(self.detailed_res ==2):
@@ -483,7 +483,7 @@ class SmartSearch(object):
 				n_tested_parameters += 1
 			else:
 				if(self.verbose):
-					print('Hyperparameter already tesed')
+					print('Hyperparameter already tested')
 				cv_scores[idx] += cv_score
 
 			if(self.detailed_res ==2):
