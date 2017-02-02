@@ -35,6 +35,7 @@ from sklearn.gaussian_process import GaussianProcess
 from sklearn.cross_validation import check_cv, _fit_and_score
 from sklearn.metrics.scorer import check_scoring
 from sklearn.base import is_classifier, clone
+from prettytable import PrettyTable
 
 class SmartSearch(object):
 	"""The class for GCP-based hyper-parameter optimization.  
@@ -294,10 +295,15 @@ class SmartSearch(object):
 					self.param_bounds[i,1] += 1
 
 		if(self.verbose):
-			print(self.parameters)
-			print(self.param_names)
-			print(self.param_isInt)
-			print(self.param_bounds)
+			# print 'Parameters and bounds: \t',self.parameters
+			# print self.param_names 
+			# print self.param_isInt 
+			# print self.param_bounds
+			# New print format
+			t = PrettyTable(['parameter','type','bounds'])
+			for key in self.parameters.keys():
+				t.add_row([key,self.parameters[key][0],self.parameters[key][1]])
+			print t
 
 
 	def vector_to_dict(self,vector_parameter):
@@ -390,7 +396,7 @@ class SmartSearch(object):
 			cv_score = self.score(dict_candidate)
 
 			if(self.verbose):
-				print ('Step ' + str(i) + ' - Hyperparameter ' + str(dict_candidate) + ' ' + str(np.mean(cv_score)))
+				print ('Step ' + str(i) + ' - Hyperparameter: ' + str(dict_candidate) + ', CV score: ' + str(np.mean(cv_score)))
 
 			is_in,idx = utils.is_in_ndarray(init_candidates[i,:],tested_parameters[:n_tested_parameters,:])
 			if not is_in:
@@ -437,7 +443,7 @@ class SmartSearch(object):
 			cv_score = self.score(dict_candidate)
 
 			if(self.verbose):
-				print ('Step ' + str(i+self.n_init) + ' - Hyperparameter ' + str(dict_candidate) + ' ' + str(np.mean(cv_score)))
+				print ('Step ' + str(i+self.n_init) + ' - Hyperparameter: ' + str(dict_candidate) + ', CV score: ' + str(np.mean(cv_score)))
 
 			is_in,idx = utils.is_in_ndarray(best_candidate,tested_parameters[:n_tested_parameters,:])
 			if not is_in:
