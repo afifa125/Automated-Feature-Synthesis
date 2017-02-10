@@ -13,6 +13,9 @@ import numpy as np
 
 
 def hpo_custom_function():
+    """
+    Example of using SmartSearch by defining a scoring function
+    """
     parameters = {'kernel': ['cat', ['rbf', 'poly']],
                   'd': ['int', [1, 3]],
                   'C': ['float', [1, 10]]}
@@ -25,6 +28,9 @@ def hpo_custom_function():
 
 
 def hpo_sklearn_pipeline():
+    """
+    Example of using SmartSearch with an sklearn estimator
+    """
     iris = load_digits()
     X, y = iris.data, iris.target
     clf = RandomForestClassifier(n_estimators=20)

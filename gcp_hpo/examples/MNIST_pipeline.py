@@ -127,7 +127,7 @@ def main():
 	sampling_model = 'GCP'
 	n_candidates= 100
 	n_random_init= 2
-	n_iter = 10
+	n_iter = 2
 	nb_iter_final = 0
 	acquisition_function = 'UCB'
 
