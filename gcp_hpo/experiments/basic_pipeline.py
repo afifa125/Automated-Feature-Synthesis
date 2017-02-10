@@ -28,6 +28,9 @@ Essentially, just follow the format of this file using the steps below.
 		- Be sure to import your data outside of this function so that you don't repeat unnecessary steps
 		- Define helper functions outside of this function as needed
 		- All parameters on which you are optimizing must be defined in p_dict
+		- NOTE: must return a list
+
+Alternatively, an sklearn estimator can be used, as shown in gcp_hpo/examples/interface.py.
 """
 
 from gcp_hpo.smart_search import SmartSearch
@@ -75,7 +78,7 @@ def calculate_accuracy(X,y,sample,indices,p_dict,score_fnc_args):
 
 def scoring_function(p_dict):
 	"""
-	Executes the basic pipeline according to the parameters in p_dict. Returns score
+	Executes the basic pipeline according to the parameters in p_dict. Returns score.
 	"""
 	# Train model
 	pca_model,pca_X_train = do_pca(X_train,num_components=p_dict['pca_dim'])
@@ -98,6 +101,25 @@ def scoring_function(p_dict):
 # 	return [model.score(pca_X_test,y_test)]
 
 
+# def main():
+# 	# This main function implements an sklearn estimator
+# 	# This is much slower than the scoring function version, probably because of the additional cross
+# 	# 	 validation done
+
+# 	clf = RandomForestClassifier(n_estimators=20)
+
+# 	# specify parameters and distributions to sample from
+# 	parameters = {"max_depth": ['int', [3, 3]],
+#                   "max_features": ['int', [1, 3]],
+#                   "min_samples_split": ['int', [1, 11]],
+#                   "min_samples_leaf": ['int', [1, 11]],
+#                   "bootstrap": ['cat', [True, False]],
+#                   "criterion": ['cat', ["gini", "entropy"]]}
+
+# 	search = SmartSearch(parameters, estimator=clf, X=X_train, y=y_train, n_iter=20)
+# 	search._fit()
+
+
 def main():
 
 	### Set parameters ###
@@ -112,8 +134,8 @@ def main():
 	model_noise = None
 	sampling_model = 'GCP'
 	n_candidates= 100
-	n_random_init= 10
-	n_iter = 20
+	n_random_init= 5
+	n_iter = 10
 	nb_iter_final = 0
 	acquisition_function = 'UCB'
 
